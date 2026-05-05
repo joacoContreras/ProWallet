@@ -14,9 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.SectionCard
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
@@ -36,19 +38,19 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
             .background(BackgroundLight)
             .verticalScroll(rememberScrollState())
     ) {
-        TopBar(title = "Configuración", onNavigateBack = onNavigateBack)
+        TopBar(title = stringResource(R.string.settings_title), onNavigateBack = onNavigateBack)
 
         Spacer(Modifier.height(8.dp))
 
         // Notifications section
-        SectionLabel(text = "NOTIFICACIONES")
+        SectionLabel(text = stringResource(R.string.settings_notifications_section))
         SectionCard(modifier = Modifier.padding(horizontal = 20.dp)) {
             SettingsSwitch(
                 icon = Icons.Default.Notifications,
                 iconBg = Primary.copy(alpha = 0.15f),
                 iconTint = PrimaryDarker,
-                title = "Notificaciones",
-                subtitle = "Recibir alertas de gastos",
+                title = stringResource(R.string.settings_notifications_title),
+                subtitle = stringResource(R.string.settings_notifications_subtitle),
                 checked = notificationsEnabled,
                 onCheckedChange = { notificationsEnabled = it }
             )
@@ -57,8 +59,8 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                 icon = Icons.Default.NotificationsActive,
                 iconBg = Secondary.copy(alpha = 0.1f),
                 iconTint = Secondary,
-                title = "Alertas de presupuesto",
-                subtitle = "Cuando superes el 80% del mes",
+                title = stringResource(R.string.settings_budget_alerts_title),
+                subtitle = stringResource(R.string.settings_budget_alerts_subtitle),
                 checked = budgetAlertsEnabled,
                 onCheckedChange = { budgetAlertsEnabled = it }
             )
@@ -67,8 +69,8 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                 icon = Icons.Default.Assessment,
                 iconBg = Tertiary,
                 iconTint = SecondaryDark,
-                title = "Reporte semanal",
-                subtitle = "Resumen de gastos cada lunes",
+                title = stringResource(R.string.settings_weekly_report_title),
+                subtitle = stringResource(R.string.settings_weekly_report_subtitle),
                 checked = weeklyReportEnabled,
                 onCheckedChange = { weeklyReportEnabled = it }
             )
@@ -77,14 +79,14 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
         Spacer(Modifier.height(16.dp))
 
         // Security section
-        SectionLabel(text = "SEGURIDAD")
+        SectionLabel(text = stringResource(R.string.settings_security_section))
         SectionCard(modifier = Modifier.padding(horizontal = 20.dp)) {
             SettingsSwitch(
                 icon = Icons.Default.Fingerprint,
                 iconBg = ErrorRed.copy(alpha = 0.1f),
                 iconTint = ErrorRed,
-                title = "Biometría",
-                subtitle = "Desbloqueo con huella dactilar",
+                title = stringResource(R.string.settings_biometrics_title),
+                subtitle = stringResource(R.string.settings_biometrics_subtitle),
                 checked = biometricEnabled,
                 onCheckedChange = { biometricEnabled = it }
             )
@@ -93,14 +95,14 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
         Spacer(Modifier.height(16.dp))
 
         // Appearance section
-        SectionLabel(text = "APARIENCIA")
+        SectionLabel(text = stringResource(R.string.settings_appearance_section))
         SectionCard(modifier = Modifier.padding(horizontal = 20.dp)) {
             SettingsSwitch(
                 icon = Icons.Default.DarkMode,
                 iconBg = NeutralDark.copy(alpha = 0.1f),
                 iconTint = NeutralDark,
-                title = "Modo oscuro",
-                subtitle = "Tema oscuro de la aplicación",
+                title = stringResource(R.string.settings_dark_mode_title),
+                subtitle = stringResource(R.string.settings_dark_mode_subtitle),
                 checked = darkModeEnabled,
                 onCheckedChange = { darkModeEnabled = it }
             )
@@ -109,14 +111,14 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
         Spacer(Modifier.height(16.dp))
 
         // Data section
-        SectionLabel(text = "DATOS")
+        SectionLabel(text = stringResource(R.string.settings_data_section))
         SectionCard(modifier = Modifier.padding(horizontal = 20.dp)) {
             SettingsSwitch(
                 icon = Icons.Default.Sync,
                 iconBg = Primary.copy(alpha = 0.15f),
                 iconTint = PrimaryDarker,
-                title = "Sincronización",
-                subtitle = "Sync con moneda local automático",
+                title = stringResource(R.string.settings_sync_title),
+                subtitle = stringResource(R.string.settings_sync_subtitle),
                 checked = currencySync,
                 onCheckedChange = { currencySync = it }
             )
@@ -125,8 +127,8 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                 icon = Icons.Default.Download,
                 iconBg = Secondary.copy(alpha = 0.1f),
                 iconTint = Secondary,
-                title = "Exportar datos",
-                subtitle = "Descargar historial en CSV",
+                title = stringResource(R.string.settings_export_title),
+                subtitle = stringResource(R.string.settings_export_subtitle),
                 onClick = {}
             )
             Divider(color = Color(0xFFF0F0F0))
@@ -134,8 +136,8 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                 icon = Icons.Default.DeleteForever,
                 iconBg = ErrorRed.copy(alpha = 0.1f),
                 iconTint = ErrorRed,
-                title = "Eliminar cuenta",
-                subtitle = "Esta acción es irreversible",
+                title = stringResource(R.string.settings_delete_account_title),
+                subtitle = stringResource(R.string.settings_delete_account_subtitle),
                 onClick = {}
             )
         }
@@ -148,14 +150,14 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "SUPER AHORRO v1.0.0",
+                text = "${stringResource(R.string.app_name).uppercase()} v1.0.0",
                 fontFamily = PlusJakartaSans,
                 fontSize = 11.sp,
                 color = NeutralLight,
                 letterSpacing = 1.sp
             )
             Text(
-                text = "Desarrollado para Tecnologías Móviles · UNDEF",
+                text = stringResource(R.string.developed_for),
                 fontFamily = PlusJakartaSans,
                 fontSize = 11.sp,
                 color = NeutralLight

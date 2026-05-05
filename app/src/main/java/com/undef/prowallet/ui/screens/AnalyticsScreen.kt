@@ -14,9 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.BottomNavBar
 import com.undef.prowallet.ui.components.SectionCard
 import com.undef.prowallet.ui.theme.*
@@ -51,14 +53,14 @@ fun AnalyticsScreen(
             item {
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    text = "Analytics",
+                    text = stringResource(R.string.analytics_tab),
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 26.sp,
                     color = TextPrimary
                 )
                 Text(
-                    text = "Track your financial wellness journey.",
+                    text = stringResource(R.string.analytics_subtitle),
                     fontFamily = PlusJakartaSans,
                     fontSize = 13.sp,
                     color = Neutral
@@ -81,7 +83,7 @@ fun AnalyticsScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "TOTAL SPENT (OCT)",
+                                text = stringResource(R.string.total_spent_label, "OCT"),
                                 fontFamily = PlusJakartaSans,
                                 fontWeight = FontWeight.Medium,
                                 fontSize = 11.sp,
@@ -98,7 +100,7 @@ fun AnalyticsScreen(
                             color = SecondaryDark
                         )
                         Text(
-                            text = "▲ 12% vs last month",
+                            text = stringResource(R.string.vs_last_month_format, "▲ 12%"),
                             fontFamily = PlusJakartaSans,
                             fontSize = 12.sp,
                             color = SecondaryDark.copy(alpha = 0.8f)
@@ -133,7 +135,7 @@ fun AnalyticsScreen(
                                 color = TextPrimary
                             )
                             Text(
-                                text = "Highest Spend",
+                                text = stringResource(R.string.highest_spend_label),
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 11.sp,
                                 color = Neutral
@@ -171,13 +173,13 @@ fun AnalyticsScreen(
                                 color = TextPrimary
                             )
                             Text(
-                                text = "Average Purchase",
+                                text = stringResource(R.string.average_purchase_label),
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 11.sp,
                                 color = Neutral
                             )
                             Text(
-                                text = "Across ${state.totalTransactions} transactions",
+                                text = stringResource(R.string.across_transactions_format, state.totalTransactions),
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 10.sp,
                                 color = NeutralLight
@@ -195,14 +197,14 @@ fun AnalyticsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Monthly Trend",
+                            text = stringResource(R.string.monthly_trend),
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
                             color = TextPrimary
                         )
                         Text(
-                            text = "6 Months",
+                            text = stringResource(R.string.monthly_trend_6mo),
                             fontFamily = PlusJakartaSans,
                             fontSize = 12.sp,
                             color = Secondary
@@ -264,7 +266,7 @@ fun AnalyticsScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Top Stores",
+                        text = stringResource(R.string.top_stores),
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,

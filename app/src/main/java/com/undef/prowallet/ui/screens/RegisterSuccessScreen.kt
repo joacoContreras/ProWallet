@@ -16,10 +16,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.undef.prowallet.R
 import com.undef.prowallet.ui.theme.*
 
 @Composable
@@ -85,23 +87,25 @@ fun RegisterSuccessScreen(onBegin: () -> Unit) {
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp) // Adjusted spacing
             ) {
                 Text(
-                    text = "¡Cuenta creada con éxito!",
+                    text = stringResource(R.string.success_title),
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 26.sp,
                     color = TextPrimary,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    lineHeight = 32.sp // Adjusted line spacing
                 )
                 Text(
-                    text = "Ya puedes empezar a gestionar tus ahorros",
+                    text = stringResource(R.string.success_subtitle),
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Normal,
-                    fontSize = 14.sp,
+                    fontSize = 15.sp, // Slightly larger
                     color = Neutral,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    lineHeight = 22.sp // Adjusted line spacing
                 )
             }
 
@@ -119,7 +123,7 @@ fun RegisterSuccessScreen(onBegin: () -> Unit) {
                 )
             ) {
                 Text(
-                    text = "Comenzar →",
+                    text = stringResource(R.string.begin_button),
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp

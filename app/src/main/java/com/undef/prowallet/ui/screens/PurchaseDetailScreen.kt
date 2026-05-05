@@ -14,9 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.ProductItem
 import com.undef.prowallet.ui.components.SectionCard
 import com.undef.prowallet.ui.components.TopBar
@@ -33,7 +35,7 @@ fun PurchaseDetailScreen(
 
     if (purchase == null) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Compra no encontrada")
+            Text(stringResource(R.string.purchase_not_found))
         }
         return
     }
@@ -51,7 +53,7 @@ fun PurchaseDetailScreen(
             .fillMaxSize()
             .background(BackgroundLight)
     ) {
-        TopBar(title = "Detalle de Compra", onNavigateBack = onNavigateBack)
+        TopBar(title = stringResource(R.string.purchase_detail_title), onNavigateBack = onNavigateBack)
 
         LazyColumn(
             contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp),
@@ -116,7 +118,7 @@ fun PurchaseDetailScreen(
                     ) {
                         Column {
                             Text(
-                                text = "Fecha",
+                                text = stringResource(R.string.date_label),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = Neutral
                             )
@@ -129,7 +131,7 @@ fun PurchaseDetailScreen(
                         }
                         Column(horizontalAlignment = Alignment.End) {
                             Text(
-                                text = "Productos",
+                                text = stringResource(R.string.products_label),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = Neutral
                             )
@@ -147,7 +149,7 @@ fun PurchaseDetailScreen(
             if (purchase.products.isNotEmpty()) {
                 item {
                     Text(
-                        text = "Productos",
+                        text = stringResource(R.string.products_label),
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
@@ -170,7 +172,7 @@ fun PurchaseDetailScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Total",
+                                text = stringResource(R.string.total_label),
                                 fontFamily = PlusJakartaSans,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp,

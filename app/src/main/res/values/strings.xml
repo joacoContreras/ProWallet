@@ -5,6 +5,7 @@
     <string name="register_title">Create Account</string>
     <string name="email_label">Email</string>
     <string name="password_label">Password</string>
+    <string name="confirm_password_label">Confirm Password</string>
     <string name="full_name_label">Full Name</string>
     <string name="login_button">Login</string>
     <string name="register_button">Sign Up</string>
@@ -32,7 +33,7 @@
     <string name="monthly_budget">Monthly Budget</string>
     <string name="top_stores">Top Stores</string>
     <string name="monthly_trend">Monthly Trend</string>
-    <string name="transactions_count">%d transactions</string>
+    <string name="transactions_count">%d transactions logged</string>
     <string name="settings_title">Settings</string>
     <string name="profile_title">Profile</string>
     <string name="edit_profile">Edit Profile</string>
@@ -55,4 +56,75 @@
     <string name="ai_scanning_title">AI Receipt Scanning</string>
     <string name="ai_scanning_desc">New: You can now scan tickets and receipts with AI to automatically log your expenses in real-time.</string>
     <string name="try_it_now">Try it now</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_subtitle">Welcome to financial calm</string>
+
+    <!-- Home Screen -->
+    <string name="welcome_user">Hello, %s 👋</string>
+    <string name="summary_subtitle">Here is your summary</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_notifications_section">NOTIFICATIONS</string>
+    <string name="settings_notifications_title">Notifications</string>
+    <string name="settings_notifications_subtitle">Receive spending alerts</string>
+    <string name="settings_budget_alerts_title">Budget Alerts</string>
+    <string name="settings_budget_alerts_subtitle">When you exceed 80% of the month</string>
+    <string name="settings_weekly_report_title">Weekly Report</string>
+    <string name="settings_weekly_report_subtitle">Spending summary every Monday</string>
+    <string name="settings_security_section">SECURITY</string>
+    <string name="settings_biometrics_title">Biometrics</string>
+    <string name="settings_biometrics_subtitle">Unlock with fingerprint</string>
+    <string name="settings_appearance_section">APPEARANCE</string>
+    <string name="settings_dark_mode_title">Dark Mode</string>
+    <string name="settings_dark_mode_subtitle">Application dark theme</string>
+    <string name="settings_data_section">DATA</string>
+    <string name="settings_sync_title">Synchronization</string>
+    <string name="settings_sync_subtitle">Automatic local currency sync</string>
+    <string name="settings_export_title">Export Data</string>
+    <string name="settings_export_subtitle">Download history in CSV</string>
+    <string name="settings_delete_account_title">Delete Account</string>
+    <string name="settings_delete_account_subtitle">This action is irreversible</string>
+    <string name="developed_for">Developed for Mobile Technologies · UNDEF</string>
+
+    <!-- Profile Screen -->
+    <string name="personal_info_section">PERSONAL INFORMATION</string>
+    <string name="full_name_placeholder">Your full name</string>
+    <string name="email_placeholder">email@example.com</string>
+    <string name="save_changes_button">Save Changes</string>
+    <string name="statistics_section">STATISTICS</string>
+    <string name="stat_purchases">Purchases</string>
+    <string name="stat_this_month">This month</string>
+    <string name="stat_savings">Savings</string>
+    <string name="logout_button">Logout</string>
+
+    <!-- History Screen -->
+    <string name="total_spent">Total Spent</string>
+
+    <!-- Purchase Detail -->
+    <string name="purchase_detail_title">Purchase Detail</string>
+    <string name="purchase_not_found">Purchase not found</string>
+    <string name="total_label">Total</string>
+
+    <!-- New Purchase -->
+    <string name="new_purchase_subtitle">Log your latest expenses to track savings.</string>
+    <string name="ticket_capture_desc">JPEG, PNG up to 5MB</string>
+    <string name="purchase_details_section">PURCHASE DETAILS</string>
+    <string name="store_name_placeholder">e.g. Whole Foods Market</string>
+    <string name="date_placeholder">mm/dd/yy</string>
+    <string name="scan_item">Scan Item</string>
+    <string name="id_code_label">ID/Code</string>
+    <string name="price_label">Price</string>
+    <string name="item_desc_placeholder">Item description…</string>
+    <string name="no_products_yet">No products added yet.</string>
+    <string name="product_name_label">Product Name</string>
+
+    <!-- Analytics Screen -->
+    <string name="analytics_subtitle">Track your financial wellness journey.</string>
+    <string name="total_spent_label">TOTAL SPENT (%s)</string>
+    <string name="vs_last_month_format">%s vs last month</string>
+    <string name="highest_spend_label">Highest Spend</string>
+    <string name="average_purchase_label">Average Purchase</string>
+    <string name="across_transactions_format">Across %d transactions</string>
+    <string name="monthly_trend_6mo">6 Months</string>
 </resources>

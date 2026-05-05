@@ -19,12 +19,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.CustomTextField
 import com.undef.prowallet.ui.components.PrimaryButton
 import com.undef.prowallet.ui.theme.*
@@ -84,14 +86,14 @@ fun LoginScreen(
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "ProWallet",
+                        text = stringResource(R.string.app_name),
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Bold,
                         fontSize = 26.sp,
                         color = SecondaryDark
                     )
                     Text(
-                        text = "Welcome back to financial calm.",
+                        text = stringResource(R.string.splash_subtitle),
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Normal,
                         fontSize = 13.sp,
@@ -103,9 +105,9 @@ fun LoginScreen(
                     CustomTextField(
                         value = email,
                         onValueChange = { email = it },
-                        placeholder = "hello@example.com",
+                        placeholder = stringResource(R.string.email_placeholder),
                         leadingIcon = Icons.Default.Email,
-                        label = "Email"
+                        label = stringResource(R.string.email_label)
                     )
 
                     Column {
@@ -114,12 +116,12 @@ fun LoginScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Password",
+                                text = stringResource(R.string.password_label),
                                 style = MaterialTheme.typography.labelLarge,
                                 color = TextPrimary
                             )
                             Text(
-                                text = "Forgot password?",
+                                text = stringResource(R.string.forgot_password),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = Secondary,
                                 modifier = Modifier.clickable {}
@@ -137,16 +139,17 @@ fun LoginScreen(
                 }
 
                 PrimaryButton(
-                    text = "Login",
+                    text = stringResource(R.string.login_button),
                     onClick = { viewModel.login(email, password) },
                     enabled = !state.isLoading
                 )
 
                 Text(
                     text = buildAnnotatedString {
-                        append("Don't have an account? ")
+                        append(stringResource(R.string.dont_have_account))
+                        append(" ")
                         withStyle(SpanStyle(color = Secondary, fontWeight = FontWeight.SemiBold)) {
-                            append("Register")
+                            append(stringResource(R.string.register_button))
                         }
                     },
                     fontFamily = PlusJakartaSans,

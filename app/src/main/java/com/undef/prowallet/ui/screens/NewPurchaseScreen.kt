@@ -15,9 +15,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.*
 import com.undef.prowallet.ui.theme.*
 import com.undef.prowallet.viewmodel.PurchaseViewModel
@@ -56,10 +58,10 @@ fun NewPurchaseScreen(
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
         ) {
-            TopBar(title = "New Purchase", onNavigateBack = onNavigateBack)
+            TopBar(title = stringResource(R.string.new_purchase_title), onNavigateBack = onNavigateBack)
 
             Text(
-                text = "Log your latest expenses to track savings.",
+                text = stringResource(R.string.new_purchase_subtitle),
                 fontFamily = PlusJakartaSans,
                 fontSize = 13.sp,
                 color = Neutral,
@@ -91,13 +93,13 @@ fun NewPurchaseScreen(
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        text = "Capture or Attach Ticket",
+                        text = stringResource(R.string.capture_ticket),
                         fontFamily = PlusJakartaSans,
                         fontSize = 12.sp,
                         color = Neutral
                     )
                     Text(
-                        text = "JPEG, PNG up to 5MB",
+                        text = stringResource(R.string.ticket_capture_desc),
                         fontFamily = PlusJakartaSans,
                         fontSize = 10.sp,
                         color = NeutralLight
@@ -110,7 +112,7 @@ fun NewPurchaseScreen(
             // Purchase details
             SectionCard(modifier = Modifier.padding(horizontal = 20.dp)) {
                 Text(
-                    text = "PURCHASE DETAILS",
+                    text = stringResource(R.string.purchase_details_section),
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 11.sp,
@@ -122,17 +124,17 @@ fun NewPurchaseScreen(
                     CustomTextField(
                         value = state.storeName,
                         onValueChange = viewModel::onStoreNameChange,
-                        placeholder = "e.g. Whole Foods Market",
+                        placeholder = stringResource(R.string.store_name_placeholder),
                         leadingIcon = Icons.Default.Store,
-                        label = "Store Name"
+                        label = stringResource(R.string.store_name_label)
                     )
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         CustomTextField(
                             value = state.date,
                             onValueChange = viewModel::onDateChange,
-                            placeholder = "mm/dd/yy",
+                            placeholder = stringResource(R.string.date_placeholder),
                             leadingIcon = Icons.Default.CalendarToday,
-                            label = "Date",
+                            label = stringResource(R.string.date_label),
                             modifier = Modifier.weight(1f)
                         )
                         CustomTextField(
@@ -140,7 +142,7 @@ fun NewPurchaseScreen(
                             onValueChange = viewModel::onTotalAmountChange,
                             placeholder = "0.00",
                             leadingIcon = Icons.Default.AttachMoney,
-                            label = "Total Amount",
+                            label = stringResource(R.string.total_amount_label),
                             modifier = Modifier.weight(1f)
                         )
                     }
@@ -157,7 +159,7 @@ fun NewPurchaseScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Products",
+                        text = stringResource(R.string.products_label),
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
@@ -167,7 +169,7 @@ fun NewPurchaseScreen(
                         Icon(Icons.Default.QrCodeScanner, contentDescription = null, modifier = Modifier.size(16.dp))
                         Spacer(Modifier.width(4.dp))
                         Text(
-                            "ScanItem",
+                            text = stringResource(R.string.scan_item),
                             fontFamily = PlusJakartaSans,
                             fontSize = 12.sp,
                             color = Secondary
@@ -180,7 +182,7 @@ fun NewPurchaseScreen(
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "ID/Code",
+                            text = stringResource(R.string.id_code_label),
                             fontFamily = PlusJakartaSans,
                             fontSize = 11.sp,
                             color = Neutral
@@ -206,7 +208,7 @@ fun NewPurchaseScreen(
                     }
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Price",
+                            text = stringResource(R.string.price_label),
                             fontFamily = PlusJakartaSans,
                             fontSize = 11.sp,
                             color = Neutral
@@ -244,7 +246,7 @@ fun NewPurchaseScreen(
                         onValueChange = viewModel::onProductNameChange,
                         modifier = Modifier.weight(1f),
                         placeholder = {
-                            Text("Item description...", color = NeutralLight, fontFamily = PlusJakartaSans, fontSize = 13.sp)
+                            Text(stringResource(R.string.item_desc_placeholder), color = NeutralLight, fontFamily = PlusJakartaSans, fontSize = 13.sp)
                         },
                         shape = RoundedCornerShape(12.dp),
                         colors = OutlinedTextFieldDefaults.colors(
@@ -253,7 +255,7 @@ fun NewPurchaseScreen(
                             focusedContainerColor = Color.White,
                             unfocusedContainerColor = Color(0xFFF8FAFB)
                         ),
-                        label = { Text("Product Name", fontFamily = PlusJakartaSans, fontSize = 11.sp) },
+                        label = { Text(stringResource(R.string.product_name_label), fontFamily = PlusJakartaSans, fontSize = 11.sp) },
                         singleLine = true
                     )
                     IconButton(
@@ -270,7 +272,7 @@ fun NewPurchaseScreen(
                 if (state.products.isEmpty()) {
                     Spacer(Modifier.height(12.dp))
                     Text(
-                        text = "No products added yet.",
+                        text = stringResource(R.string.no_products_yet),
                         fontFamily = PlusJakartaSans,
                         fontSize = 13.sp,
                         color = NeutralLight,
@@ -302,7 +304,7 @@ fun NewPurchaseScreen(
                 Icon(Icons.Default.CheckCircle, contentDescription = null, modifier = Modifier.size(20.dp))
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    text = "Save Purchase",
+                    text = stringResource(R.string.save_purchase),
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp

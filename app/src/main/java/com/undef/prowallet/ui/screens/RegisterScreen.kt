@@ -20,12 +20,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.CustomTextField
 import com.undef.prowallet.ui.components.PrimaryButton
 import com.undef.prowallet.ui.theme.*
@@ -88,14 +90,14 @@ fun RegisterScreen(
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "ProWallet",
+                        text = stringResource(R.string.app_name),
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Bold,
                         fontSize = 24.sp,
                         color = SecondaryDark
                     )
                     Text(
-                        text = "Comienza tu viaje hacia la calma financiera.",
+                        text = stringResource(R.string.splash_subtitle),
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Normal,
                         fontSize = 13.sp,
@@ -107,16 +109,16 @@ fun RegisterScreen(
                     CustomTextField(
                         value = fullName,
                         onValueChange = { fullName = it },
-                        placeholder = "Tu nombre completo",
+                        placeholder = stringResource(R.string.full_name_placeholder),
                         leadingIcon = Icons.Default.Person,
-                        label = "Full Name"
+                        label = stringResource(R.string.full_name_label)
                     )
                     CustomTextField(
                         value = email,
                         onValueChange = { email = it },
-                        placeholder = "tu@correo.com",
+                        placeholder = stringResource(R.string.email_placeholder),
                         leadingIcon = Icons.Default.Email,
-                        label = "Email"
+                        label = stringResource(R.string.email_label)
                     )
                     CustomTextField(
                         value = password,
@@ -124,7 +126,7 @@ fun RegisterScreen(
                         placeholder = "••••••••",
                         leadingIcon = Icons.Default.Lock,
                         isPassword = true,
-                        label = "Password"
+                        label = stringResource(R.string.password_label)
                     )
                     CustomTextField(
                         value = confirmPassword,
@@ -132,21 +134,22 @@ fun RegisterScreen(
                         placeholder = "••••••••",
                         leadingIcon = Icons.Default.Lock,
                         isPassword = true,
-                        label = "Confirm Password"
+                        label = stringResource(R.string.confirm_password_label)
                     )
                 }
 
                 PrimaryButton(
-                    text = "Crear Cuenta",
+                    text = stringResource(R.string.register_button),
                     onClick = { viewModel.register(fullName, email, password) },
                     enabled = !state.isLoading
                 )
 
                 Text(
                     text = buildAnnotatedString {
-                        append("¿Ya tienes cuenta? ")
+                        append(stringResource(R.string.already_have_account))
+                        append(" ")
                         withStyle(SpanStyle(color = Secondary, fontWeight = FontWeight.SemiBold)) {
-                            append("Iniciar sesión")
+                            append(stringResource(R.string.login_button))
                         }
                     },
                     fontFamily = PlusJakartaSans,

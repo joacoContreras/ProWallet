@@ -15,9 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.undef.prowallet.R
 import com.undef.prowallet.data.MockRepository
 import com.undef.prowallet.ui.components.CustomTextField
 import com.undef.prowallet.ui.components.PrimaryButton
@@ -43,7 +45,7 @@ fun ProfileScreen(
             .verticalScroll(rememberScrollState())
     ) {
         TopBar(
-            title = "Perfil",
+            title = stringResource(R.string.profile_title),
             onNavigateBack = onNavigateBack,
             actions = {
                 IconButton(onClick = onNavigateToSettings) {
@@ -111,7 +113,7 @@ fun ProfileScreen(
         // Form
         SectionCard(modifier = Modifier.padding(horizontal = 20.dp)) {
             Text(
-                text = "INFORMACIÓN PERSONAL",
+                text = stringResource(R.string.personal_info_section),
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 11.sp,
@@ -123,20 +125,20 @@ fun ProfileScreen(
                 CustomTextField(
                     value = fullName,
                     onValueChange = { fullName = it },
-                    placeholder = "Nombre completo",
+                    placeholder = stringResource(R.string.full_name_placeholder),
                     leadingIcon = Icons.Default.Person,
-                    label = "Nombre"
+                    label = stringResource(R.string.full_name_label)
                 )
                 CustomTextField(
                     value = email,
                     onValueChange = { email = it },
-                    placeholder = "correo@example.com",
+                    placeholder = stringResource(R.string.email_placeholder),
                     leadingIcon = Icons.Default.Email,
-                    label = "Email"
+                    label = stringResource(R.string.email_label)
                 )
             }
             Spacer(Modifier.height(16.dp))
-            PrimaryButton(text = "Guardar cambios", onClick = {})
+            PrimaryButton(text = stringResource(R.string.save_changes_button), onClick = {})
         }
 
         Spacer(Modifier.height(16.dp))
@@ -144,7 +146,7 @@ fun ProfileScreen(
         // Stats card
         SectionCard(modifier = Modifier.padding(horizontal = 20.dp)) {
             Text(
-                text = "ESTADÍSTICAS",
+                text = stringResource(R.string.statistics_section),
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 11.sp,
@@ -156,9 +158,9 @@ fun ProfileScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                StatItem(label = "Compras", value = "6")
-                StatItem(label = "Este mes", value = "$1,842")
-                StatItem(label = "Ahorro", value = "12%")
+                StatItem(label = stringResource(R.string.stat_purchases), value = "6")
+                StatItem(label = stringResource(R.string.stat_this_month), value = "$1,842")
+                StatItem(label = stringResource(R.string.stat_savings), value = "12%")
             }
         }
 
@@ -178,7 +180,7 @@ fun ProfileScreen(
             Icon(Icons.Default.Logout, contentDescription = null, modifier = Modifier.size(20.dp))
             Spacer(Modifier.width(8.dp))
             Text(
-                text = "Cerrar sesión",
+                text = stringResource(R.string.logout_button),
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp

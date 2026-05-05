@@ -3,14 +3,15 @@ package com.undef.prowallet.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.PurchaseCard
 import com.undef.prowallet.ui.components.SectionCard
 import com.undef.prowallet.ui.components.TopBar
@@ -30,10 +31,10 @@ fun HistoryScreen(
             .fillMaxSize()
             .background(BackgroundLight)
     ) {
-        TopBar(title = "Historial", onNavigateBack = onNavigateBack)
+        TopBar(title = stringResource(R.string.history_tab), onNavigateBack = onNavigateBack)
 
         Text(
-            text = "${state.allPurchases.size} compras registradas",
+            text = stringResource(R.string.transactions_count, state.allPurchases.size),
             fontFamily = PlusJakartaSans,
             fontSize = 13.sp,
             color = Neutral,
@@ -64,7 +65,7 @@ fun HistoryScreen(
                 Column {
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        text = "Total gastado",
+                        text = stringResource(R.string.total_spent),
                         fontFamily = PlusJakartaSans,
                         fontSize = 14.sp,
                         color = Neutral

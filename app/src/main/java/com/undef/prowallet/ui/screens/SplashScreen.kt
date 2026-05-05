@@ -81,7 +81,7 @@ fun SplashScreen(onNavigateToLogin: () -> Unit) {
             )
 
             Text(
-                text = "Tu camino hacia la calma financiera",
+                text = stringResource(id = R.string.splash_subtitle),
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.Normal,
                 fontSize = 14.sp,
