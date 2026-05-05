@@ -1,4 +1,4 @@
-package com.undef.superahorro.domain
+package com.undef.prowallet.domain
 
 data class User(
     val id: String,

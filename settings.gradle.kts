@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "SuperAhorro"
+rootProject.name = "ProWallet"
 include(":app")

@@ -1,4 +1,4 @@
-package com.undef.superahorro.ui.screens
+package com.undef.prowallet.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,13 +18,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.undef.superahorro.data.MockRepository
-import com.undef.superahorro.ui.components.CustomTextField
-import com.undef.superahorro.ui.components.PrimaryButton
-import com.undef.superahorro.ui.components.SectionCard
-import com.undef.superahorro.ui.components.TopBar
-import com.undef.superahorro.ui.theme.*
-import com.undef.superahorro.viewmodel.AuthViewModel
+import com.undef.prowallet.data.MockRepository
+import com.undef.prowallet.ui.components.CustomTextField
+import com.undef.prowallet.ui.components.PrimaryButton
+import com.undef.prowallet.ui.components.SectionCard
+import com.undef.prowallet.ui.components.TopBar
+import com.undef.prowallet.ui.theme.*
+import com.undef.prowallet.viewmodel.AuthViewModel
 
 @Composable
 fun ProfileScreen(

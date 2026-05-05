@@ -1,4 +1,4 @@
-package com.undef.superahorro.ui.screens
+package com.undef.prowallet.ui.screens
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.undef.superahorro.ui.theme.*
+import com.undef.prowallet.ui.theme.*
 import kotlinx.coroutines.delay
 
 @Composable

@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.undef.superahorro"
+    namespace = "com.undef.prowallet"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.undef.superahorro"
+        applicationId = "com.undef.prowallet"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

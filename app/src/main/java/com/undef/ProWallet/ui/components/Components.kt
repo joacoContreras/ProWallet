@@ -1,4 +1,4 @@
-package com.undef.superahorro.ui.components
+package com.undef.prowallet.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,9 +21,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.undef.superahorro.domain.Product
-import com.undef.superahorro.domain.Purchase
-import com.undef.superahorro.ui.theme.*
+import com.undef.prowallet.domain.Product
+import com.undef.prowallet.domain.Purchase
+import com.undef.prowallet.ui.theme.*
 
 @Composable
 fun PrimaryButton(

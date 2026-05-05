@@ -1,4 +1,4 @@
-package com.undef.superahorro.ui.screens
+package com.undef.prowallet.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,6 +10,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Savings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -25,23 +26,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.undef.superahorro.ui.components.CustomTextField
-import com.undef.superahorro.ui.components.PrimaryButton
-import com.undef.superahorro.ui.theme.*
-import com.undef.superahorro.viewmodel.AuthViewModel
+import com.undef.prowallet.ui.components.CustomTextField
+import com.undef.prowallet.ui.components.PrimaryButton
+import com.undef.prowallet.ui.theme.*
+import com.undef.prowallet.viewmodel.AuthViewModel
 
 @Composable
-fun LoginScreen(
+fun RegisterScreen(
     viewModel: AuthViewModel,
-    onLoginSuccess: () -> Unit,
-    onNavigateToRegister: () -> Unit
+    onRegisterSuccess: () -> Unit,
+    onNavigateToLogin: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
+    var fullName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
 
-    LaunchedEffect(state.isLoggedIn) {
-        if (state.isLoggedIn) onLoginSuccess()
+    LaunchedEffect(state.registrationSuccess) {
+        if (state.registrationSuccess) {
+            viewModel.clearRegistrationSuccess()
+            onRegisterSuccess()
+        }
     }
 
     Box(
@@ -63,22 +69,20 @@ fun LoginScreen(
                     .padding(28.dp)
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(20.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Box(
                     modifier = Modifier
-                        .size(80.dp)
+                        .size(72.dp)
                         .clip(CircleShape)
-                        .background(
-                            Brush.radialGradient(listOf(Primary, PrimaryDark))
-                        ),
+                        .background(Brush.radialGradient(listOf(Primary, PrimaryDark))),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Savings,
+                        Icons.Default.Savings,
                         contentDescription = null,
                         tint = Color.White,
-                        modifier = Modifier.size(44.dp)
+                        modifier = Modifier.size(40.dp)
                     )
                 }
 
@@ -87,11 +91,11 @@ fun LoginScreen(
                         text = "ProWallet",
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 26.sp,
+                        fontSize = 24.sp,
                         color = SecondaryDark
                     )
                     Text(
-                        text = "Welcome back to financial calm.",
+                        text = "Comienza tu viaje hacia la calma financiera.",
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Normal,
                         fontSize = 13.sp,
@@ -101,57 +105,53 @@ fun LoginScreen(
 
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     CustomTextField(
+                        value = fullName,
+                        onValueChange = { fullName = it },
+                        placeholder = "Tu nombre completo",
+                        leadingIcon = Icons.Default.Person,
+                        label = "Full Name"
+                    )
+                    CustomTextField(
                         value = email,
                         onValueChange = { email = it },
-                        placeholder = "hello@example.com",
+                        placeholder = "tu@correo.com",
                         leadingIcon = Icons.Default.Email,
                         label = "Email"
                     )
-
-                    Column {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "Password",
-                                style = MaterialTheme.typography.labelLarge,
-                                color = TextPrimary
-                            )
-                            Text(
-                                text = "Forgot password?",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = Secondary,
-                                modifier = Modifier.clickable {}
-                            )
-                        }
-                        Spacer(Modifier.height(6.dp))
-                        CustomTextField(
-                            value = password,
-                            onValueChange = { password = it },
-                            placeholder = "••••••••",
-                            leadingIcon = Icons.Default.Lock,
-                            isPassword = true
-                        )
-                    }
+                    CustomTextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        placeholder = "••••••••",
+                        leadingIcon = Icons.Default.Lock,
+                        isPassword = true,
+                        label = "Password"
+                    )
+                    CustomTextField(
+                        value = confirmPassword,
+                        onValueChange = { confirmPassword = it },
+                        placeholder = "••••••••",
+                        leadingIcon = Icons.Default.Lock,
+                        isPassword = true,
+                        label = "Confirm Password"
+                    )
                 }
 
                 PrimaryButton(
-                    text = "Login",
-                    onClick = { viewModel.login(email, password) },
+                    text = "Crear Cuenta",
+                    onClick = { viewModel.register(fullName, email, password) },
                     enabled = !state.isLoading
                 )
 
                 Text(
                     text = buildAnnotatedString {
-                        append("Don't have an account? ")
+                        append("¿Ya tienes cuenta? ")
                         withStyle(SpanStyle(color = Secondary, fontWeight = FontWeight.SemiBold)) {
-                            append("Register")
+                            append("Iniciar sesión")
                         }
                     },
                     fontFamily = PlusJakartaSans,
                     fontSize = 13.sp,
-                    modifier = Modifier.clickable { onNavigateToRegister() }
+                    modifier = Modifier.clickable { onNavigateToLogin() }
                 )
             }
         }

@@ -1,4 +1,4 @@
-package com.undef.superahorro.ui.screens
+package com.undef.prowallet.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,9 +17,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.undef.superahorro.ui.components.SectionCard
-import com.undef.superahorro.ui.components.TopBar
-import com.undef.superahorro.ui.theme.*
+import com.undef.prowallet.ui.components.SectionCard
+import com.undef.prowallet.ui.components.TopBar
+import com.undef.prowallet.ui.theme.*
 
 @Composable
 fun SettingsScreen(onNavigateBack: () -> Unit) {

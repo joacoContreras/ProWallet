@@ -1,4 +1,4 @@
-package com.undef.superahorro.ui.screens
+package com.undef.prowallet.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -19,11 +19,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.undef.superahorro.ui.components.BottomNavBar
-import com.undef.superahorro.ui.components.PurchaseCard
-import com.undef.superahorro.ui.components.SectionCard
-import com.undef.superahorro.ui.theme.*
-import com.undef.superahorro.viewmodel.HomeViewModel
+import com.undef.prowallet.ui.components.BottomNavBar
+import com.undef.prowallet.ui.components.PurchaseCard
+import com.undef.prowallet.ui.components.SectionCard
+import com.undef.prowallet.ui.theme.*
+import com.undef.prowallet.viewmodel.HomeViewModel
 
 @Composable
 fun HomeScreen(

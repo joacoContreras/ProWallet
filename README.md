@@ -12,7 +12,7 @@ Aplicación Android de gestión de gastos personales. Primera entrega visual con
 ## Arquitectura
 
 ```
-com.undef.superahorro
+com.undef.prowallet
 ├── data/           # MockRepository con datos de prueba
 ├── domain/         # Modelos (User, Purchase, Product)
 ├── ui/
@@ -51,7 +51,7 @@ com.undef.superahorro
 ## Cómo abrir el proyecto
 
 1. Clonar / descomprimir el proyecto
-2. Abrir **Android Studio** → `Open` → seleccionar la carpeta `SuperAhorro/`
+2. Abrir **Android Studio** → `Open` → seleccionar la carpeta `ProWallet/`
 3. Esperar sync de Gradle (requiere internet para descargar dependencias)
 4. Correr en emulador o dispositivo físico con Android 8.0+ (API 26)
 

@@ -1,8 +1,8 @@
-package com.undef.superahorro.data
+package com.undef.prowallet.data
 
-import com.undef.superahorro.domain.Product
-import com.undef.superahorro.domain.Purchase
-import com.undef.superahorro.domain.User
+import com.undef.prowallet.domain.Product
+import com.undef.prowallet.domain.Purchase
+import com.undef.prowallet.domain.User
 
 object MockRepository {
 

@@ -1,4 +1,4 @@
-package com.undef.superahorro.ui.navigation
+package com.undef.prowallet.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -7,10 +7,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.undef.superahorro.ui.screens.*
-import com.undef.superahorro.viewmodel.AuthViewModel
-import com.undef.superahorro.viewmodel.HomeViewModel
-import com.undef.superahorro.viewmodel.PurchaseViewModel
+import com.undef.prowallet.ui.screens.*
+import com.undef.prowallet.viewmodel.AuthViewModel
+import com.undef.prowallet.viewmodel.HomeViewModel
+import com.undef.prowallet.viewmodel.PurchaseViewModel
 
 sealed class Screen(val route: String) {
     object Splash : Screen("splash")
