@@ -1,3 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ProWallet</string>
+    <string name="login_title">Iniciar sesión</string>
+    <string name="register_title">Crear cuenta</string>
+    <string name="email_label">Email</string>
+    <string name="password_label">Contraseña</string>
+    <string name="full_name_label">Nombre completo</string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Crear Cuenta</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="dont_have_account">¿No tienes cuenta?</string>
+    <string name="already_have_account">¿Ya tienes cuenta?</string>
+    <string name="success_title">¡Cuenta creada con éxito!</string>
+    <string name="success_subtitle">Ya puedes empezar a gestionar tus ahorros</string>
+    <string name="begin_button">Comenzar</string>
+    <string name="home_title">Inicio</string>
+    <string name="analytics_title">Analíticas</string>
+    <string name="new_purchase_title">Nueva compra</string>
+    <string name="total_monthly_spend">Gasto mensual total</string>
+    <string name="remaining">Restantes</string>
+    <string name="recent_purchases">Compras recientes</string>
+    <string name="see_all">Ver todo</string>
+    <string name="save_purchase">Guardar compra</string>
+    <string name="store_name_label">Nombre de la tienda</string>
+    <string name="date_label">Fecha</string>
+    <string name="total_amount_label">Monto total</string>
+    <string name="products_label">Productos</string>
+    <string name="capture_ticket">Capturar o adjuntar ticket</string>
 </resources>
