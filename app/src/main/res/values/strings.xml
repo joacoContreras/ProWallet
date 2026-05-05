@@ -37,4 +37,22 @@
     <string name="profile_title">Profile</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="logout">Logout</string>
+    <string name="notifications_title">Notifications</string>
+    <string name="mark_all_read">Mark all as read</string>
+    <string name="today_section">Today</string>
+    <string name="earlier_section">Earlier</string>
+    <string name="notification_budget_title">Budget Alert</string>
+    <string name="notification_budget_desc">You have reached 80% of your grocery budget for this month. Take a look at your spending trends.</string>
+    <string name="notification_savings_title">Savings Milestone</string>
+    <string name="notification_savings_desc">Great job! You saved $50 more than last month. You\'re getting closer to your vacation goal!</string>
+    <string name="notification_reminder_title">Reminder</string>
+    <string name="notification_reminder_desc">Don\'t forget to log your lunch expense from earlier today to keep your budget accurate.</string>
+    <string name="notification_system_title">System Update</string>
+    <string name="notification_system_desc">ProWallet just got faster. Check out the new dashboard layout designed for financial calm.</string>
+    <string name="notification_growth_title">Portfolio Growth</string>
+    <string name="notification_growth_desc">Your investment portfolio grew by 1.2% this week despite market fluctuations. Stay the course!</string>
+    <string name="new_feature_badge">New Feature</string>
+    <string name="ai_scanning_title">AI Receipt Scanning</string>
+    <string name="ai_scanning_desc">New: You can now scan tickets and receipts with AI to automatically log your expenses in real-time.</string>
+    <string name="try_it_now">Try it now</string>
 </resources>

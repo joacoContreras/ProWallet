@@ -32,7 +32,8 @@ fun HomeScreen(
     onNavigateToAnalytics: () -> Unit,
     onNavigateToPurchaseDetail: (String) -> Unit,
     onNavigateToHistory: () -> Unit,
-    onNavigateToProfile: () -> Unit
+    onNavigateToProfile: () -> Unit,
+    onNavigateToNotifications: () -> Unit
 ) {
     val state by homeViewModel.uiState.collectAsState()
 
@@ -79,7 +80,7 @@ fun HomeScreen(
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         IconButton(
-                            onClick = {},
+                            onClick = onNavigateToNotifications,
                             modifier = Modifier
                                 .size(40.dp)
                                 .clip(CircleShape)

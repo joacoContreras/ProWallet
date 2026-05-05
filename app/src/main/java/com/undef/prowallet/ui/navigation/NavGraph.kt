@@ -26,6 +26,7 @@ sealed class Screen(val route: String) {
     object Analytics : Screen("analytics")
     object Profile : Screen("profile")
     object Settings : Screen("settings")
+    object Notifications : Screen("notifications")
 }
 
 @Composable
@@ -92,7 +93,14 @@ fun AppNavGraph() {
                     navController.navigate(Screen.PurchaseDetail.createRoute(id))
                 },
                 onNavigateToHistory = { navController.navigate(Screen.History.route) },
-                onNavigateToProfile = { navController.navigate(Screen.Profile.route) }
+                onNavigateToProfile = { navController.navigate(Screen.Profile.route) },
+                onNavigateToNotifications = { navController.navigate(Screen.Notifications.route) }
+            )
+        }
+
+        composable(Screen.Notifications.route) {
+            NotificationsScreen(
+                onNavigateBack = { navController.popBackStack() }
             )
         }
 
