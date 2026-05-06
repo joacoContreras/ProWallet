@@ -31,6 +31,7 @@ sealed class Screen(val route: String) {
     object StoreDetail : Screen("store_detail/{storeName}") {
         fun createRoute(storeName: String) = "store_detail/$storeName"
     }
+    object PurchaseSuccess : Screen("purchase_success")
 }
 
 @Composable
@@ -111,7 +112,9 @@ fun AppNavGraph() {
         composable(Screen.NewPurchase.route) {
             NewPurchaseScreen(
                 viewModel = purchaseViewModel,
-                onSaveSuccess = { navController.popBackStack() },
+                onSaveSuccess = { 
+                    navController.navigate(Screen.PurchaseSuccess.route)
+                },
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToHome = {
                     navController.navigate(Screen.Home.route) {
@@ -119,6 +122,18 @@ fun AppNavGraph() {
                     }
                 },
                 onNavigateToAnalytics = { navController.navigate(Screen.Analytics.route) }
+            )
+        }
+
+        composable(Screen.PurchaseSuccess.route) {
+            PurchaseSuccessScreen(
+                viewModel = purchaseViewModel,
+                onNavigateToHome = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+                onViewReceipt = { /* Logic for receipt */ }
             )
         }
 

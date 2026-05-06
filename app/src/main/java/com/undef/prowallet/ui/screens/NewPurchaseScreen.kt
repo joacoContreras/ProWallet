@@ -3,7 +3,10 @@ package com.undef.prowallet.ui.screens
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -17,9 +20,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,7 +45,6 @@ fun NewPurchaseScreen(
 
     val datePickerState = rememberDatePickerState()
     
-    // Time slots every 15 minutes
     val timeSlots = remember {
         (0 until 24).flatMap { hour ->
             listOf("00", "15", "30", "45").map { minute ->
@@ -56,8 +55,8 @@ fun NewPurchaseScreen(
 
     LaunchedEffect(state.savedSuccess) {
         if (state.savedSuccess) {
-            viewModel.resetForm()
             onSaveSuccess()
+            viewModel.clearSavedSuccess()
         }
     }
 
@@ -262,93 +261,54 @@ fun NewPurchaseScreen(
 
                 Spacer(Modifier.height(12.dp))
 
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = stringResource(R.string.id_code_label),
-                            fontFamily = PlusJakartaSans,
-                            fontSize = 11.sp,
-                            color = Neutral
-                        )
-                        Spacer(Modifier.height(4.dp))
-                        OutlinedTextField(
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        CustomTextField(
                             value = state.currentProductCode,
                             onValueChange = viewModel::onProductCodeChange,
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(12.dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = Primary,
-                                unfocusedBorderColor = Color(0xFFE8ECEF),
-                                focusedContainerColor = Color.White,
-                                unfocusedContainerColor = Color(0xFFF8FAFB)
-                            ),
-                            singleLine = true,
-                            textStyle = LocalTextStyle.current.copy(
-                                fontFamily = PlusJakartaSans,
-                                fontSize = 13.sp
-                            )
+                            placeholder = "12345",
+                            leadingIcon = Icons.Default.QrCode,
+                            label = stringResource(R.string.id_code_label),
+                            modifier = Modifier.weight(1f)
                         )
-                    }
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = stringResource(R.string.price_label),
-                            fontFamily = PlusJakartaSans,
-                            fontSize = 11.sp,
-                            color = Neutral
-                        )
-                        Spacer(Modifier.height(4.dp))
-                        OutlinedTextField(
+                        CustomTextField(
                             value = state.currentProductPrice,
                             onValueChange = viewModel::onProductPriceChange,
-                            modifier = Modifier.fillMaxWidth(),
-                            prefix = { Text("$ ", color = Neutral, fontFamily = PlusJakartaSans) },
-                            shape = RoundedCornerShape(12.dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = Primary,
-                                unfocusedBorderColor = Color(0xFFE8ECEF),
-                                focusedContainerColor = Color.White,
-                                unfocusedContainerColor = Color(0xFFF8FAFB)
-                            ),
-                            singleLine = true,
-                            textStyle = LocalTextStyle.current.copy(
-                                fontFamily = PlusJakartaSans,
-                                fontSize = 13.sp
-                            )
+                            placeholder = "0.00",
+                            leadingIcon = Icons.Default.AttachMoney,
+                            label = stringResource(R.string.price_label),
+                            modifier = Modifier.weight(1f)
                         )
                     }
-                }
 
-                Spacer(Modifier.height(8.dp))
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    OutlinedTextField(
+                    CustomTextField(
                         value = state.currentProductName,
                         onValueChange = viewModel::onProductNameChange,
-                        modifier = Modifier.weight(1f),
-                        placeholder = {
-                            Text(stringResource(R.string.item_desc_placeholder), color = NeutralLight, fontFamily = PlusJakartaSans, fontSize = 13.sp)
-                        },
-                        shape = RoundedCornerShape(12.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Primary,
-                            unfocusedBorderColor = Color(0xFFE8ECEF),
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color(0xFFF8FAFB)
-                        ),
-                        label = { Text(stringResource(R.string.product_name_label), fontFamily = PlusJakartaSans, fontSize = 11.sp) },
-                        singleLine = true
+                        placeholder = "Product Name",
+                        leadingIcon = Icons.Default.ShoppingCart,
+                        label = stringResource(R.string.product_name_label)
                     )
-                    IconButton(
-                        onClick = viewModel::addProduct,
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(Primary)
+
+                    CustomTextField(
+                        value = state.currentProductDescription,
+                        onValueChange = viewModel::onProductDescriptionChange,
+                        placeholder = "Description...",
+                        leadingIcon = Icons.Default.Description,
+                        label = "Description"
+                    )
+
+                    Button(
+                        onClick = viewModel::addOrUpdateProduct,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Primary)
                     ) {
-                        Icon(Icons.Default.Add, contentDescription = "Add product", tint = Color.White)
+                        Icon(
+                            if (state.editingProductId != null) Icons.Default.Edit else Icons.Default.Add,
+                            contentDescription = null
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(if (state.editingProductId != null) "Update Product" else "Add Product")
                     }
                 }
 
@@ -362,10 +322,37 @@ fun NewPurchaseScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
                 } else {
-                    Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(16.dp))
                     Divider(color = Color(0xFFF0F0F0))
                     state.products.forEach { product ->
-                        ProductItem(product = product)
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    product.name,
+                                    fontFamily = PlusJakartaSans,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp
+                                )
+                                Text(
+                                    "${product.code} • $${String.format(Locale.getDefault(), "%.2f", product.price)}",
+                                    fontFamily = PlusJakartaSans,
+                                    fontSize = 12.sp,
+                                    color = Neutral
+                                )
+                            }
+                            IconButton(onClick = { viewModel.editProduct(product) }) {
+                                Icon(Icons.Default.Edit, contentDescription = "Edit", tint = Secondary, modifier = Modifier.size(20.dp))
+                            }
+                            IconButton(onClick = { viewModel.removeProduct(product.id) }) {
+                                Icon(Icons.Default.Delete, contentDescription = "Delete", tint = ErrorRed, modifier = Modifier.size(20.dp))
+                            }
+                        }
+                        Divider(color = Color(0xFFF8F8F8))
                     }
                 }
             }
