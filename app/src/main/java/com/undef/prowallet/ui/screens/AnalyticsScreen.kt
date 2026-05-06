@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.util.Locale
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.BottomNavBar
 import com.undef.prowallet.ui.components.SectionCard
@@ -95,7 +96,7 @@ fun AnalyticsScreen(
                         }
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            text = "$${String.format("%.2f", state.totalSpentMonth)}",
+                            text = "$${String.format(Locale.getDefault(), "%.2f", state.totalSpentMonth)}",
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.Bold,
                             fontSize = 36.sp,
@@ -130,7 +131,7 @@ fun AnalyticsScreen(
                             )
                             Spacer(Modifier.height(8.dp))
                             Text(
-                                text = "$${String.format("%.2f", state.highestSpend)}",
+                                text = "$${String.format(Locale.getDefault(), "%.2f", state.highestSpend)}",
                                 fontFamily = PlusJakartaSans,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 22.sp,
@@ -168,7 +169,7 @@ fun AnalyticsScreen(
                             )
                             Spacer(Modifier.height(8.dp))
                             Text(
-                                text = "$${String.format("%.2f", state.averagePurchase)}",
+                                text = "$${String.format(Locale.getDefault(), "%.2f", state.averagePurchase)}",
                                 fontFamily = PlusJakartaSans,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 22.sp,
@@ -325,7 +326,7 @@ fun AnalyticsScreen(
                             }
                             Spacer(Modifier.width(12.dp))
                             Text(
-                                text = "$${String.format("%.2f", amount)}",
+                                text = "$${String.format(Locale.getDefault(), "%.2f", amount)}",
                                 fontFamily = PlusJakartaSans,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 14.sp,

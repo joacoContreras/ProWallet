@@ -18,6 +18,7 @@ data class Purchase(
     val id: String,
     val storeName: String,
     val date: String,
+    val time: String = "12:00",
     val totalAmount: Double,
     val category: String,
     val products: List<Product> = emptyList()

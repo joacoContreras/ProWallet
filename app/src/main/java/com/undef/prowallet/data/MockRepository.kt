@@ -24,7 +24,8 @@ object MockRepository {
         Purchase(
             id = "pur_001",
             storeName = "Mercadona",
-            date = "Today, 14:30",
+            date = "05/05/26",
+            time = "14:30",
             totalAmount = 84.20,
             category = "Groceries",
             products = listOf(mockProducts[0], mockProducts[1], mockProducts[2])
@@ -32,7 +33,8 @@ object MockRepository {
         Purchase(
             id = "pur_002",
             storeName = "Repsol",
-            date = "Yesterday",
+            date = "05/04/26",
+            time = "10:15",
             totalAmount = 45.00,
             category = "Transport",
             products = listOf(Product("p006", "60001", "Gasolina 95", 45.00))
@@ -40,7 +42,8 @@ object MockRepository {
         Purchase(
             id = "pur_003",
             storeName = "La Trattoria",
-            date = "Oct 13",
+            date = "10/13/25",
+            time = "20:00",
             totalAmount = 112.50,
             category = "Dining",
             products = listOf(
@@ -52,7 +55,8 @@ object MockRepository {
         Purchase(
             id = "pur_004",
             storeName = "Whole Foods Market",
-            date = "Oct 10",
+            date = "10/10/25",
+            time = "11:30",
             totalAmount = 320.00,
             category = "Groceries",
             products = listOf(mockProducts[0], mockProducts[3], mockProducts[4])
@@ -60,7 +64,8 @@ object MockRepository {
         Purchase(
             id = "pur_005",
             storeName = "Starbucks",
-            date = "Oct 8",
+            date = "10/08/25",
+            time = "08:45",
             totalAmount = 145.00,
             category = "Coffee",
             products = listOf(
@@ -71,7 +76,8 @@ object MockRepository {
         Purchase(
             id = "pur_006",
             storeName = "Shell Station",
-            date = "Oct 5",
+            date = "10/05/25",
+            time = "16:00",
             totalAmount = 85.20,
             category = "Transport",
             products = listOf(Product("p012", "90001", "Combustible", 85.20))

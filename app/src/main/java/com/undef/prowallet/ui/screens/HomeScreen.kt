@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.util.Locale
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.BottomNavBar
 import com.undef.prowallet.ui.components.PurchaseCard
@@ -135,7 +136,7 @@ fun HomeScreen(
                         )
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            text = "$${String.format("%.2f", state.totalMonthlySpend)}",
+                            text = "$${String.format(Locale.getDefault(), "%.2f", state.totalMonthlySpend)}",
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.Bold,
                             fontSize = 36.sp,
@@ -210,7 +211,7 @@ fun HomeScreen(
                             }
                             Spacer(Modifier.height(8.dp))
                             Text(
-                                text = "$${String.format("%.2f", state.remaining)}",
+                                text = "$${String.format(Locale.getDefault(), "%.2f", state.remaining)}",
                                 fontFamily = PlusJakartaSans,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 20.sp,

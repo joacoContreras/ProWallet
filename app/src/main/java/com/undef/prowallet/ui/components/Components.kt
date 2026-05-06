@@ -3,6 +3,8 @@ package com.undef.prowallet.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -95,8 +98,12 @@ fun CustomTextField(
     leadingIcon: ImageVector,
     modifier: Modifier = Modifier,
     isPassword: Boolean = false,
-    label: String? = null
+    label: String? = null,
+    readOnly: Boolean = false,
+    onClick: (() -> Unit)? = null
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    
     Column(modifier = modifier) {
         if (label != null) {
             Text(
@@ -109,7 +116,15 @@ fun CustomTextField(
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .then(
+                    if (onClick != null) Modifier.clickable(
+                        interactionSource = interactionSource,
+                        indication = null,
+                        onClick = onClick
+                    ) else Modifier
+                ),
             placeholder = {
                 Text(
                     text = placeholder,
@@ -134,9 +149,15 @@ fun CustomTextField(
                 focusedContainerColor = Color.White,
                 unfocusedContainerColor = Color(0xFFF8FAFB),
                 focusedTextColor = TextPrimary,
-                unfocusedTextColor = TextPrimary
+                unfocusedTextColor = TextPrimary,
+                disabledBorderColor = Color(0xFFE8ECEF),
+                disabledContainerColor = Color(0xFFF8FAFB),
+                disabledTextColor = TextPrimary
             ),
-            singleLine = true
+            singleLine = true,
+            readOnly = readOnly,
+            enabled = onClick == null,
+            interactionSource = interactionSource
         )
     }
 }
@@ -199,13 +220,13 @@ fun PurchaseCard(
                 fontWeight = FontWeight.SemiBold
             )
             Text(
-                text = "${purchase.date} • ${purchase.category}",
+                text = "${purchase.date} • ${purchase.time} • ${purchase.category}",
                 style = MaterialTheme.typography.bodySmall,
                 color = TextSecondary
             )
         }
         Text(
-            text = "-$${String.format("%.2f", purchase.totalAmount)}",
+            text = "-$${String.format(java.util.Locale.getDefault(), "%.2f", purchase.totalAmount)}",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
             color = ErrorRed

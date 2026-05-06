@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.util.Locale
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
@@ -127,7 +128,7 @@ fun StoreDetailScreen(
                             letterSpacing = 1.sp
                         )
                         Text(
-                            text = "$${String.format("%.2f", totalMonthlySpend)}",
+                            text = "$${String.format(Locale.getDefault(), "%.2f", totalMonthlySpend)}",
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = 32.sp,
@@ -239,7 +240,7 @@ fun ComparisonCard(
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(text = label, fontFamily = PlusJakartaSans, fontSize = 12.sp, color = Neutral)
             Text(
-                text = "$${String.format("%.2f", amount)}",
+                text = "$${String.format(Locale.getDefault(), "%.2f", amount)}",
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
@@ -268,7 +269,7 @@ fun DistributionRow(label: String, amount: Double, percentage: Float, color: Col
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = label, fontFamily = PlusJakartaSans, fontSize = 13.sp, color = TextPrimary)
             Text(
-                text = "$${String.format("%.2f", amount)} (${(percentage * 100).toInt()}%)",
+                text = "$${String.format(Locale.getDefault(), "%.2f", amount)} (${(percentage * 100).toInt()}%)",
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.Bold,
                 fontSize = 13.sp,

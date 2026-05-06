@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 data class PurchaseUiState(
     val storeName: String = "",
     val date: String = "",
+    val time: String = "",
     val totalAmount: String = "",
     val products: List<Product> = emptyList(),
     val currentProductCode: String = "10492",
@@ -30,6 +31,10 @@ class PurchaseViewModel : ViewModel() {
 
     fun onDateChange(value: String) {
         _uiState.value = _uiState.value.copy(date = value)
+    }
+
+    fun onTimeChange(value: String) {
+        _uiState.value = _uiState.value.copy(time = value)
     }
 
     fun onTotalAmountChange(value: String) {

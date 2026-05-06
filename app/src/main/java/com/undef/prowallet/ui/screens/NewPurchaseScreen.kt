@@ -17,13 +17,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.*
 import com.undef.prowallet.ui.theme.*
 import com.undef.prowallet.viewmodel.PurchaseViewModel
+import java.text.SimpleDateFormat
+import java.util.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewPurchaseScreen(
     viewModel: PurchaseViewModel,
@@ -33,12 +40,77 @@ fun NewPurchaseScreen(
     onNavigateToAnalytics: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
+    var showDatePicker by remember { mutableStateOf(false) }
+    var showTimePicker by remember { mutableStateOf(false) }
+
+    val datePickerState = rememberDatePickerState()
+    
+    // Time slots every 15 minutes
+    val timeSlots = remember {
+        (0 until 24).flatMap { hour ->
+            listOf("00", "15", "30", "45").map { minute ->
+                String.format(Locale.getDefault(), "%02d:%s", hour, minute)
+            }
+        }
+    }
 
     LaunchedEffect(state.savedSuccess) {
         if (state.savedSuccess) {
             viewModel.resetForm()
             onSaveSuccess()
         }
+    }
+
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    datePickerState.selectedDateMillis?.let {
+                        val sdf = SimpleDateFormat("MM/dd/yy", Locale.getDefault())
+                        viewModel.onDateChange(sdf.format(Date(it)))
+                    }
+                    showDatePicker = false
+                }) { Text(stringResource(R.string.ok)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
+    if (showTimePicker) {
+        AlertDialog(
+            onDismissRequest = { showTimePicker = false },
+            title = { Text(stringResource(R.string.select_time)) },
+            text = {
+                Box(modifier = Modifier.height(300.dp)) {
+                    LazyColumn {
+                        items(timeSlots) { time ->
+                            Text(
+                                text = time,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        viewModel.onTimeChange(time)
+                                        showTimePicker = false
+                                    }
+                                    .padding(16.dp),
+                                fontFamily = PlusJakartaSans,
+                                fontSize = 16.sp,
+                                textAlign = TextAlign.Center
+                            )
+                            Divider(color = Color(0xFFF0F0F0))
+                        }
+                    }
+                }
+            },
+            confirmButton = {}
+        )
     }
 
     Scaffold(
@@ -131,21 +203,32 @@ fun NewPurchaseScreen(
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         CustomTextField(
                             value = state.date,
-                            onValueChange = viewModel::onDateChange,
+                            onValueChange = { },
                             placeholder = stringResource(R.string.date_placeholder),
                             leadingIcon = Icons.Default.CalendarToday,
                             label = stringResource(R.string.date_label),
+                            readOnly = true,
+                            onClick = { showDatePicker = true },
                             modifier = Modifier.weight(1f)
                         )
                         CustomTextField(
-                            value = state.totalAmount,
-                            onValueChange = viewModel::onTotalAmountChange,
-                            placeholder = "0.00",
-                            leadingIcon = Icons.Default.AttachMoney,
-                            label = stringResource(R.string.total_amount_label),
+                            value = state.time,
+                            onValueChange = { },
+                            placeholder = "00:00",
+                            leadingIcon = Icons.Default.Schedule,
+                            label = stringResource(R.string.time_label),
+                            readOnly = true,
+                            onClick = { showTimePicker = true },
                             modifier = Modifier.weight(1f)
                         )
                     }
+                    CustomTextField(
+                        value = state.totalAmount,
+                        onValueChange = viewModel::onTotalAmountChange,
+                        placeholder = "0.00",
+                        leadingIcon = Icons.Default.AttachMoney,
+                        label = stringResource(R.string.total_amount_label)
+                    )
                 }
             }
 

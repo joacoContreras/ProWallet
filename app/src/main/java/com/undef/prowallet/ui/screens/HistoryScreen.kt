@@ -11,6 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.util.Locale
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.PurchaseCard
 import com.undef.prowallet.ui.components.SectionCard
@@ -71,7 +72,7 @@ fun HistoryScreen(
                         color = Neutral
                     )
                     Text(
-                        text = "$${String.format("%.2f", state.allPurchases.sumOf { it.totalAmount })}",
+                        text = "$${String.format(Locale.getDefault(), "%.2f", state.allPurchases.sumOf { it.totalAmount })}",
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Bold,
                         fontSize = 24.sp,
