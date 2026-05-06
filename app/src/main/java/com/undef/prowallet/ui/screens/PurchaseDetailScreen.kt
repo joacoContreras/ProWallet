@@ -23,13 +23,16 @@ import com.undef.prowallet.ui.components.ProductItem
 import com.undef.prowallet.ui.components.SectionCard
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
+import com.undef.prowallet.viewmodel.HomeViewModel
 import com.undef.prowallet.viewmodel.PurchaseViewModel
 
 @Composable
 fun PurchaseDetailScreen(
     purchaseId: String,
     viewModel: PurchaseViewModel,
-    onNavigateBack: () -> Unit
+    homeViewModel: HomeViewModel,
+    onNavigateBack: () -> Unit,
+    onNavigateToEdit: (String) -> Unit
 ) {
     val purchase = remember { viewModel.getPurchaseById(purchaseId) }
 
@@ -53,7 +56,21 @@ fun PurchaseDetailScreen(
             .fillMaxSize()
             .background(BackgroundLight)
     ) {
-        TopBar(title = stringResource(R.string.purchase_detail_title), onNavigateBack = onNavigateBack)
+        TopBar(
+            title = stringResource(R.string.purchase_detail_title),
+            onNavigateBack = onNavigateBack,
+            actions = {
+                IconButton(onClick = { onNavigateToEdit(purchaseId) }) {
+                    Icon(Icons.Default.Edit, contentDescription = "Edit", tint = PrimaryDarker)
+                }
+                IconButton(onClick = { 
+                    homeViewModel.deletePurchase(purchaseId)
+                    onNavigateBack()
+                }) {
+                    Icon(Icons.Default.Delete, contentDescription = "Delete", tint = ErrorRed)
+                }
+            }
+        )
 
         LazyColumn(
             contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp),

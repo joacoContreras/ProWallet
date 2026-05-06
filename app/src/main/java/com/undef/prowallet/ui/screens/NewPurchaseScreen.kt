@@ -199,6 +199,21 @@ fun NewPurchaseScreen(
                         leadingIcon = Icons.Default.Store,
                         label = stringResource(R.string.store_name_label)
                     )
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Button(
+                            onClick = { /* Launcher for camera/gallery */ },
+                            modifier = Modifier.fillMaxWidth().height(48.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Primary.copy(alpha = 0.1f), contentColor = PrimaryDarker)
+                        ) {
+                            Icon(Icons.Default.AddPhotoAlternate, contentDescription = null)
+                            Spacer(Modifier.width(8.dp))
+                            Text("Attach Ticket Image")
+                        }
+                    }
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         CustomTextField(
                             value = state.date,

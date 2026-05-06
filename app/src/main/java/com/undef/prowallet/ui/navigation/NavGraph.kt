@@ -145,7 +145,12 @@ fun AppNavGraph() {
             PurchaseDetailScreen(
                 purchaseId = purchaseId,
                 viewModel = purchaseViewModel,
-                onNavigateBack = { navController.popBackStack() }
+                homeViewModel = homeViewModel,
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToEdit = { id ->
+                    /* Logic to navigate to edit */
+                    navController.navigate(Screen.NewPurchase.route) // Reuse NewPurchase for now
+                }
             )
         }
 

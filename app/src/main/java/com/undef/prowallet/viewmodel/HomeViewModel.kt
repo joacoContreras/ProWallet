@@ -33,25 +33,37 @@ class HomeViewModel : ViewModel() {
         loadData()
     }
 
-    private fun loadData() {
-        val purchases = MockRepository.mockPurchases
-        val highest = purchases.maxByOrNull { it.totalAmount }
+    fun deletePurchase(purchaseId: String) {
+        val currentList = _uiState.value.allPurchases
+        val newList = currentList.filter { it.id != purchaseId }
+        updateStateWithPurchases(newList)
+    }
 
-        _uiState.value = HomeUiState(
-            userName = MockRepository.currentUser.fullName.split(" ").first(),
-            totalMonthlySpend = MockRepository.totalMonthlySpend,
-            monthlyBudget = MockRepository.monthlyBudget,
-            remaining = MockRepository.remaining,
-            percentageVsLastMonth = MockRepository.percentageVsLastMonth,
-            recentPurchases = purchases.take(3),
+    private fun updateStateWithPurchases(purchases: List<Purchase>) {
+        val highest = purchases.maxByOrNull { it.totalAmount }
+        val totalSpent = purchases.sumOf { it.totalAmount }
+        
+        _uiState.value = _uiState.value.copy(
             allPurchases = purchases,
-            topStores = MockRepository.topStores,
-            monthlyTrend = MockRepository.monthlyTrend,
-            totalSpentMonth = 1240.50,
+            recentPurchases = purchases.take(3),
+            totalMonthlySpend = totalSpent,
+            remaining = _uiState.value.monthlyBudget - totalSpent,
             highestSpend = highest?.totalAmount ?: 0.0,
             highestSpendStore = highest?.storeName ?: "",
-            averagePurchase = purchases.map { it.totalAmount }.average(),
-            totalTransactions = 27
+            averagePurchase = if (purchases.isNotEmpty()) purchases.map { it.totalAmount }.average() else 0.0,
+            totalTransactions = purchases.size
+        )
+    }
+
+    private fun loadData() {
+        updateStateWithPurchases(MockRepository.mockPurchases)
+        _uiState.value = _uiState.value.copy(
+            userName = MockRepository.currentUser.fullName.split(" ").first(),
+            monthlyBudget = MockRepository.monthlyBudget,
+            percentageVsLastMonth = MockRepository.percentageVsLastMonth,
+            topStores = MockRepository.topStores,
+            monthlyTrend = MockRepository.monthlyTrend,
+            totalSpentMonth = 1240.50
         )
     }
 }

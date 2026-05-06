@@ -22,5 +22,6 @@ data class Purchase(
     val time: String = "12:00",
     val totalAmount: Double,
     val category: String,
-    val products: List<Product> = emptyList()
+    val products: List<Product> = emptyList(),
+    val ticketImageUri: String? = null
 )
