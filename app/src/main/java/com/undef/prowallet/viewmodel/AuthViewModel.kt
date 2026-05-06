@@ -12,7 +12,10 @@ data class AuthUiState(
     val isLoggedIn: Boolean = false,
     val user: User? = null,
     val error: String? = null,
-    val registrationSuccess: Boolean = false
+    val registrationSuccess: Boolean = false,
+    val resetEmailSent: Boolean = false,
+    val codeVerified: Boolean = false,
+    val passwordUpdated: Boolean = false
 )
 
 class AuthViewModel : ViewModel() {
@@ -46,5 +49,32 @@ class AuthViewModel : ViewModel() {
 
     fun clearRegistrationSuccess() {
         _uiState.value = _uiState.value.copy(registrationSuccess = false)
+    }
+
+    fun sendResetCode(email: String) {
+        _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+        // Mock: success
+        _uiState.value = _uiState.value.copy(isLoading = false, resetEmailSent = true)
+    }
+
+    fun verifyCode(code: String) {
+        _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+        // Mock: success
+        _uiState.value = _uiState.value.copy(isLoading = false, codeVerified = true)
+    }
+
+    fun updatePassword(password: String) {
+        _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+        // Mock: success
+        _uiState.value = _uiState.value.copy(isLoading = false, passwordUpdated = true)
+    }
+
+    fun resetFlow() {
+        _uiState.value = _uiState.value.copy(
+            resetEmailSent = false,
+            codeVerified = false,
+            passwordUpdated = false,
+            error = null
+        )
     }
 }
