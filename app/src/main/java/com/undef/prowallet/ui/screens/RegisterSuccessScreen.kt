@@ -8,12 +8,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Savings
+import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -41,37 +44,48 @@ fun RegisterSuccessScreen(onBegin: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(listOf(Tertiary, Color.White))),
+            .background(BackgroundLight),
         contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(24.dp),
-            modifier = Modifier.padding(32.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp)
         ) {
+            Spacer(modifier = Modifier.weight(1f))
+
+            // Success Illustration Container
             Box(
-                modifier = Modifier.scale(scale.value),
-                contentAlignment = Alignment.BottomEnd
+                modifier = Modifier
+                    .size(280.dp)
+                    .scale(scale.value)
+                    .shadow(10.dp, RoundedCornerShape(40.dp))
+                    .clip(RoundedCornerShape(40.dp))
+                    .background(Primary.copy(alpha = 0.2f)),
+                contentAlignment = Alignment.Center
             ) {
                 Box(
                     modifier = Modifier
-                        .size(120.dp)
+                        .size(140.dp)
                         .clip(CircleShape)
-                        .background(
-                            Brush.radialGradient(listOf(Primary, PrimaryDark))
-                        ),
+                        .background(Brush.radialGradient(listOf(Primary, PrimaryDark))),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.Savings,
                         contentDescription = null,
                         tint = Color.White,
-                        modifier = Modifier.size(68.dp)
+                        modifier = Modifier.size(80.dp)
                     )
                 }
+                
+                // Floating checkmark
                 Box(
                     modifier = Modifier
-                        .size(36.dp)
+                        .align(Alignment.BottomEnd)
+                        .padding(24.dp)
+                        .size(44.dp)
                         .clip(CircleShape)
                         .background(SuccessGreen),
                     contentAlignment = Alignment.Center
@@ -80,55 +94,87 @@ fun RegisterSuccessScreen(onBegin: () -> Unit) {
                         imageVector = Icons.Default.Check,
                         contentDescription = null,
                         tint = Color.White,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             }
 
+            Spacer(modifier = Modifier.height(48.dp))
+
+            // Success Message Section
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp) // Adjusted spacing
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
                     text = stringResource(R.string.success_title),
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 26.sp,
+                    fontSize = 32.sp,
                     color = TextPrimary,
                     textAlign = TextAlign.Center,
-                    lineHeight = 32.sp // Adjusted line spacing
+                    lineHeight = 40.sp
                 )
                 Text(
                     text = stringResource(R.string.success_subtitle),
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Normal,
-                    fontSize = 15.sp, // Slightly larger
+                    fontSize = 16.sp,
                     color = Neutral,
                     textAlign = TextAlign.Center,
-                    lineHeight = 22.sp // Adjusted line spacing
+                    lineHeight = 24.sp,
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(modifier = Modifier.weight(1.2f))
 
+            // Primary Action
             Button(
                 onClick = onBegin,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(54.dp),
-                shape = RoundedCornerShape(27.dp),
+                    .height(56.dp)
+                    .shadow(4.dp, RoundedCornerShape(28.dp)),
+                shape = RoundedCornerShape(28.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Secondary,
-                    contentColor = Color.White
+                    containerColor = Primary,
+                    contentColor = PrimaryDarker
                 )
             ) {
                 Text(
                     text = stringResource(R.string.begin_button),
                     fontFamily = PlusJakartaSans,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
                 )
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Subtle Branding
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.alpha(0.6f)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.VerifiedUser,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp),
+                    tint = Neutral
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.secure_account_verified),
+                    fontFamily = PlusJakartaSans,
+                    fontSize = 12.sp,
+                    color = Neutral,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

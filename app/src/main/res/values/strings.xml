@@ -12,9 +12,10 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="dont_have_account">Don\'t have an account?</string>
     <string name="already_have_account">Already have an account?</string>
-    <string name="success_title">Account created successfully!</string>
-    <string name="success_subtitle">You can now start managing your finances</string>
+    <string name="success_title">Welcome to ProWallet!</string>
+    <string name="success_subtitle">Your account has been created successfully. You\'re all set to start managing your finances with calm.</string>
     <string name="begin_button">Get Started</string>
+    <string name="secure_account_verified">Secure Account Verified</string>
     <string name="home_tab">Home</string>
     <string name="analytics_tab">Analytics</string>
     <string name="history_tab">History</string>
