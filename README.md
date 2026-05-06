@@ -1,4 +1,4 @@
-# SUPER AHORRO
+# ProWallet
 
 Aplicación Android de gestión de gastos personales. Primera entrega visual con datos mockeados y navegación completa.
 
