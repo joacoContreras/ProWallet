@@ -1,5 +1,6 @@
 package com.undef.prowallet.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -77,14 +79,13 @@ fun RegisterScreen(
                     modifier = Modifier
                         .size(72.dp)
                         .clip(CircleShape)
-                        .background(Brush.radialGradient(listOf(Primary, PrimaryDark))),
+                        .background(Primary.copy(alpha = 0.1f)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        Icons.Default.Savings,
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_app_logo_with_bg),
                         contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(40.dp)
+                        modifier = Modifier.size(56.dp)
                     )
                 }
 

@@ -42,6 +42,7 @@ sealed class Screen(val route: String) {
     object VerifyCode : Screen("verify_code")
     object UpdatePassword : Screen("update_password")
     object UpdatePasswordSuccess : Screen("update_password_success")
+    object ContactSupport : Screen("contact_support")
 }
 
 @Composable
@@ -224,6 +225,7 @@ fun AppNavGraph(navController: NavHostController) {
                 onNavigateToManageAccounts = { navController.navigate(Screen.ManageAccounts.route) },
                 onNavigateToMonthlySetup = { navController.navigate(Screen.MonthlySetup.route) },
                 onNavigateToAutoSavings = { navController.navigate(Screen.AutoSavings.route) },
+                onNavigateToContactSupport = { navController.navigate(Screen.ContactSupport.route) },
                 onLogout = {
                     authViewModel.logout()
                     navController.navigate(Screen.Login.route) {
@@ -295,6 +297,11 @@ fun AppNavGraph(navController: NavHostController) {
                         popUpTo(Screen.ForgotPassword.route) { inclusive = true }
                     }
                 }
+            )
+        }
+        composable(Screen.ContactSupport.route) {
+            ContactSupportScreen(
+                onNavigateBack = { navController.popBackStack() }
             )
         }
     }

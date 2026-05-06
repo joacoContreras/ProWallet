@@ -1,12 +1,12 @@
 package com.undef.prowallet.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ChevronRight
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -27,7 +27,10 @@ import com.undef.prowallet.ui.theme.*
 import java.util.Locale
 
 @Composable
-fun AutoSavingsScreen(onNavigateBack: () -> Unit) {
+fun AutoSavingsScreen(
+    onNavigateBack: () -> Unit,
+    onNavigateToNotifications: () -> Unit
+) {
     var savingsPercentage by remember { mutableFloatStateOf(10f) }
     var selectedMethod by remember { mutableStateOf("Percentage") }
     var selectedFrequency by remember { mutableStateOf("Monthly") }
@@ -38,8 +41,8 @@ fun AutoSavingsScreen(onNavigateBack: () -> Unit) {
                 title = "Auto-Savings Plan",
                 onNavigateBack = onNavigateBack,
                 actions = {
-                    IconButton(onClick = { }) {
-                        Icon(Icons.Default.Notifications, contentDescription = null, tint = PrimaryDarker)
+                    IconButton(onClick = onNavigateToNotifications) {
+                        Icon(Icons.Default.Notifications, contentDescription = "Notifications", tint = PrimaryDarker)
                     }
                     Box(
                         modifier = Modifier
@@ -198,7 +201,9 @@ fun AutoSavingsScreen(onNavigateBack: () -> Unit) {
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(text = "Destination Fund", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Neutral, letterSpacing = 1.sp)
-                    DestinationFundCard(Icons.Default.Savings, "Main Savings", "APY 4.25%", Secondary.copy(alpha = 0.1f))
+                    DestinationFundCard(Icons.Default.Savings, "Main Savings", "APY 4.25%", Secondary.copy(alpha = 0.1f)) {
+                        // Potential navigation to fund details
+                    }
                 }
             }
 
@@ -240,9 +245,11 @@ fun FrequencyRow(label: String, isSelected: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-fun DestinationFundCard(icon: ImageVector, title: String, subtitle: String, iconBg: Color) {
+fun DestinationFundCard(icon: ImageVector, title: String, subtitle: String, iconBg: Color, onClick: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
@@ -258,7 +265,7 @@ fun DestinationFundCard(icon: ImageVector, title: String, subtitle: String, icon
                 Text(text = title, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = TextPrimary)
                 Text(text = subtitle, fontSize = 12.sp, color = Neutral)
             }
-            Icon(Icons.AutoMirrored.Filled.ChevronRight, contentDescription = null, tint = Neutral)
+            Icon(Icons.Default.ChevronRight, contentDescription = null, tint = Neutral)
         }
     }
 }

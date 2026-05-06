@@ -33,6 +33,8 @@ fun ProfileScreen(
     onNavigateToSettings: () -> Unit,
     onNavigateToManageAccounts: () -> Unit,
     onNavigateToMonthlySetup: () -> Unit,
+    onNavigateToAutoSavings: () -> Unit,
+    onNavigateToContactSupport: () -> Unit,
     onLogout: () -> Unit
 ) {
     Column(
@@ -183,7 +185,7 @@ fun ProfileScreen(
                 items = listOf(
                     ManagementItem(Icons.Default.AccountBalance, "Linked Accounts", "3 Banks Connected", SecondaryLight.copy(alpha = 0.2f), SecondaryDark, onNavigateToManageAccounts),
                     ManagementItem(Icons.Default.EventRepeat, "Fixed Expenses", "Rent, Utilities, Subscriptions", TertiaryDark.copy(alpha = 0.5f), SecondaryDark, onNavigateToMonthlySetup),
-                    ManagementItem(Icons.Default.Savings, "Auto-Savings Plan", "$500/mo automated", Primary.copy(alpha = 0.2f), PrimaryDarker, { })
+                    ManagementItem(Icons.Default.Savings, "Auto-Savings Plan", "$500/mo automated", Primary.copy(alpha = 0.2f), PrimaryDarker, onNavigateToAutoSavings)
                 )
             )
 
@@ -191,20 +193,20 @@ fun ProfileScreen(
             ManagementSection(
                 title = "Support & Safety",
                 items = listOf(
-                    ManagementItem(Icons.Default.SupportAgent, "Contact Us", "Live chat available", BackgroundLight, Neutral, { }),
+                    ManagementItem(Icons.Default.SupportAgent, "Contact Us", "", BackgroundLight, Neutral, onNavigateToContactSupport),
                     ManagementItem(Icons.Default.Security, "Security & Privacy", "2FA, Biometrics, Permissions", BackgroundLight, Neutral, { })
                 )
             )
 
             // Logout Button
-            OutlinedButton(
+            Button(
                 onClick = onLogout,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
                 shape = RoundedCornerShape(28.dp),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = ErrorRed),
-                border = ButtonDefaults.outlinedButtonBorder
+                colors = ButtonDefaults.buttonColors(containerColor = ErrorRed, contentColor = Color.White),
+                elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
             ) {
                 Text(
                     text = "Log Out",
@@ -277,7 +279,9 @@ fun ManagementSection(title: String, items: List<ManagementItem>) {
                         }
                         Column(modifier = Modifier.weight(1f)) {
                             Text(text = item.title, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
-                            Text(text = item.subtitle, fontSize = 12.sp, color = Neutral)
+                            if (item.subtitle.isNotBlank()) {
+                                Text(text = item.subtitle, fontSize = 12.sp, color = Neutral)
+                            }
                         }
                         Icon(Icons.Default.ChevronRight, contentDescription = null, tint = Neutral, modifier = Modifier.size(20.dp))
                     }
