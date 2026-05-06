@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -28,7 +29,8 @@ import com.undef.prowallet.viewmodel.HomeViewModel
 fun AnalyticsScreen(
     homeViewModel: HomeViewModel,
     onNavigateToHome: () -> Unit,
-    onNavigateToNewPurchase: () -> Unit
+    onNavigateToNewPurchase: () -> Unit,
+    onNavigateToTopStores: () -> Unit
 ) {
     val state by homeViewModel.uiState.collectAsState()
 
@@ -272,8 +274,8 @@ fun AnalyticsScreen(
                         fontSize = 18.sp,
                         color = TextPrimary
                     )
-                    IconButton(onClick = {}) {
-                        Icon(Icons.Default.MoreHoriz, contentDescription = null, tint = Neutral)
+                    IconButton(onClick = onNavigateToTopStores) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowForwardIos, contentDescription = "View all", tint = Secondary, modifier = Modifier.size(16.dp))
                     }
                 }
             }

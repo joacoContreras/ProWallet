@@ -128,4 +128,10 @@
     <string name="average_purchase_label">Average Purchase</string>
     <string name="across_transactions_format">Across %d transactions</string>
     <string name="monthly_trend_6mo">6 Months</string>
+
+    <!-- Top Stores Screen -->
+    <string name="top_stores_title">Top Stores</string>
+    <string name="monthly_spending_insight">Monthly Spending Insight</string>
+    <string name="ranked_by_volume">Ranked by Volume</string>
+    <string name="spending_distribution">Spending Distribution</string>
 </resources>

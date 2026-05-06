@@ -27,6 +27,7 @@ sealed class Screen(val route: String) {
     object Profile : Screen("profile")
     object Settings : Screen("settings")
     object Notifications : Screen("notifications")
+    object TopStores : Screen("top_stores")
 }
 
 @Composable
@@ -148,7 +149,15 @@ fun AppNavGraph() {
                         popUpTo(Screen.Home.route) { inclusive = true }
                     }
                 },
-                onNavigateToNewPurchase = { navController.navigate(Screen.NewPurchase.route) }
+                onNavigateToNewPurchase = { navController.navigate(Screen.NewPurchase.route) },
+                onNavigateToTopStores = { navController.navigate(Screen.TopStores.route) }
+            )
+        }
+
+        composable(Screen.TopStores.route) {
+            TopStoresScreen(
+                homeViewModel = homeViewModel,
+                onNavigateBack = { navController.popBackStack() }
             )
         }
 
