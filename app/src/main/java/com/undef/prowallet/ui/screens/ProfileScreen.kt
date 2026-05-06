@@ -7,23 +7,21 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ChevronRight
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.undef.prowallet.R
-import com.undef.prowallet.data.MockRepository
-import com.undef.prowallet.ui.components.CustomTextField
-import com.undef.prowallet.ui.components.PrimaryButton
-import com.undef.prowallet.ui.components.SectionCard
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
 import com.undef.prowallet.viewmodel.AuthViewModel
@@ -35,9 +33,6 @@ fun ProfileScreen(
     onNavigateToSettings: () -> Unit,
     onLogout: () -> Unit
 ) {
-    var fullName by remember { mutableStateOf(MockRepository.currentUser.fullName) }
-    var email by remember { mutableStateOf(MockRepository.currentUser.email) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -45,167 +40,249 @@ fun ProfileScreen(
             .verticalScroll(rememberScrollState())
     ) {
         TopBar(
-            title = stringResource(R.string.profile_title),
+            title = stringResource(R.string.app_name),
             onNavigateBack = onNavigateBack,
             actions = {
                 IconButton(onClick = onNavigateToSettings) {
-                    Icon(Icons.Default.Settings, contentDescription = "Settings", tint = TextPrimary)
+                    Icon(Icons.Default.Settings, contentDescription = "Settings", tint = PrimaryDarker)
                 }
             }
         )
 
-        // Avatar section
-        Box(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 20.dp),
-            contentAlignment = Alignment.Center
+                .padding(horizontal = 24.dp)
+                .padding(bottom = 100.dp),
+            verticalArrangement = Arrangement.spacedBy(32.dp)
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            // User Identity Section
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Box(contentAlignment = Alignment.BottomEnd) {
                     Box(
                         modifier = Modifier
                             .size(96.dp)
+                            .shadow(20.dp, CircleShape)
                             .clip(CircleShape)
-                            .background(Brush.radialGradient(listOf(Primary, Secondary))),
+                            .background(Color.White),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = fullName.take(1).uppercase(),
-                            fontFamily = PlusJakartaSans,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 40.sp,
-                            color = Color.White
+                        // Profile Image Placeholder
+                        Icon(
+                            Icons.Default.Person,
+                            contentDescription = null,
+                            modifier = Modifier.size(56.dp),
+                            tint = PrimaryDarker.copy(alpha = 0.2f)
                         )
                     }
                     Box(
                         modifier = Modifier
                             .size(28.dp)
                             .clip(CircleShape)
-                            .background(Secondary),
+                            .background(Primary),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            Icons.Default.Edit,
+                            Icons.Default.Verified,
                             contentDescription = null,
                             tint = Color.White,
                             modifier = Modifier.size(16.dp)
                         )
                     }
                 }
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(16.dp))
                 Text(
-                    text = fullName,
+                    text = "Alex Rivera",
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
+                    fontSize = 24.sp,
                     color = TextPrimary
                 )
                 Text(
-                    text = email,
+                    text = "Wealth Management Plan: Pro Platinum",
                     fontFamily = PlusJakartaSans,
                     fontSize = 14.sp,
                     color = Neutral
                 )
             }
-        }
 
-        // Form
-        SectionCard(modifier = Modifier.padding(horizontal = 20.dp)) {
-            Text(
-                text = stringResource(R.string.personal_info_section),
-                fontFamily = PlusJakartaSans,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 11.sp,
-                color = Neutral,
-                letterSpacing = 1.sp
-            )
-            Spacer(Modifier.height(16.dp))
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                CustomTextField(
-                    value = fullName,
-                    onValueChange = { fullName = it },
-                    placeholder = stringResource(R.string.full_name_placeholder),
-                    leadingIcon = Icons.Default.Person,
-                    label = stringResource(R.string.full_name_label)
-                )
-                CustomTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    placeholder = stringResource(R.string.email_placeholder),
-                    leadingIcon = Icons.Default.Email,
-                    label = stringResource(R.string.email_label)
-                )
+            // Financial Profile Section
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Financial Profile",
+                        fontFamily = PlusJakartaSans,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        color = TextPrimary
+                    )
+                    Surface(
+                        color = Primary.copy(alpha = 0.1f),
+                        shape = RoundedCornerShape(percent = 50)
+                    ) {
+                        Text(
+                            text = "Active",
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                            color = PrimaryDarker,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                ) {
+                    Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(24.dp)) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                            FinancialStatCard(
+                                icon = Icons.Default.Payments,
+                                label = "Monthly Income",
+                                value = "$8,450",
+                                modifier = Modifier.weight(1f)
+                            )
+                            FinancialStatCard(
+                                icon = Icons.Default.PieChart,
+                                label = "Budget Usage",
+                                value = "64%",
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text("Spending Limit", fontSize = 12.sp, color = Neutral)
+                                Text("$5,408 / $8,450", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                            }
+                            LinearProgressIndicator(
+                                progress = { 0.64f },
+                                modifier = Modifier.fillMaxWidth().height(10.dp).clip(CircleShape),
+                                color = PrimaryDarker,
+                                trackColor = BackgroundLight
+                            )
+                        }
+                    }
+                }
             }
-            Spacer(Modifier.height(16.dp))
-            PrimaryButton(text = stringResource(R.string.save_changes_button), onClick = {})
-        }
 
-        Spacer(Modifier.height(16.dp))
-
-        // Stats card
-        SectionCard(modifier = Modifier.padding(horizontal = 20.dp)) {
-            Text(
-                text = stringResource(R.string.statistics_section),
-                fontFamily = PlusJakartaSans,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 11.sp,
-                color = Neutral,
-                letterSpacing = 1.sp
+            // Management Section
+            ManagementSection(
+                title = "Management",
+                items = listOf(
+                    ManagementItem(Icons.Default.AccountBalance, "Linked Accounts", "3 Banks Connected", SecondaryLight.copy(alpha = 0.2f), SecondaryDark),
+                    ManagementItem(Icons.Default.EventRepeat, "Fixed Expenses", "Rent, Utilities, Subscriptions", TertiaryDark.copy(alpha = 0.5f), SecondaryDark),
+                    ManagementItem(Icons.Default.Savings, "Auto-Savings Plan", "$500/mo automated", Primary.copy(alpha = 0.2f), PrimaryDarker)
+                )
             )
-            Spacer(Modifier.height(12.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+
+            // Support Section
+            ManagementSection(
+                title = "Support & Safety",
+                items = listOf(
+                    ManagementItem(Icons.Default.SupportAgent, "Contact Us", "Live chat available", BackgroundLight, Neutral),
+                    ManagementItem(Icons.Default.Security, "Security & Privacy", "2FA, Biometrics, Permissions", BackgroundLight, Neutral)
+                )
+            )
+
+            // Logout Button
+            OutlinedButton(
+                onClick = onLogout,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = RoundedCornerShape(28.dp),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = ErrorRed),
+                border = ButtonDefaults.outlinedButtonBorder
             ) {
-                StatItem(label = stringResource(R.string.stat_purchases), value = "6")
-                StatItem(label = stringResource(R.string.stat_this_month), value = "$1,842")
-                StatItem(label = stringResource(R.string.stat_savings), value = "12%")
+                Text(
+                    text = "Log Out",
+                    fontFamily = PlusJakartaSans,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
             }
         }
-
-        Spacer(Modifier.height(16.dp))
-
-        // Logout button
-        OutlinedButton(
-            onClick = onLogout,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .height(54.dp),
-            shape = RoundedCornerShape(27.dp),
-            colors = ButtonDefaults.outlinedButtonColors(contentColor = ErrorRed),
-            border = ButtonDefaults.outlinedButtonBorder
-        ) {
-            Icon(Icons.Default.Logout, contentDescription = null, modifier = Modifier.size(20.dp))
-            Spacer(Modifier.width(8.dp))
-            Text(
-                text = stringResource(R.string.logout_button),
-                fontFamily = PlusJakartaSans,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 16.sp
-            )
-        }
-
-        Spacer(Modifier.height(32.dp))
     }
 }
 
 @Composable
-private fun StatItem(label: String, value: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+fun FinancialStatCard(icon: ImageVector, label: String, value: String, modifier: Modifier = Modifier) {
+    Surface(
+        modifier = modifier,
+        color = BackgroundLight,
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Icon(icon, contentDescription = null, tint = Secondary, modifier = Modifier.size(24.dp))
+            Text(text = label, fontSize = 11.sp, color = Neutral)
+            Text(text = value, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+        }
+    }
+}
+
+data class ManagementItem(
+    val icon: ImageVector,
+    val title: String,
+    val subtitle: String,
+    val iconBg: Color,
+    val iconTint: Color
+)
+
+@Composable
+fun ManagementSection(title: String, items: List<ManagementItem>) {
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text(
-            text = value,
+            text = title,
             fontFamily = PlusJakartaSans,
             fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
-            color = Secondary
+            fontSize = 18.sp,
+            color = TextPrimary
         )
-        Text(
-            text = label,
-            fontFamily = PlusJakartaSans,
-            fontSize = 12.sp,
-            color = Neutral
-        )
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
+        ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                items.forEachIndexed { index, item ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(CircleShape)
+                                .background(item.iconBg),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(item.icon, contentDescription = null, tint = item.iconTint, modifier = Modifier.size(20.dp))
+                        }
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(text = item.title, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                            Text(text = item.subtitle, fontSize = 12.sp, color = Neutral)
+                        }
+                        Icon(Icons.AutoMirrored.Filled.ChevronRight, contentDescription = null, tint = Neutral, modifier = Modifier.size(20.dp))
+                    }
+                    if (index < items.lastIndex) {
+                        Divider(color = Color(0xFFF8F8F8), thickness = 1.dp)
+                    }
+                }
+            }
+        }
     }
 }
