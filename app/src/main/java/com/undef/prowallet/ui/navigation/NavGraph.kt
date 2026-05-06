@@ -150,7 +150,7 @@ fun AppNavGraph(navController: NavHostController) {
                 viewModel = purchaseViewModel,
                 homeViewModel = homeViewModel,
                 onNavigateBack = { navController.popBackStack() },
-                onNavigateToEdit = { id ->
+                onNavigateToEdit = { _ ->
                     navController.navigate(Screen.NewPurchase.route)
                 }
             )

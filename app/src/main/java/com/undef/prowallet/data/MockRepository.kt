@@ -13,11 +13,11 @@ object MockRepository {
     )
 
     val mockProducts = listOf(
-        Product("p001", "10492", "Leche entera 1L", 1.20),
-        Product("p002", "20381", "Pan de molde", 2.50),
-        Product("p003", "30192", "Yogur natural x4", 3.80),
-        Product("p004", "40293", "Aceite de oliva 500ml", 6.90),
-        Product("p005", "50183", "Detergente 750ml", 2.10)
+        Product("p001", "10492", "Leche entera 1L", "Milk 1L", 1.20),
+        Product("p002", "20381", "Pan de molde", "Bread", 2.50),
+        Product("p003", "30192", "Yogur natural x4", "Yogurt pack", 3.80),
+        Product("p004", "40293", "Aceite de oliva 500ml", "Olive Oil", 6.90),
+        Product("p005", "50183", "Detergente 750ml", "Detergent", 2.10)
     )
 
     val mockPurchases = listOf(
@@ -37,7 +37,7 @@ object MockRepository {
             time = "10:15",
             totalAmount = 45.00,
             category = "Transport",
-            products = listOf(Product("p006", "60001", "Gasolina 95", 45.00))
+            products = listOf(Product("p006", "60001", "Gasolina 95", "Fuel", 45.00))
         ),
         Purchase(
             id = "pur_003",
@@ -47,9 +47,9 @@ object MockRepository {
             totalAmount = 112.50,
             category = "Dining",
             products = listOf(
-                Product("p007", "70001", "Pasta carbonara x2", 28.00),
-                Product("p008", "70002", "Vino tinto", 18.00),
-                Product("p009", "70003", "Tiramisú x2", 14.00)
+                Product("p007", "70001", "Pasta carbonara x2", "Dinner", 28.00),
+                Product("p008", "70002", "Vino tinto", "Wine", 18.00),
+                Product("p009", "70003", "Tiramisú x2", "Dessert", 14.00)
             )
         ),
         Purchase(
@@ -69,8 +69,8 @@ object MockRepository {
             totalAmount = 145.00,
             category = "Coffee",
             products = listOf(
-                Product("p010", "80001", "Latte grande x3", 18.00),
-                Product("p011", "80002", "Croissant x2", 8.00)
+                Product("p010", "80001", "Latte grande x3", "Coffee", 18.00),
+                Product("p011", "80002", "Croissant x2", "Pastry", 8.00)
             )
         ),
         Purchase(
@@ -80,7 +80,7 @@ object MockRepository {
             time = "16:00",
             totalAmount = 85.20,
             category = "Transport",
-            products = listOf(Product("p012", "90001", "Combustible", 85.20))
+            products = listOf(Product("p012", "90001", "Combustible", "Fuel", 85.20))
         )
     )
 

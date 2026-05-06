@@ -1,4 +1,4 @@
-package com.undef.ProWallet
+package com.undef.prowallet
 
 import org.junit.Test
 

@@ -8,7 +8,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ChevronRight
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -280,10 +279,10 @@ fun ManagementSection(title: String, items: List<ManagementItem>) {
                             Text(text = item.title, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
                             Text(text = item.subtitle, fontSize = 12.sp, color = Neutral)
                         }
-                        Icon(Icons.AutoMirrored.Filled.ChevronRight, contentDescription = null, tint = Neutral, modifier = Modifier.size(20.dp))
+                        Icon(Icons.Default.ChevronRight, contentDescription = null, tint = Neutral, modifier = Modifier.size(20.dp))
                     }
                     if (index < items.lastIndex) {
-                        Divider(color = Color(0xFFF8F8F8), thickness = 1.dp)
+                        HorizontalDivider(color = Color(0xFFF8F8F8), thickness = 1.dp)
                     }
                 }
             }
