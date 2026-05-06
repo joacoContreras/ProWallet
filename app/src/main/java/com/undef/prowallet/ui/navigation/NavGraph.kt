@@ -2,6 +2,7 @@ package com.undef.prowallet.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,11 +33,11 @@ sealed class Screen(val route: String) {
         fun createRoute(storeName: String) = "store_detail/$storeName"
     }
     object PurchaseSuccess : Screen("purchase_success")
+    object ChatAi : Screen("chat_ai")
 }
 
 @Composable
-fun AppNavGraph() {
-    val navController = rememberNavController()
+fun AppNavGraph(navController: NavHostController) {
     val authViewModel: AuthViewModel = viewModel()
     val homeViewModel: HomeViewModel = viewModel()
     val purchaseViewModel: PurchaseViewModel = viewModel()
@@ -148,8 +149,7 @@ fun AppNavGraph() {
                 homeViewModel = homeViewModel,
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToEdit = { id ->
-                    /* Logic to navigate to edit */
-                    navController.navigate(Screen.NewPurchase.route) // Reuse NewPurchase for now
+                    navController.navigate(Screen.NewPurchase.route)
                 }
             )
         }
@@ -214,6 +214,12 @@ fun AppNavGraph() {
 
         composable(Screen.Settings.route) {
             SettingsScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.ChatAi.route) {
+            ChatAiScreen(
                 onNavigateBack = { navController.popBackStack() }
             )
         }

@@ -4,7 +4,23 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.SmartToy
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.undef.prowallet.ui.navigation.AppNavGraph
+import com.undef.prowallet.ui.navigation.Screen
+import com.undef.prowallet.ui.theme.PrimaryDarker
 import com.undef.prowallet.ui.theme.ProWalletTheme
 
 class MainActivity : ComponentActivity() {
@@ -13,7 +29,45 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ProWalletTheme {
-                AppNavGraph()
+                ProWalletAppWrapper()
+            }
+        }
+    }
+}
+
+@Composable
+fun ProWalletAppWrapper() {
+    val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    // Screens where the AI FAB should NOT be visible
+    val excludedScreens = listOf(
+        Screen.Splash.route,
+        Screen.Login.route,
+        Screen.Register.route,
+        Screen.RegisterSuccess.route,
+        Screen.ChatAi.route
+    )
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        AppNavGraph(navController = navController)
+
+        if (currentRoute != null && currentRoute !in excludedScreens) {
+            FloatingActionButton(
+                onClick = { navController.navigate(Screen.ChatAi.route) },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = 20.dp, bottom = 100.dp), // Positioned above the BottomBar
+                containerColor = PrimaryDarker,
+                contentColor = Color.White,
+                shape = CircleShape
+            ) {
+                Icon(
+                    imageVector = Icons.Default.SmartToy,
+                    contentDescription = "Chat with AI",
+                    modifier = Modifier.size(28.dp)
+                )
             }
         }
     }
