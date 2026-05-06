@@ -65,7 +65,7 @@ fun SplashScreen(onNavigateToLogin: () -> Unit) {
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_prowallet),
+                    painter = painterResource(id = R.drawable.ic_app_logo_foreground),
                     contentDescription = null,
                     modifier = Modifier.size(64.dp)
                 )
