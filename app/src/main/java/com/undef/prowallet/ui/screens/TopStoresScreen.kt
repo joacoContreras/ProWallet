@@ -1,6 +1,7 @@
 package com.undef.prowallet.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -35,7 +36,8 @@ import com.undef.prowallet.viewmodel.HomeViewModel
 @Composable
 fun TopStoresScreen(
     homeViewModel: HomeViewModel,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onNavigateToStoreDetail: (String) -> Unit
 ) {
     val state by homeViewModel.uiState.collectAsState()
 
@@ -175,7 +177,8 @@ fun TopStoresScreen(
                     icon = icon,
                     trendIcon = trend.first,
                     trendColor = trend.second,
-                    trendValue = trendValue
+                    trendValue = trendValue,
+                    onClick = { onNavigateToStoreDetail(name) }
                 )
             }
 
@@ -212,12 +215,14 @@ fun StoreRankItem(
     icon: ImageVector,
     trendIcon: ImageVector,
     trendColor: Color,
-    trendValue: String
+    trendValue: String,
+    onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(2.dp, RoundedCornerShape(20.dp)),
+            .shadow(2.dp, RoundedCornerShape(20.dp))
+            .clickable { onClick() },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {

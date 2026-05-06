@@ -134,4 +134,7 @@
     <string name="monthly_spending_insight">Monthly Spending Insight</string>
     <string name="ranked_by_volume">Ranked by Volume</string>
     <string name="spending_distribution">Spending Distribution</string>
+
+    <!-- Store Detail Screen -->
+    <string name="store_detail_title">Store Detail</string>
 </resources>

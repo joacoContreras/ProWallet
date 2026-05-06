@@ -28,6 +28,9 @@ sealed class Screen(val route: String) {
     object Settings : Screen("settings")
     object Notifications : Screen("notifications")
     object TopStores : Screen("top_stores")
+    object StoreDetail : Screen("store_detail/{storeName}") {
+        fun createRoute(storeName: String) = "store_detail/$storeName"
+    }
 }
 
 @Composable
@@ -157,6 +160,20 @@ fun AppNavGraph() {
         composable(Screen.TopStores.route) {
             TopStoresScreen(
                 homeViewModel = homeViewModel,
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToStoreDetail = { name ->
+                    navController.navigate(Screen.StoreDetail.createRoute(name))
+                }
+            )
+        }
+
+        composable(
+            route = Screen.StoreDetail.route,
+            arguments = listOf(navArgument("storeName") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val storeName = backStackEntry.arguments?.getString("storeName") ?: ""
+            StoreDetailScreen(
+                storeName = storeName,
                 onNavigateBack = { navController.popBackStack() }
             )
         }
