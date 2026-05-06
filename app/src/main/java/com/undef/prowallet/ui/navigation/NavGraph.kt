@@ -6,7 +6,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.undef.prowallet.ui.screens.*
 import com.undef.prowallet.viewmodel.AuthViewModel
@@ -192,7 +191,10 @@ fun AppNavGraph(navController: NavHostController) {
 
         composable(Screen.PersonalInflation.route) {
             PersonalInflationScreen(
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToNotifications = {
+                    navController.navigate(Screen.Notifications.route) // 3. Definimos la acción de ir a notificaciones
+                }
             )
         }
 

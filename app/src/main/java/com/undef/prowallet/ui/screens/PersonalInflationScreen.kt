@@ -3,8 +3,6 @@ package com.undef.prowallet.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
@@ -23,12 +21,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.undef.prowallet.R
-import com.undef.prowallet.ui.components.SectionCard
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
 
 @Composable
-fun PersonalInflationScreen(onNavigateBack: () -> Unit) {
+fun PersonalInflationScreen(onNavigateBack: () -> Unit, onNavigateToNotifications: () -> Unit) {
     var selectedTab by remember { mutableStateOf("Monthly") }
 
     Scaffold(
@@ -37,7 +34,7 @@ fun PersonalInflationScreen(onNavigateBack: () -> Unit) {
                 title = stringResource(R.string.app_name),
                 onNavigateBack = onNavigateBack,
                 actions = {
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = onNavigateToNotifications) {
                         Icon(Icons.Default.Notifications, contentDescription = null, tint = PrimaryDarker)
                     }
                 }
