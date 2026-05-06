@@ -72,6 +72,9 @@ fun AppNavGraph(navController: NavHostController) {
                 },
                 onNavigateToRegister = {
                     navController.navigate(Screen.Register.route)
+                },
+                onNavigateToForgotPassword = {
+                    navController.navigate(Screen.ForgotPassword.route)
                 }
             )
         }
@@ -257,6 +260,41 @@ fun AppNavGraph(navController: NavHostController) {
             AutoSavingsScreen(
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToNotifications = { navController.navigate(Screen.Notifications.route) }
+            )
+        }
+
+        composable(Screen.ForgotPassword.route) {
+            ForgotPasswordScreen(
+                viewModel = authViewModel,
+                onCodeSent = { navController.navigate(Screen.VerifyCode.route) },
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.VerifyCode.route) {
+            VerifyCodeScreen(
+                viewModel = authViewModel,
+                onVerified = { navController.navigate(Screen.UpdatePassword.route) },
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.UpdatePassword.route) {
+            UpdatePasswordScreen(
+                viewModel = authViewModel,
+                onSuccess = { navController.navigate(Screen.UpdatePasswordSuccess.route) },
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.UpdatePasswordSuccess.route) {
+            UpdatePasswordSuccessScreen(
+                viewModel = authViewModel,
+                onRedirect = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.ForgotPassword.route) { inclusive = true }
+                    }
+                }
             )
         }
     }
