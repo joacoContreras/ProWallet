@@ -1,5 +1,6 @@
 package com.undef.prowallet.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -36,7 +38,8 @@ import com.undef.prowallet.viewmodel.AuthViewModel
 fun LoginScreen(
     viewModel: AuthViewModel,
     onLoginSuccess: () -> Unit,
-    onNavigateToRegister: () -> Unit
+    onNavigateToRegister: () -> Unit,
+    onNavigateToForgotPassword: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
     var email by remember { mutableStateOf("") }
@@ -71,16 +74,13 @@ fun LoginScreen(
                     modifier = Modifier
                         .size(80.dp)
                         .clip(CircleShape)
-                        .background(
-                            Brush.radialGradient(listOf(Primary, PrimaryDark))
-                        ),
+                        .background(Primary.copy(alpha = 0.1f)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Savings,
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_app_logo_with_bg),
                         contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(44.dp)
+                        modifier = Modifier.size(60.dp)
                     )
                 }
 
@@ -124,7 +124,7 @@ fun LoginScreen(
                                 text = stringResource(R.string.forgot_password),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = Secondary,
-                                modifier = Modifier.clickable {}
+                                modifier = Modifier.clickable { onNavigateToForgotPassword() }
                             )
                         }
                         Spacer(Modifier.height(6.dp))
