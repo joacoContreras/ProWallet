@@ -1,6 +1,7 @@
 package com.undef.prowallet.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -31,6 +32,8 @@ fun ProfileScreen(
     authViewModel: AuthViewModel,
     onNavigateBack: () -> Unit,
     onNavigateToSettings: () -> Unit,
+    onNavigateToManageAccounts: () -> Unit,
+    onNavigateToMonthlySetup: () -> Unit,
     onLogout: () -> Unit
 ) {
     Column(
@@ -69,7 +72,6 @@ fun ProfileScreen(
                             .background(Color.White),
                         contentAlignment = Alignment.Center
                     ) {
-                        // Profile Image Placeholder
                         Icon(
                             Icons.Default.Person,
                             contentDescription = null,
@@ -180,9 +182,9 @@ fun ProfileScreen(
             ManagementSection(
                 title = "Management",
                 items = listOf(
-                    ManagementItem(Icons.Default.AccountBalance, "Linked Accounts", "3 Banks Connected", SecondaryLight.copy(alpha = 0.2f), SecondaryDark),
-                    ManagementItem(Icons.Default.EventRepeat, "Fixed Expenses", "Rent, Utilities, Subscriptions", TertiaryDark.copy(alpha = 0.5f), SecondaryDark),
-                    ManagementItem(Icons.Default.Savings, "Auto-Savings Plan", "$500/mo automated", Primary.copy(alpha = 0.2f), PrimaryDarker)
+                    ManagementItem(Icons.Default.AccountBalance, "Linked Accounts", "3 Banks Connected", SecondaryLight.copy(alpha = 0.2f), SecondaryDark, onNavigateToManageAccounts),
+                    ManagementItem(Icons.Default.EventRepeat, "Fixed Expenses", "Rent, Utilities, Subscriptions", TertiaryDark.copy(alpha = 0.5f), SecondaryDark, onNavigateToMonthlySetup),
+                    ManagementItem(Icons.Default.Savings, "Auto-Savings Plan", "$500/mo automated", Primary.copy(alpha = 0.2f), PrimaryDarker, { })
                 )
             )
 
@@ -190,8 +192,8 @@ fun ProfileScreen(
             ManagementSection(
                 title = "Support & Safety",
                 items = listOf(
-                    ManagementItem(Icons.Default.SupportAgent, "Contact Us", "Live chat available", BackgroundLight, Neutral),
-                    ManagementItem(Icons.Default.Security, "Security & Privacy", "2FA, Biometrics, Permissions", BackgroundLight, Neutral)
+                    ManagementItem(Icons.Default.SupportAgent, "Contact Us", "Live chat available", BackgroundLight, Neutral, { }),
+                    ManagementItem(Icons.Default.Security, "Security & Privacy", "2FA, Biometrics, Permissions", BackgroundLight, Neutral, { })
                 )
             )
 
@@ -236,7 +238,8 @@ data class ManagementItem(
     val title: String,
     val subtitle: String,
     val iconBg: Color,
-    val iconTint: Color
+    val iconTint: Color,
+    val onClick: () -> Unit
 )
 
 @Composable
@@ -259,6 +262,7 @@ fun ManagementSection(title: String, items: List<ManagementItem>) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .clickable { item.onClick() }
                             .padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(16.dp)

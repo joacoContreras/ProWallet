@@ -34,6 +34,8 @@ sealed class Screen(val route: String) {
     }
     object PurchaseSuccess : Screen("purchase_success")
     object ChatAi : Screen("chat_ai")
+    object ManageAccounts : Screen("manage_accounts")
+    object MonthlySetup : Screen("monthly_setup")
 }
 
 @Composable
@@ -203,12 +205,26 @@ fun AppNavGraph(navController: NavHostController) {
                 authViewModel = authViewModel,
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToSettings = { navController.navigate(Screen.Settings.route) },
+                onNavigateToManageAccounts = { navController.navigate(Screen.ManageAccounts.route) },
+                onNavigateToMonthlySetup = { navController.navigate(Screen.MonthlySetup.route) },
                 onLogout = {
                     authViewModel.logout()
                     navController.navigate(Screen.Login.route) {
                         popUpTo(0) { inclusive = true }
                     }
                 }
+            )
+        }
+
+        composable(Screen.ManageAccounts.route) {
+            ManageAccountsScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.MonthlySetup.route) {
+            MonthlySetupScreen(
+                onNavigateBack = { navController.popBackStack() }
             )
         }
 
