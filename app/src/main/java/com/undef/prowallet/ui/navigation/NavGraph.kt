@@ -37,6 +37,11 @@ sealed class Screen(val route: String) {
     object ManageAccounts : Screen("manage_accounts")
     object MonthlySetup : Screen("monthly_setup")
     object PersonalInflation : Screen("personal_inflation")
+    object AutoSavings : Screen("auto_savings")
+    object ForgotPassword : Screen("forgot_password")
+    object VerifyCode : Screen("verify_code")
+    object UpdatePassword : Screen("update_password")
+    object UpdatePasswordSuccess : Screen("update_password_success")
 }
 
 @Composable
@@ -215,6 +220,7 @@ fun AppNavGraph(navController: NavHostController) {
                 onNavigateToSettings = { navController.navigate(Screen.Settings.route) },
                 onNavigateToManageAccounts = { navController.navigate(Screen.ManageAccounts.route) },
                 onNavigateToMonthlySetup = { navController.navigate(Screen.MonthlySetup.route) },
+                onNavigateToAutoSavings = { navController.navigate(Screen.AutoSavings.route) },
                 onLogout = {
                     authViewModel.logout()
                     navController.navigate(Screen.Login.route) {
@@ -245,6 +251,12 @@ fun AppNavGraph(navController: NavHostController) {
         composable(Screen.ChatAi.route) {
             ChatAiScreen(
                 onNavigateBack = { navController.popBackStack() }
+            )
+        }
+        composable(Screen.AutoSavings.route) {
+            AutoSavingsScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToNotifications = { navController.navigate(Screen.Notifications.route) }
             )
         }
     }
