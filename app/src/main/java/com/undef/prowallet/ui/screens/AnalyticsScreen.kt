@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -31,7 +32,8 @@ fun AnalyticsScreen(
     homeViewModel: HomeViewModel,
     onNavigateToHome: () -> Unit,
     onNavigateToNewPurchase: () -> Unit,
-    onNavigateToTopStores: () -> Unit
+    onNavigateToTopStores: () -> Unit,
+    onNavigateToPersonalInflation: () -> Unit
 ) {
     val state by homeViewModel.uiState.collectAsState()
 
@@ -55,19 +57,35 @@ fun AnalyticsScreen(
         ) {
             item {
                 Spacer(Modifier.height(8.dp))
-                Text(
-                    text = stringResource(R.string.analytics_tab),
-                    fontFamily = PlusJakartaSans,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 26.sp,
-                    color = TextPrimary
-                )
-                Text(
-                    text = stringResource(R.string.analytics_subtitle),
-                    fontFamily = PlusJakartaSans,
-                    fontSize = 13.sp,
-                    color = Neutral
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = stringResource(R.string.analytics_tab),
+                            fontFamily = PlusJakartaSans,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 26.sp,
+                            color = TextPrimary
+                        )
+                        Text(
+                            text = stringResource(R.string.analytics_subtitle),
+                            fontFamily = PlusJakartaSans,
+                            fontSize = 13.sp,
+                            color = Neutral
+                        )
+                    }
+                    IconButton(
+                        onClick = onNavigateToPersonalInflation,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Primary.copy(alpha = 0.1f))
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.TrendingUp, contentDescription = "Personal Inflation", tint = PrimaryDarker)
+                    }
+                }
             }
 
             item {
