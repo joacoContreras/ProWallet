@@ -200,7 +200,7 @@ fun AnalyticsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = stringResource(R.string.monthly_trend),
+                            text = "Monthly Trend",
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
@@ -256,6 +256,75 @@ fun AnalyticsScreen(
                                         )
                                     }
                                 }
+                            }
+                        }
+                    }
+                }
+            }
+
+            item {
+                Text(
+                    text = "Most Purchased Products",
+                    fontFamily = PlusJakartaSans,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = TextPrimary
+                )
+            }
+
+            item {
+                SectionCard {
+                    if (state.mostPurchasedProducts.isEmpty()) {
+                        Text(
+                            text = "No data available",
+                            fontFamily = PlusJakartaSans,
+                            fontSize = 14.sp,
+                            color = Neutral,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                    } else {
+                        state.mostPurchasedProducts.forEachIndexed { idx, (name, count) ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(32.dp)
+                                            .clip(CircleShape)
+                                            .background(Secondary.copy(alpha = 0.1f)),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = "${idx + 1}",
+                                            fontFamily = PlusJakartaSans,
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 12.sp,
+                                            color = Secondary
+                                        )
+                                    }
+                                    Spacer(Modifier.width(12.dp))
+                                    Text(
+                                        text = name,
+                                        fontFamily = PlusJakartaSans,
+                                        fontWeight = FontWeight.SemiBold,
+                                        fontSize = 14.sp,
+                                        color = TextPrimary
+                                    )
+                                }
+                                Text(
+                                    text = "$count times",
+                                    fontFamily = PlusJakartaSans,
+                                    fontSize = 12.sp,
+                                    color = Neutral
+                                )
+                            }
+                            if (idx < state.mostPurchasedProducts.lastIndex) {
+                                Divider(color = Color(0xFFF0F0F0), thickness = 0.5.dp)
                             }
                         }
                     }

@@ -2,6 +2,7 @@ package com.undef.prowallet.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.undef.prowallet.data.MockRepository
+import com.undef.prowallet.domain.Product
 import com.undef.prowallet.domain.Purchase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +22,8 @@ data class HomeUiState(
     val highestSpend: Double = 0.0,
     val highestSpendStore: String = "",
     val averagePurchase: Double = 0.0,
-    val totalTransactions: Int = 0
+    val totalTransactions: Int = 0,
+    val mostPurchasedProducts: List<Pair<String, Int>> = emptyList()
 )
 
 class HomeViewModel : ViewModel() {
@@ -43,6 +45,14 @@ class HomeViewModel : ViewModel() {
         val highest = purchases.maxByOrNull { it.totalAmount }
         val totalSpent = purchases.sumOf { it.totalAmount }
         
+        // Calculate most purchased products
+        val productCounts = purchases.flatMap { it.products }
+            .groupBy { it.name }
+            .mapValues { it.value.size }
+            .toList()
+            .sortedByDescending { it.second }
+            .take(5)
+
         _uiState.value = _uiState.value.copy(
             allPurchases = purchases,
             recentPurchases = purchases.take(3),
@@ -51,7 +61,8 @@ class HomeViewModel : ViewModel() {
             highestSpend = highest?.totalAmount ?: 0.0,
             highestSpendStore = highest?.storeName ?: "",
             averagePurchase = if (purchases.isNotEmpty()) purchases.map { it.totalAmount }.average() else 0.0,
-            totalTransactions = purchases.size
+            totalTransactions = purchases.size,
+            mostPurchasedProducts = productCounts
         )
     }
 
