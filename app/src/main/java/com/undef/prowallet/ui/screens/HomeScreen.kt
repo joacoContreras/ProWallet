@@ -1,6 +1,7 @@
 package com.undef.prowallet.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -55,53 +56,65 @@ fun HomeScreen(
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
             item {
-                // Header
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 20.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                // Header (Redesigned as per mockup)
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = Color(0xFFF1F7F6), // Match background color from mockup header
+                    shadowElevation = 2.dp
                 ) {
-                    Column {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp, vertical = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        // Profile Avatar
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(CircleShape)
+                                .background(NeutralLight)
+                                .clickable { onNavigateToProfile() },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                Icons.Default.Person,
+                                contentDescription = "Profile",
+                                tint = Color.White,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+
+                        // App Name
                         Text(
-                            text = stringResource(R.string.welcome_user, state.userName),
+                            text = stringResource(R.string.app_name),
                             fontFamily = PlusJakartaSans,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 22.sp,
-                            color = TextPrimary
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 18.sp,
+                            color = PrimaryDarker
                         )
-                        Text(
-                            text = stringResource(R.string.summary_subtitle),
-                            fontFamily = PlusJakartaSans,
-                            fontSize = 13.sp,
-                            color = Neutral
-                        )
-                    }
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+
+                        // Notification Icon
                         IconButton(
                             onClick = onNavigateToNotifications,
                             modifier = Modifier
                                 .size(40.dp)
                                 .clip(CircleShape)
-                                .background(Color.White)
+                                .background(Color.White.copy(alpha = 0.5f))
                         ) {
-                            Icon(Icons.Default.Notifications, contentDescription = "Notifications", tint = TextPrimary)
-                        }
-                        IconButton(
-                            onClick = onNavigateToProfile,
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape)
-                                .background(Secondary)
-                        ) {
-                            Icon(Icons.Default.Person, contentDescription = "Profile", tint = Color.White)
+                            Icon(
+                                Icons.Default.Notifications,
+                                contentDescription = "Notifications",
+                                tint = PrimaryDarker
+                            )
                         }
                     }
                 }
             }
 
             item {
+                Spacer(Modifier.height(24.dp))
                 // Main spend card
                 Card(
                     modifier = Modifier
@@ -109,7 +122,7 @@ fun HomeScreen(
                         .padding(horizontal = 20.dp)
                         .shadow(8.dp, RoundedCornerShape(20.dp)),
                     shape = RoundedCornerShape(20.dp),
-                    colors = CardDefaults.cardColors(containerColor = Secondary)
+                    colors = CardDefaults.cardColors(containerColor = Primary)
                 ) {
                     Column(modifier = Modifier.padding(20.dp)) {
                         Text(
@@ -117,7 +130,7 @@ fun HomeScreen(
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.Medium,
                             fontSize = 11.sp,
-                            color = Color.White.copy(alpha = 0.7f),
+                            color = SecondaryDark.copy(alpha = 0.8f),
                             letterSpacing = 1.sp
                         )
                         Spacer(Modifier.height(4.dp))
@@ -126,7 +139,7 @@ fun HomeScreen(
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.Bold,
                             fontSize = 36.sp,
-                            color = Color.White
+                            color = SecondaryDark
                         )
                         Spacer(Modifier.height(12.dp))
                         Row(
@@ -137,13 +150,14 @@ fun HomeScreen(
                                 text = "Healthy pace",
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 12.sp,
-                                color = Primary
+                                color = SecondaryDark.copy(alpha = 0.7f)
                             )
                             Text(
                                 text = "${((state.totalMonthlySpend / state.monthlyBudget) * 100).toInt()}% of Budget",
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 12.sp,
-                                color = Color.White.copy(alpha = 0.8f)
+                                fontWeight = FontWeight.Bold,
+                                color = SecondaryDark
                             )
                         }
                         Spacer(Modifier.height(6.dp))
@@ -151,10 +165,10 @@ fun HomeScreen(
                             progress = { (state.totalMonthlySpend / state.monthlyBudget).toFloat() },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(6.dp)
-                                .clip(RoundedCornerShape(3.dp)),
-                            color = Primary,
-                            trackColor = Color.White.copy(alpha = 0.3f)
+                                .height(8.dp)
+                                .clip(RoundedCornerShape(4.dp)),
+                            color = PrimaryDarker,
+                            trackColor = Color.White.copy(alpha = 0.5f)
                         )
                     }
                 }
@@ -174,20 +188,23 @@ fun HomeScreen(
                             .weight(1f)
                             .shadow(4.dp, RoundedCornerShape(16.dp)),
                         shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.White)
+                        colors = CardDefaults.cardColors(containerColor = SecondaryLight.copy(alpha = 0.4f))
                     ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
                             Box(
                                 modifier = Modifier
                                     .size(36.dp)
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(Primary.copy(alpha = 0.2f)),
+                                    .clip(CircleShape)
+                                    .background(Color.White.copy(alpha = 0.5f)),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     Icons.Default.AccountBalanceWallet,
                                     contentDescription = null,
-                                    tint = PrimaryDarker,
+                                    tint = SecondaryDark,
                                     modifier = Modifier.size(20.dp)
                                 )
                             }
@@ -197,13 +214,13 @@ fun HomeScreen(
                                 fontFamily = PlusJakartaSans,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 20.sp,
-                                color = TextPrimary
+                                color = SecondaryDark
                             )
                             Text(
                                 text = stringResource(R.string.remaining),
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 12.sp,
-                                color = Neutral
+                                color = SecondaryDark.copy(alpha = 0.8f)
                             )
                         }
                     }
@@ -214,20 +231,23 @@ fun HomeScreen(
                             .weight(1f)
                             .shadow(4.dp, RoundedCornerShape(16.dp)),
                         shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color(0xFFF8F8F8))
+                        colors = CardDefaults.cardColors(containerColor = TertiaryDark.copy(alpha = 0.5f))
                     ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
                             Box(
                                 modifier = Modifier
                                     .size(36.dp)
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(Neutral.copy(alpha = 0.1f)),
+                                    .clip(CircleShape)
+                                    .background(Color.White.copy(alpha = 0.5f)),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     Icons.Default.TrendingDown,
                                     contentDescription = null,
-                                    tint = Neutral,
+                                    tint = SecondaryDark,
                                     modifier = Modifier.size(20.dp)
                                 )
                             }
@@ -237,13 +257,13 @@ fun HomeScreen(
                                 fontFamily = PlusJakartaSans,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 20.sp,
-                                color = TextPrimary
+                                color = SecondaryDark
                             )
                             Text(
                                 text = "Less than last mo.",
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 12.sp,
-                                color = Neutral
+                                color = SecondaryDark.copy(alpha = 0.8f)
                             )
                         }
                     }
