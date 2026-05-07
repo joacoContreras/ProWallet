@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ProWallet</string>
+    <string name="login_title">Iniciar Sesión</string>
+    <string name="register_title">Crear Cuenta</string>
+    <string name="email_label">Correo Electrónico</string>
+    <string name="password_label">Contraseña</string>
+    <string name="confirm_password_label">Confirmar Contraseña</string>
+    <string name="full_name_label">Nombre Completo</string>
+    <string name="login_button">Ingresar</string>
+    <string name="register_button">Registrarse</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="dont_have_account">¿No tienes una cuenta?</string>
+    <string name="already_have_account">¿Ya tienes una cuenta?</string>
+    <string name="success_title">¡Bienvenido a ProWallet!</string>
+    <string name="success_subtitle">Tu cuenta ha sido creada con éxito. Ya puedes empezar a gestionar tus finanzas con calma.</string>
+    <string name="begin_button">Empezar</string>
+    <string name="secure_account_verified">Cuenta Segura Verificada</string>
+    <string name="home_tab">Inicio</string>
+    <string name="analytics_tab">Análisis</string>
+    <string name="history_tab">Historial</string>
+    <string name="profile_tab">Perfil</string>
+    <string name="new_purchase_title">Nueva Compra</string>
+    <string name="total_monthly_spend">Gasto Mensual Total</string>
+    <string name="remaining">Restante</string>
+    <string name="recent_purchases">Compras Recientes</string>
+    <string name="see_all">Ver Todo</string>
+    <string name="save_purchase">Guardar Compra</string>
+    <string name="store_name_label">Nombre de la Tienda</string>
+    <string name="date_label">Fecha</string>
+    <string name="total_amount_label">Monto Total</string>
+    <string name="products_label">Productos</string>
+    <string name="capture_ticket">Capturar o adjuntar ticket</string>
+    <string name="monthly_budget">Presupuesto Mensual</string>
+    <string name="top_stores">Tiendas Principales</string>
+    <string name="monthly_trend">Tendencia Mensual</string>
+    <string name="transactions_count">%d transacciones registradas</string>
+    <string name="settings_title">Ajustes</string>
+    <string name="profile_title">Perfil</string>
+    <string name="edit_profile">Editar Perfil</string>
+    <string name="logout">Cerrar Sesión</string>
+    <string name="notifications_title">Notificaciones</string>
+    <string name="mark_all_read">Marcar todas como leídas</string>
+    <string name="today_section">Hoy</string>
+    <string name="earlier_section">Antes</string>
+    <string name="notification_budget_title">Alerta de Presupuesto</string>
+    <string name="notification_budget_desc">Has alcanzado el 80% de tu presupuesto de comestibles para este mes. Echa un vistazo a tus tendencias de gasto.</string>
+    <string name="notification_savings_title">Hito de Ahorro</string>
+    <string name="notification_savings_desc">¡Buen trabajo! Ahorraste $50 más que el mes pasado. ¡Estás más cerca de tu meta de vacaciones!</string>
+    <string name="notification_reminder_title">Recordatorio</string>
+    <string name="notification_reminder_desc">No olvides registrar tu gasto de almuerzo de hoy para mantener tu presupuesto preciso.</string>
+    <string name="notification_system_title">Actualización del Sistema</string>
+    <string name="notification_system_desc">ProWallet ahora es más rápido. Mira el nuevo diseño del tablero diseñado para la calma financiera.</string>
+    <string name="notification_growth_title">Crecimiento de Cartera</string>
+    <string name="notification_growth_desc">Tu cartera de inversiones creció un 1,2% esta semana a pesar de las fluctuaciones del mercado. ¡Mantén el rumbo!</string>
+    <string name="new_feature_badge">Nueva Función</string>
+    <string name="ai_scanning_title">Escaneo de Tickets con IA</string>
+    <string name="ai_scanning_desc">Nuevo: Ahora puedes escanear tickets y recibos con IA para registrar automáticamente tus gastos en tiempo real.</string>
+    <string name="try_it_now">Pruébalo ahora</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_subtitle">Bienvenido a la calma financiera</string>
+
+    <!-- Home Screen -->
+    <string name="welcome_user">Hola, %s 👋</string>
+    <string name="summary_subtitle">Aquí tienes tu resumen</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_notifications_section">NOTIFICACIONES</string>
+    <string name="settings_notifications_title">Notificaciones</string>
+    <string name="settings_notifications_subtitle">Recibir alertas de gastos</string>
+    <string name="settings_budget_alerts_title">Alertas de Presupuesto</string>
+    <string name="settings_budget_alerts_subtitle">Cuando superas el 80% del mes</string>
+    <string name="settings_weekly_report_title">Informe Semanal</string>
+    <string name="settings_weekly_report_subtitle">Resumen de gastos cada lunes</string>
+    <string name="settings_security_section">SEGURIDAD</string>
+    <string name="settings_biometrics_title">Biometría</string>
+    <string name="settings_biometrics_subtitle">Desbloquear con huella digital</string>
+    <string name="settings_appearance_section">APARIENCIA</string>
+    <string name="settings_dark_mode_title">Modo Oscuro</string>
+    <string name="settings_dark_mode_subtitle">Tema oscuro de la aplicación</string>
+    <string name="settings_data_section">DATOS</string>
+    <string name="settings_sync_title">Sincronización</string>
+    <string name="settings_sync_subtitle">Sincronización automática de moneda local</string>
+    <string name="settings_export_title">Exportar Datos</string>
+    <string name="settings_export_subtitle">Descargar historial en CSV</string>
+    <string name="settings_delete_account_title">Eliminar Cuenta</string>
+    <string name="settings_delete_account_subtitle">Esta acción es irreversible</string>
+    <string name="developed_for">Desarrollado para Tecnologías Móviles · UNDEF</string>
+
+    <!-- Profile Screen -->
+    <string name="personal_info_section">INFORMACIÓN PERSONAL</string>
+    <string name="full_name_placeholder">Tu nombre completo</string>
+    <string name="email_placeholder">correo@ejemplo.com</string>
+    <string name="save_changes_button">Guardar Cambios</string>
+    <string name="statistics_section">ESTADÍSTICAS</string>
+    <string name="stat_purchases">Compras</string>
+    <string name="stat_this_month">Este mes</string>
+    <string name="stat_savings">Ahorros</string>
+    <string name="logout_button">Cerrar Sesión</string>
+
+    <!-- History Screen -->
+    <string name="total_spent">Total Gastado</string>
+
+    <!-- Purchase Detail -->
+    <string name="purchase_detail_title">Detalle de Compra</string>
+    <string name="purchase_not_found">Compra no encontrada</string>
+    <string name="total_label">Total</string>
+
+    <!-- New Purchase -->
+    <string name="new_purchase_subtitle">Registra tus últimos gastos para seguir tus ahorros.</string>
+    <string name="ticket_capture_desc">JPEG, PNG hasta 5MB</string>
+    <string name="purchase_details_section">DETALLES DE LA COMPRA</string>
+    <string name="store_name_placeholder">ej. Whole Foods Market</string>
+    <string name="date_placeholder">mm/dd/aa</string>
+    <string name="scan_item">Escanear Artículo</string>
+    <string name="id_code_label">ID/Código</string>
+    <string name="price_label">Precio</string>
+    <string name="item_desc_placeholder">Descripción del artículo…</string>
+    <string name="no_products_yet">Aún no se han añadido productos.</string>
+    <string name="product_name_label">Nombre del Producto</string>
+
+    <!-- Analytics Screen -->
+    <string name="analytics_subtitle">Sigue tu camino hacia el bienestar financiero.</string>
+    <string name="total_spent_label">TOTAL GASTADO (%s)</string>
+    <string name="vs_last_month_format">%s vs mes pasado</string>
+    <string name="highest_spend_label">Mayor Gasto</string>
+    <string name="average_purchase_label">Compra Promedio</string>
+    <string name="across_transactions_format">En %d transacciones</string>
+    <string name="monthly_trend_6mo">6 Meses</string>
+    <string name="most_purchased_products">Productos más comprados</string>
+    <string name="no_data_available">No hay datos disponibles</string>
+    <string name="times_format">%d veces</string>
+
+    <!-- Top Stores Screen -->
+    <string name="top_stores_title">Tiendas principales</string>
+    <string name="monthly_spending_insight">Información de gasto mensual</string>
+    <string name="ranked_by_volume">Clasificado por volumen</string>
+    <string name="spending_distribution">Distribución de gastos</string>
+    <string name="from_last_month_format">%s desde el mes pasado</string>
+    <string name="transactions_format">%d Transacciones</string>
+    <string name="groceries_label">Comestibles</string>
+    <string name="tech_digital_label">Tecnología y digital</string>
+
+    <!-- Store Detail Screen -->
+    <string name="store_detail_title">Detalle de la Tienda</string>
+    <string name="time_label">Hora</string>
+    <string name="select_date">Seleccionar Fecha</string>
+    <string name="select_time">Seleccionar Hora</string>
+    <string name="cancel">Cancelar</string>
+    <string name="ok">Aceptar</string>
+
+    <!-- New added strings -->
+    <string name="language_title">Idioma</string>
+    <string name="language_subtitle">Selecciona tu idioma de preferencia</string>
+
+    <!-- Home Screen Additional -->
+    <string name="healthy_pace">Ritmo saludable</string>
+    <string name="of_budget">%s del Presupuesto</string>
+    <string name="less_than_last_mo">Menos que el mes pasado</string>
+
+    <!-- Bottom Bar -->
+    <string name="nav_home">Inicio</string>
+    <string name="nav_new">Nuevo</string>
+    <string name="nav_analytics">Análisis</string>
+
+    <!-- Additional missing strings -->
+    <string name="attach_ticket_image">Adjuntar imagen del ticket</string>
+    <string name="spending_limit">Límite de gasto</string>
+
+    <!-- Manage Accounts Screen -->
+    <string name="manage_accounts_title">Gestionar cuentas</string>
+    <string name="manage_accounts_subtitle">Revisa y organiza tus fondos conectados</string>
+    <string name="add_new_account">Añadir nueva cuenta</string>
+    <string name="primary_label">Primaria</string>
+    <string name="edit_label">Editar</string>
+
+    <!-- Personal Inflation Screen -->
+    <string name="monthly_inflation">Inflación mensual</string>
+    <string name="quarterly">Trimestral</string>
+    <string name="monthly">Mensual</string>
+    <string name="personal_inflation_rate">Tasa de inflación personal</string>
+    <string name="top_price_hikes_label">MAYORES AUMENTOS DE PRECIO</string>
+    <string name="price_changes_by_product">Cambios de precio por producto</string>
+    <string name="view_all_products">Ver todos los productos</string>
+    <string name="ai_savings_tip">Consejo de ahorro de IA</string>
+    <string name="since_last_month">Desde el mes pasado</string>
+    <string name="average_trip_increase">Aumento promedio por viaje</string>
+
+    <!-- Contact Support Screen -->
+    <string name="how_can_we_help">¿Cómo podemos ayudar?</string>
+    <string name="search_help_center_desc">Busca en nuestro centro de ayuda respuestas rápidas a preguntas comunes sobre tu cuenta y ahorros.</string>
+    <string name="search_help_center_hint">Buscar \'Depósito directo\'…</string>
+    <string name="live_chat">Chat en vivo</string>
+    <string name="email_support">Soporte por correo</string>
+    <string name="faq_title">Preguntas frecuentes</string>
+    <string name="send_us_a_message">Envíanos un mensaje</string>
+    <string name="expect_response_24h">Espera una respuesta en 24 horas.</string>
+    <string name="subject_label">Asunto</string>
+    <string name="message_label">Mensaje</string>
+    <string name="message_hint">¿Cómo podemos ayudarte hoy?</string>
+    <string name="send_message_button">Enviar mensaje</string>
+    <string name="team_here_for_you">Nuestro equipo está aquí para vos.</string>
+    <string name="available_24_7">Disponible 24/7 para soporte de emergencia.</string>
+    <string name="learn_more_settlement">Más información sobre tiempos de liquidación</string>
+    <!-- Auto Savings Screen -->
+    <string name="auto_savings_plan">Plan de ahorro automático</string>
+    <string name="auto_savings_footer">Los fondos se transferirán automáticamente desde su cuenta principal en la fecha programada.</string>
+    <string name="activate_plan">Activar plan</string>
+    <string name="savings_goal">Meta de ahorro</string>
+    <string name="savings_yearly_format">Has ahorrado %s este año.</string>
+    <string name="percentage">Porcentaje</string>
+    <string name="fixed_amount">Monto fijo</string>
+    <string name="current_income">Ingresos actuales</string>
+    <string name="estimated_monthly_savings">Ahorro mensual estimado</string>
+    <string name="frequency">Frecuencia</string>
+    <string name="bi_weekly">Quincenal</string>
+    <string name="weekly">Semanal</string>
+    <string name="destination_fund">Fondo de destino</string>
+</resources>

@@ -19,11 +19,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.undef.prowallet.R
 import com.undef.prowallet.domain.Product
 import com.undef.prowallet.domain.Purchase
 import com.undef.prowallet.ui.theme.*
@@ -320,9 +322,9 @@ fun BottomNavBar(
             selected = currentRoute == "home",
             onClick = onHomeClick,
             icon = {
-                Icon(Icons.Default.Home, contentDescription = "Home")
+                Icon(Icons.Default.Home, contentDescription = stringResource(R.string.nav_home))
             },
-            label = { Text("Home", fontFamily = PlusJakartaSans) },
+            label = { Text(stringResource(R.string.nav_home), fontFamily = PlusJakartaSans) },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = Secondary,
                 selectedTextColor = Secondary,
@@ -343,13 +345,13 @@ fun BottomNavBar(
                 ) {
                     Icon(
                         Icons.Default.Add,
-                        contentDescription = "New",
+                        contentDescription = stringResource(R.string.nav_new),
                         tint = Color.White,
                         modifier = Modifier.size(24.dp)
                     )
                 }
             },
-            label = { Text("New", fontFamily = PlusJakartaSans) },
+            label = { Text(stringResource(R.string.nav_new), fontFamily = PlusJakartaSans) },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = Secondary,
                 selectedTextColor = Secondary,
@@ -361,9 +363,9 @@ fun BottomNavBar(
             selected = currentRoute == "analytics",
             onClick = onAnalyticsClick,
             icon = {
-                Icon(Icons.Default.BarChart, contentDescription = "Analytics")
+                Icon(Icons.Default.BarChart, contentDescription = stringResource(R.string.nav_analytics))
             },
-            label = { Text("Analytics", fontFamily = PlusJakartaSans) },
+            label = { Text(stringResource(R.string.nav_analytics), fontFamily = PlusJakartaSans) },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = Secondary,
                 selectedTextColor = Secondary,

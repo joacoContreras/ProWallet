@@ -66,7 +66,7 @@ fun ContactSupportScreen(onNavigateBack: () -> Unit) {
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "How can we help?",
+                        text = stringResource(R.string.how_can_we_help),
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Bold,
                         fontSize = 28.sp,
@@ -74,7 +74,7 @@ fun ContactSupportScreen(onNavigateBack: () -> Unit) {
                         textAlign = TextAlign.Center
                     )
                     Text(
-                        text = "Search our help center for quick answers to common questions about your account and savings.",
+                        text = stringResource(R.string.search_help_center_desc),
                         fontFamily = PlusJakartaSans,
                         fontSize = 14.sp,
                         color = Neutral,
@@ -88,7 +88,7 @@ fun ContactSupportScreen(onNavigateBack: () -> Unit) {
                         value = searchQuery,
                         onValueChange = { searchQuery = it },
                         modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("Search for 'Direct Deposit'...", color = NeutralLight) },
+                        placeholder = { Text(stringResource(R.string.search_help_center_hint), color = NeutralLight) },
                         leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = Neutral) },
                         shape = RoundedCornerShape(12.dp),
                         colors = OutlinedTextFieldDefaults.colors(
@@ -105,14 +105,14 @@ fun ContactSupportScreen(onNavigateBack: () -> Unit) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     SupportQuickAction(
                         icon = Icons.Default.ChatBubble,
-                        label = "Live Chat",
+                        label = stringResource(R.string.live_chat),
                         containerColor = SecondaryLight.copy(alpha = 0.2f),
                         contentColor = SecondaryDark,
                         modifier = Modifier.weight(1f)
                     )
                     SupportQuickAction(
                         icon = Icons.Default.Mail,
-                        label = "Email Support",
+                        label = stringResource(R.string.email_support),
                         containerColor = TertiaryDark.copy(alpha = 0.4f),
                         contentColor = PrimaryDarker,
                         modifier = Modifier.weight(1f)
@@ -128,8 +128,8 @@ fun ContactSupportScreen(onNavigateBack: () -> Unit) {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "Frequently Asked Questions", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = TextPrimary)
-                        Text(text = "View all", color = PrimaryDarker, fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.clickable { })
+                        Text(text = stringResource(R.string.faq_title), fontWeight = FontWeight.Bold, fontSize = 18.sp, color = TextPrimary)
+                        Text(text = stringResource(R.string.see_all), color = PrimaryDarker, fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.clickable { })
                     }
                     
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -153,12 +153,12 @@ fun ContactSupportScreen(onNavigateBack: () -> Unit) {
                 ) {
                     Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                         Column {
-                            Text(text = "Send us a Message", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = TextPrimary)
-                            Text(text = "Expect a response within 24 hours.", fontSize = 13.sp, color = Neutral)
+                            Text(text = stringResource(R.string.send_us_a_message), fontWeight = FontWeight.Bold, fontSize = 18.sp, color = TextPrimary)
+                            Text(text = stringResource(R.string.expect_response_24h), fontSize = 13.sp, color = Neutral)
                         }
 
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text(text = "Subject", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                            Text(text = stringResource(R.string.subject_label), fontSize = 14.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
                             Box {
                                 var expanded by remember { mutableStateOf(false) }
                                 OutlinedCard(
@@ -192,12 +192,12 @@ fun ContactSupportScreen(onNavigateBack: () -> Unit) {
                         }
 
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text(text = "Message", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                            Text(text = stringResource(R.string.message_label), fontSize = 14.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
                             OutlinedTextField(
                                 value = message,
                                 onValueChange = { message = it },
                                 modifier = Modifier.fillMaxWidth().height(120.dp),
-                                placeholder = { Text("How can we help you today?", color = NeutralLight) },
+                                placeholder = { Text(stringResource(R.string.message_hint), color = NeutralLight) },
                                 shape = RoundedCornerShape(12.dp),
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedContainerColor = Color.White,
@@ -213,7 +213,7 @@ fun ContactSupportScreen(onNavigateBack: () -> Unit) {
                             shape = RoundedCornerShape(28.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = PrimaryDarker)
                         ) {
-                            Text(text = "Send Message", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                            Text(text = stringResource(R.string.send_message_button), fontWeight = FontWeight.Bold, fontSize = 16.sp)
                         }
                     }
                 }
@@ -235,8 +235,8 @@ fun ContactSupportScreen(onNavigateBack: () -> Unit) {
                         )
                         Box(modifier = Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color.Transparent, PrimaryDarker.copy(alpha = 0.8f)))))
                         Column(modifier = Modifier.padding(20.dp).align(Alignment.BottomStart)) {
-                            Text(text = "Our team is here for you.", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                            Text(text = "Available 24/7 for emergency support.", color = Color.White.copy(alpha = 0.8f), fontSize = 13.sp)
+                            Text(text = stringResource(R.string.team_here_for_you), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                            Text(text = stringResource(R.string.available_24_7), color = Color.White.copy(alpha = 0.8f), fontSize = 13.sp)
                         }
                     }
                 }
@@ -318,7 +318,7 @@ fun FaqExpandedItem(icon: ImageVector, title: String, description: String) {
                 HorizontalDivider(color = BackgroundLight)
                 Text(text = description, fontSize = 13.sp, color = Neutral, lineHeight = 18.sp)
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable { }) {
-                    Text(text = "Learn more about settlement times", color = PrimaryDarker, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    Text(text = stringResource(R.string.learn_more_settlement), color = PrimaryDarker, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                     Spacer(Modifier.width(4.dp))
                     Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, tint = PrimaryDarker, modifier = Modifier.size(14.dp))
                 }

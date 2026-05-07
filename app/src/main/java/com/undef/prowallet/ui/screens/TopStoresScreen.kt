@@ -51,7 +51,7 @@ fun TopStoresScreen(
             onNavigateBack = onNavigateBack,
             actions = {
                 IconButton(onClick = { }) {
-                    Icon(Icons.Default.Search, contentDescription = "Search", tint = PrimaryDarker)
+                    Icon(Icons.Default.Search, contentDescription = stringResource(R.string.see_all), tint = PrimaryDarker)
                 }
             }
         )
@@ -92,7 +92,7 @@ fun TopStoresScreen(
                                 shape = RoundedCornerShape(percent = 50)
                             ) {
                                 Text(
-                                    text = "+12% from last month",
+                                    text = stringResource(R.string.from_last_month_format, "+12%"),
                                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                                     fontFamily = PlusJakartaSans,
                                     fontSize = 11.sp,
@@ -196,9 +196,9 @@ fun TopStoresScreen(
 
             item {
                 SectionCard {
-                    DistributionItem(label = "Groceries", percentage = 0.45f, color = PrimaryDarker)
+                    DistributionItem(label = stringResource(R.string.groceries_label), percentage = 0.45f, color = PrimaryDarker)
                     Spacer(Modifier.height(16.dp))
-                    DistributionItem(label = "Tech & Digital", percentage = 0.30f, color = Secondary)
+                    DistributionItem(label = stringResource(R.string.tech_digital_label), percentage = 0.30f, color = Secondary)
                 }
             }
             
@@ -250,7 +250,7 @@ fun StoreRankItem(
                     color = TextPrimary
                 )
                 Text(
-                    text = "$transactions Transactions",
+                    text = stringResource(R.string.transactions_format, transactions),
                     fontFamily = PlusJakartaSans,
                     fontSize = 12.sp,
                     color = Neutral

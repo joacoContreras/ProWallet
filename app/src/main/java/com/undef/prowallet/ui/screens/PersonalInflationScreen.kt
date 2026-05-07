@@ -58,7 +58,7 @@ fun PersonalInflationScreen(onNavigateBack: () -> Unit, onNavigateToNotification
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Monthly Inflation",
+                            text = stringResource(R.string.monthly_inflation),
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.Bold,
                             fontSize = 22.sp,
@@ -70,8 +70,8 @@ fun PersonalInflationScreen(onNavigateBack: () -> Unit, onNavigateToNotification
                             shape = RoundedCornerShape(percent = 50)
                         ) {
                             Row(modifier = Modifier.padding(4.dp)) {
-                                TabButton("Monthly", selectedTab == "Monthly") { selectedTab = "Monthly" }
-                                TabButton("Quarterly", selectedTab == "Quarterly") { selectedTab = "Quarterly" }
+                                TabButton(stringResource(R.string.monthly), selectedTab == "Monthly") { selectedTab = "Monthly" }
+                                TabButton(stringResource(R.string.quarterly), selectedTab == "Quarterly") { selectedTab = "Quarterly" }
                             }
                         }
                     }
@@ -88,13 +88,13 @@ fun PersonalInflationScreen(onNavigateBack: () -> Unit, onNavigateToNotification
                                 verticalAlignment = Alignment.Top
                             ) {
                                 Column {
-                                    Text(text = "Personal Inflation Rate", fontSize = 14.sp, color = Neutral)
+                                    Text(text = stringResource(R.string.personal_inflation_rate), fontSize = 14.sp, color = Neutral)
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         Text(text = "+4.2%", fontSize = 32.sp, fontWeight = FontWeight.ExtraBold, color = TextPrimary)
                                         Spacer(Modifier.width(8.dp))
                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                             Icon(Icons.AutoMirrored.Filled.TrendingUp, contentDescription = null, tint = ErrorRed, modifier = Modifier.size(16.dp))
-                                            Text(text = "vs last month", fontSize = 12.sp, color = ErrorRed, fontWeight = FontWeight.Medium)
+                                            Text(text = stringResource(R.string.vs_last_month_format, ""), fontSize = 12.sp, color = ErrorRed, fontWeight = FontWeight.Medium)
                                         }
                                     }
                                 }
@@ -140,7 +140,7 @@ fun PersonalInflationScreen(onNavigateBack: () -> Unit, onNavigateToNotification
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Icon(Icons.Default.PriorityHigh, contentDescription = null, tint = PrimaryDarker, modifier = Modifier.size(18.dp))
-                        Text(text = "TOP PRICE HIKES", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Neutral, letterSpacing = 1.sp)
+                        Text(text = stringResource(R.string.top_price_hikes_label), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Neutral, letterSpacing = 1.sp)
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                         HikeCard(icon = Icons.Default.LocalGasStation, label = "Fuel", value = "+12.4%", color = ErrorRed, modifier = Modifier.weight(1f))
@@ -152,20 +152,20 @@ fun PersonalInflationScreen(onNavigateBack: () -> Unit, onNavigateToNotification
             // Price Changes by Product
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    Text(text = "Price Changes by Product", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                    Text(text = stringResource(R.string.price_changes_by_product), fontSize = 18.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(20.dp),
                         colors = CardDefaults.cardColors(containerColor = Color.White)
                     ) {
                         Column {
-                            ProductChangeItem(Icons.Default.Egg, "Organic Milk", "Groceries", "+$0.50", "Since last month")
+                            ProductChangeItem(Icons.Default.Egg, "Organic Milk", "Groceries", "+$0.50", stringResource(R.string.since_last_month))
                             HorizontalDivider(color = Color(0xFFF8F8F8))
-                            ProductChangeItem(Icons.Default.Wifi, "Internet Plan", "Bills", "+$5.00", "Since last month")
+                            ProductChangeItem(Icons.Default.Wifi, "Internet Plan", "Bills", "+$5.00", stringResource(R.string.since_last_month))
                             HorizontalDivider(color = Color(0xFFF8F8F8))
-                            ProductChangeItem(Icons.Default.LocalCafe, "Coffee Beans", "Groceries", "+$0.15", "Since last month")
+                            ProductChangeItem(Icons.Default.LocalCafe, "Coffee Beans", "Groceries", "+$0.15", stringResource(R.string.since_last_month))
                             HorizontalDivider(color = Color(0xFFF8F8F8))
-                            ProductChangeItem(Icons.Default.DirectionsCar, "Ride Share", "Transport", "+$1.25", "Average trip increase")
+                            ProductChangeItem(Icons.Default.DirectionsCar, "Ride Share", "Transport", "+$1.25", stringResource(R.string.average_trip_increase))
                             
                             Button(
                                 onClick = {},
@@ -173,7 +173,7 @@ fun PersonalInflationScreen(onNavigateBack: () -> Unit, onNavigateToNotification
                                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF3F4F3)),
                                 shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
                             ) {
-                                Text("View All Products", color = PrimaryDarker, fontWeight = FontWeight.Bold)
+                                Text(stringResource(R.string.view_all_products), color = PrimaryDarker, fontWeight = FontWeight.Bold)
                             }
                         }
                     }
@@ -190,7 +190,7 @@ fun PersonalInflationScreen(onNavigateBack: () -> Unit, onNavigateToNotification
                     Row(modifier = Modifier.padding(20.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                         Icon(Icons.Default.SmartToy, contentDescription = null, tint = Color.White, modifier = Modifier.size(32.dp))
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text("AI Savings Tip", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                            Text(stringResource(R.string.ai_savings_tip), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                             Text(
                                 "Based on your spending, switching to a quarterly grocery subscription could save you $42/month against rising dairy costs.",
                                 color = Color.White.copy(alpha = 0.9f),

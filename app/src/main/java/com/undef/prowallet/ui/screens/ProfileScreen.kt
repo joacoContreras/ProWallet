@@ -21,10 +21,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
 import com.undef.prowallet.viewmodel.AuthViewModel
+
+@Preview(showBackground = true)
+@Composable
+fun ProfileScreenPreview() {
+    ProWalletTheme {
+        ProfileScreen(
+            authViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+            onNavigateBack = {},
+            onNavigateToSettings = {},
+            onNavigateToManageAccounts = {},
+            onNavigateToMonthlySetup = {},
+            onNavigateToAutoSavings = {},
+            onNavigateToContactSupport = {},
+            onLogout = {}
+        )
+    }
+}
 
 @Composable
 fun ProfileScreen(
@@ -104,7 +122,7 @@ fun ProfileScreen(
                     color = TextPrimary
                 )
                 Text(
-                    text = "Wealth Management Plan: Pro Platinum",
+                    text = "Wealth Management Plan: Pro Plan",
                     fontFamily = PlusJakartaSans,
                     fontSize = 14.sp,
                     color = Neutral
@@ -165,7 +183,7 @@ fun ProfileScreen(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("Spending Limit", fontSize = 12.sp, color = Neutral)
+                                Text(stringResource(R.string.spending_limit), fontSize = 12.sp, color = Neutral)
                                 Text("$5,408 / $8,450", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
                             }
                             LinearProgressIndicator(

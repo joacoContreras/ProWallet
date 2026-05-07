@@ -83,7 +83,7 @@ fun AnalyticsScreen(
                             .clip(RoundedCornerShape(12.dp))
                             .background(Primary.copy(alpha = 0.1f))
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.TrendingUp, contentDescription = "Personal Inflation", tint = PrimaryDarker)
+                        Icon(Icons.AutoMirrored.Filled.TrendingUp, contentDescription = stringResource(R.string.personal_inflation_rate), tint = PrimaryDarker)
                     }
                 }
             }
@@ -218,7 +218,7 @@ fun AnalyticsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Monthly Trend",
+                            text = stringResource(R.string.monthly_trend),
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
@@ -282,7 +282,7 @@ fun AnalyticsScreen(
 
             item {
                 Text(
-                    text = "Most Purchased Products",
+                    text = stringResource(R.string.most_purchased_products),
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
@@ -294,7 +294,7 @@ fun AnalyticsScreen(
                 SectionCard {
                     if (state.mostPurchasedProducts.isEmpty()) {
                         Text(
-                            text = "No data available",
+                            text = stringResource(R.string.no_data_available),
                             fontFamily = PlusJakartaSans,
                             fontSize = 14.sp,
                             color = Neutral,
@@ -335,7 +335,7 @@ fun AnalyticsScreen(
                                     )
                                 }
                                 Text(
-                                    text = "$count times",
+                                    text = stringResource(R.string.times_format, count),
                                     fontFamily = PlusJakartaSans,
                                     fontSize = 12.sp,
                                     color = Neutral
@@ -363,7 +363,7 @@ fun AnalyticsScreen(
                         color = TextPrimary
                     )
                     IconButton(onClick = onNavigateToTopStores) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowForwardIos, contentDescription = "View all", tint = Secondary, modifier = Modifier.size(16.dp))
+                        Icon(Icons.AutoMirrored.Filled.ArrowForwardIos, contentDescription = stringResource(R.string.see_all), tint = Secondary, modifier = Modifier.size(16.dp))
                     }
                 }
             }

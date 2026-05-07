@@ -128,12 +128,19 @@
     <string name="average_purchase_label">Average Purchase</string>
     <string name="across_transactions_format">Across %d transactions</string>
     <string name="monthly_trend_6mo">6 Months</string>
+    <string name="most_purchased_products">Most Purchased Products</string>
+    <string name="no_data_available">No data available</string>
+    <string name="times_format">%d times</string>
 
     <!-- Top Stores Screen -->
     <string name="top_stores_title">Top Stores</string>
     <string name="monthly_spending_insight">Monthly Spending Insight</string>
     <string name="ranked_by_volume">Ranked by Volume</string>
     <string name="spending_distribution">Spending Distribution</string>
+    <string name="from_last_month_format">%s from last month</string>
+    <string name="transactions_format">%d Transactions</string>
+    <string name="groceries_label">Groceries</string>
+    <string name="tech_digital_label">Tech &amp; Digital</string>
 
     <!-- Store Detail Screen -->
     <string name="store_detail_title">Store Detail</string>
@@ -142,4 +149,72 @@
     <string name="select_time">Select Time</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+
+    <!-- New added strings -->
+    <string name="language_title">Language</string>
+    <string name="language_subtitle">Select your preferred language</string>
+
+    <!-- Home Screen Additional -->
+    <string name="healthy_pace">Healthy pace</string>
+    <string name="of_budget">%s of Budget</string>
+    <string name="less_than_last_mo">Less than last mo.</string>
+
+    <!-- Bottom Bar -->
+    <string name="nav_home">Home</string>
+    <string name="nav_new">New</string>
+    <string name="nav_analytics">Analytics</string>
+
+    <!-- Additional missing strings -->
+    <string name="attach_ticket_image">Attach Ticket Image</string>
+    <string name="spending_limit">Spending Limit</string>
+
+    <!-- Manage Accounts Screen -->
+    <string name="manage_accounts_title">Manage Accounts</string>
+    <string name="manage_accounts_subtitle">Review and organize your connected funds</string>
+    <string name="add_new_account">Add New Account</string>
+    <string name="primary_label">Primary</string>
+    <string name="edit_label">Edit</string>
+
+    <!-- Personal Inflation Screen -->
+    <string name="monthly_inflation">Monthly Inflation</string>
+    <string name="quarterly">Quarterly</string>
+    <string name="monthly">Monthly</string>
+    <string name="personal_inflation_rate">Personal Inflation Rate</string>
+    <string name="top_price_hikes_label">TOP PRICE HIKES</string>
+    <string name="price_changes_by_product">Price Changes by Product</string>
+    <string name="view_all_products">View All Products</string>
+    <string name="ai_savings_tip">AI Savings Tip</string>
+    <string name="since_last_month">Since last month</string>
+    <string name="average_trip_increase">Average trip increase</string>
+
+    <!-- Contact Support Screen -->
+    <string name="how_can_we_help">How can we help?</string>
+    <string name="search_help_center_desc">Search our help center for quick answers to common questions about your account and savings.</string>
+    <string name="search_help_center_hint">Search for \'Direct Deposit\'...</string>
+    <string name="live_chat">Live Chat</string>
+    <string name="email_support">Email Support</string>
+    <string name="faq_title">Frequently Asked Questions</string>
+    <string name="send_us_a_message">Send us a Message</string>
+    <string name="expect_response_24h">Expect a response within 24 hours.</string>
+    <string name="subject_label">Subject</string>
+    <string name="message_label">Message</string>
+    <string name="message_hint">How can we help you today?</string>
+    <string name="send_message_button">Send Message</string>
+    <string name="team_here_for_you">Our team is here for you.</string>
+    <string name="available_24_7">Available 24/7 for emergency support.</string>
+    <string name="learn_more_settlement">Learn more about settlement times</string>
+    <!-- Auto Savings Screen -->
+    <string name="auto_savings_plan">Auto-Savings Plan</string>
+    <string name="auto_savings_footer">Funds will be automatically transferred from your primary account on the scheduled date.</string>
+    <string name="activate_plan">Activate Plan</string>
+    <string name="savings_goal">Savings Goal</string>
+    <string name="savings_yearly_format">You\'ve saved %s this year.</string>
+    <string name="percentage">Percentage</string>
+    <string name="fixed_amount">Fixed Amount</string>
+    <string name="current_income">Current Income</string>
+    <string name="estimated_monthly_savings">Estimated Monthly Savings</string>
+    <string name="frequency">Frequency</string>
+    <string name="bi_weekly">Bi-weekly</string>
+    <string name="weekly">Weekly</string>
+    <string name="destination_fund">Destination Fund</string>
 </resources>
