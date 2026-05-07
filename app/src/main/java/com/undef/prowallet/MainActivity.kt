@@ -58,7 +58,7 @@ fun ProWalletAppWrapper() {
                 onClick = { navController.navigate(Screen.ChatAi.route) },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(end = 20.dp, bottom = 100.dp), // Positioned above the BottomBar
+                    .padding(end = 20.dp, bottom = 120.dp), // Increased bottom padding to avoid Analytics overlap
                 containerColor = PrimaryDarker,
                 contentColor = Color.White,
                 shape = CircleShape

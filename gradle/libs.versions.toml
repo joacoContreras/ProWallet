@@ -11,8 +11,10 @@ composeBom = "2024.08.00"
 navigationCompose = "2.7.7"
 lifecycleViewmodelCompose = "2.8.4"
 coil = "2.6.0"
+appcompat = "1.7.0"
 
 [libraries]
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

@@ -24,12 +24,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.*
 import com.undef.prowallet.ui.theme.*
 import com.undef.prowallet.viewmodel.PurchaseViewModel
 import java.text.SimpleDateFormat
 import java.util.*
+
+@Preview(showBackground = true)
+@Composable
+fun NewPurchaseScreenPreview() {
+    ProWalletTheme {
+        NewPurchaseScreen(
+            viewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+            onSaveSuccess = {},
+            onNavigateBack = {},
+            onNavigateToHome = {},
+            onNavigateToAnalytics = {}
+        )
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -170,12 +185,6 @@ fun NewPurchaseScreen(
                         fontSize = 12.sp,
                         color = Neutral
                     )
-                    Text(
-                        text = stringResource(R.string.ticket_capture_desc),
-                        fontFamily = PlusJakartaSans,
-                        fontSize = 10.sp,
-                        color = NeutralLight
-                    )
                 }
             }
 
@@ -212,7 +221,7 @@ fun NewPurchaseScreen(
                         ) {
                             Icon(Icons.Default.AddPhotoAlternate, contentDescription = null)
                             Spacer(Modifier.width(8.dp))
-                            Text("Attach Ticket Image")
+                            Text(stringResource(R.string.attach_ticket_image))
                         }
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -279,14 +288,6 @@ fun NewPurchaseScreen(
 
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        CustomTextField(
-                            value = state.currentProductCode,
-                            onValueChange = viewModel::onProductCodeChange,
-                            placeholder = "12345",
-                            leadingIcon = Icons.Default.QrCode,
-                            label = stringResource(R.string.id_code_label),
-                            modifier = Modifier.weight(1f)
-                        )
                         CustomTextField(
                             value = state.currentProductPrice,
                             onValueChange = viewModel::onProductPriceChange,
@@ -355,7 +356,7 @@ fun NewPurchaseScreen(
                                     fontSize = 14.sp
                                 )
                                 Text(
-                                    "${product.code} • $${String.format(Locale.getDefault(), "%.2f", product.price)}",
+                                    "${String.format(Locale.getDefault(), "$%.2f", product.price)}",
                                     fontFamily = PlusJakartaSans,
                                     fontSize = 12.sp,
                                     color = Neutral

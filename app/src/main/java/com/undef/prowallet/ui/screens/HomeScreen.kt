@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
 import java.util.Locale
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.BottomNavBar
@@ -26,6 +27,22 @@ import com.undef.prowallet.ui.components.PurchaseCard
 import com.undef.prowallet.ui.components.SectionCard
 import com.undef.prowallet.ui.theme.*
 import com.undef.prowallet.viewmodel.HomeViewModel
+
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview() {
+    ProWalletTheme {
+        HomeScreen(
+            homeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+            onNavigateToNewPurchase = {},
+            onNavigateToAnalytics = {},
+            onNavigateToPurchaseDetail = {},
+            onNavigateToHistory = {},
+            onNavigateToProfile = {},
+            onNavigateToNotifications = {}
+        )
+    }
+}
 
 @Composable
 fun HomeScreen(
@@ -148,13 +165,13 @@ fun HomeScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Healthy pace",
+                                text = stringResource(R.string.healthy_pace),
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 12.sp,
                                 color = SecondaryDark.copy(alpha = 0.7f)
                             )
                             Text(
-                                text = "${((state.totalMonthlySpend / state.monthlyBudget) * 100).toInt()}% of Budget",
+                                text = stringResource(R.string.of_budget, "${((state.totalMonthlySpend / state.monthlyBudget) * 100).toInt()}%"),
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
@@ -261,7 +278,7 @@ fun HomeScreen(
                                 color = SecondaryDark
                             )
                             Text(
-                                text = "Less than last mo.",
+                                text = stringResource(R.string.less_than_last_mo),
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 12.sp,
                                 color = SecondaryDark.copy(alpha = 0.8f)

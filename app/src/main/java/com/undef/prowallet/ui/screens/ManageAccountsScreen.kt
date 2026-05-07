@@ -66,7 +66,7 @@ fun ManageAccountsScreen(onNavigateBack: () -> Unit) {
                 ) {
                     Icon(Icons.Default.Add, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
-                    Text(text = "Add New Account", fontFamily = PlusJakartaSans, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text(text = stringResource(R.string.add_new_account), fontFamily = PlusJakartaSans, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 }
             }
         }
@@ -90,8 +90,8 @@ fun ManageAccountsScreen(onNavigateBack: () -> Unit) {
                         Icon(Icons.Default.AccountBalanceWallet, contentDescription = null, tint = PrimaryDarker)
                     }
                     Column {
-                        Text(text = "Manage Accounts", fontFamily = PlusJakartaSans, fontWeight = FontWeight.Bold, fontSize = 20.sp, color = TextPrimary)
-                        Text(text = "Review and organize your connected funds", fontFamily = PlusJakartaSans, fontSize = 13.sp, color = Neutral)
+                        Text(text = stringResource(R.string.manage_accounts_title), fontFamily = PlusJakartaSans, fontWeight = FontWeight.Bold, fontSize = 20.sp, color = TextPrimary)
+                        Text(text = stringResource(R.string.manage_accounts_subtitle), fontFamily = PlusJakartaSans, fontSize = 13.sp, color = Neutral)
                     }
                 }
             }
@@ -136,7 +136,7 @@ fun AccountCard(account: BankAccount) {
                         shape = RoundedCornerShape(percent = 50)
                     ) {
                         Text(
-                            text = "Primary",
+                            text = stringResource(R.string.primary_label),
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Bold,
@@ -153,7 +153,7 @@ fun AccountCard(account: BankAccount) {
                     shape = RoundedCornerShape(20.dp),
                     border = androidx.compose.foundation.BorderStroke(1.dp, NeutralLight.copy(alpha = 0.3f))
                 ) {
-                    Text(text = "Edit", color = PrimaryDarker, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                    Text(text = stringResource(R.string.edit_label), color = PrimaryDarker, fontSize = 13.sp, fontWeight = FontWeight.Bold)
                 }
                 OutlinedButton(
                     onClick = { },
