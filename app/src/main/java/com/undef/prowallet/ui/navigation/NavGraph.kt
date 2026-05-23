@@ -1,6 +1,8 @@
 package com.undef.prowallet.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -58,8 +60,10 @@ fun AppNavGraph(navController: NavHostController) {
         startDestination = Screen.Splash.route
     ) {
         composable(Screen.Splash.route) {
+            val isLoggedIn by authViewModel.isLoggedIn.collectAsState(initial = false)
             SplashScreen(onNavigateToLogin = {
-                navController.navigate(Screen.Login.route) {
+                val destination = if (isLoggedIn) Screen.Home.route else Screen.Login.route
+                navController.navigate(destination) {
                     popUpTo(Screen.Splash.route) { inclusive = true }
                 }
             })
