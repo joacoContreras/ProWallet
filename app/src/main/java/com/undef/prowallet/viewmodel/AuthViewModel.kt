@@ -138,6 +138,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         _uiState.value = _uiState.value.copy(registrationSuccess = false)
     }
 
+    fun clearError() {
+        _uiState.value = _uiState.value.copy(error = null)
+    }
+
     fun sendResetCode(email: String) {
         _uiState.value = _uiState.value.copy(isLoading = true, error = null)
         _uiState.value = _uiState.value.copy(isLoading = false, resetEmailSent = true)

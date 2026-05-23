@@ -164,7 +164,7 @@ fun LoginScreen(
                     },
                     fontFamily = PlusJakartaSans,
                     fontSize = 13.sp,
-                    modifier = Modifier.clickable { onNavigateToRegister() }
+                    modifier = Modifier.clickable { viewModel.clearError(); onNavigateToRegister() }
                 )
             }
         }

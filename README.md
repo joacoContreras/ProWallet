@@ -46,9 +46,11 @@ Aplicación Android de gestión de gastos personales desarrollada como proyecto 
 ## Stack tecnológico
 
 - **Kotlin** + **Jetpack Compose** (Material 3)
-- **Navigation Compose** — navegación declarativa entre 24 pantallas
+- **Navigation Compose** — navegación declarativa entre 25 pantallas
 - **ViewModel** + **StateFlow** — arquitectura MVVM, un ViewModel por pantalla
-- **Coroutines** — operaciones asíncronas con `viewModelScope`
+- **Room** — base de datos local (usuarios, compras, productos, categorías)
+- **DataStore Preferences** — persistencia de sesión entre reinicios
+- **Coroutines** + **Flow** — operaciones asíncronas con `viewModelScope`
 - **compileSdk 35 / minSdk 26** (Android 8.0+)
 
 ---
@@ -58,19 +60,35 @@ Aplicación Android de gestión de gastos personales desarrollada como proyecto 
 ```
 com.undef.prowallet
 ├── data/
-│   ├── MockRepository.kt       ← datos de prueba (compras, usuario, budget)
-│   └── PurchaseRepository.kt   ← fuente de verdad compartida (StateFlow)
+│   ├── dao/
+│   │   ├── UserDao.kt
+│   │   ├── PurchaseDao.kt
+│   │   ├── ProductDao.kt
+│   │   ├── PurchasedItemDao.kt
+│   │   └── CategoryDao.kt
+│   ├── MockRepository.kt           ← datos de prueba (compras, budget)
+│   ├── PurchaseRepository.kt       ← fuente de verdad compartida (StateFlow)
+│   ├── ProWalletDatabase.kt        ← Room database singleton
+│   ├── UserEntity.kt
+│   ├── PurchaseEntity.kt
+│   ├── ProductEntity.kt
+│   ├── PurchasedItemEntity.kt
+│   ├── CategoryEntity.kt
+│   ├── PurchaseWithItems.kt
+│   ├── PurchasedItemWithProduct.kt
+│   └── StoreTotal.kt
 ├── domain/
-│   └── models.kt               ← User, Product, Purchase
+│   └── models.kt                   ← User, Product, Purchase
 ├── ui/
-│   ├── components/             ← PrimaryButton, CustomTextField, TopBar, etc.
-│   ├── navigation/             ← NavGraph + sealed class Screen
-│   ├── screens/                ← una pantalla por archivo (24 pantallas)
-│   └── theme/                  ← Color.kt · Type.kt · Theme.kt
+│   ├── components/                 ← PrimaryButton, CustomTextField, TopBar, etc.
+│   ├── navigation/                 ← NavGraph + sealed class Screen
+│   ├── screens/                    ← una pantalla por archivo (25 pantallas)
+│   └── theme/                      ← Color.kt · Type.kt · Theme.kt
 ├── util/
-│   └── LocaleHelper.kt         ← i18n (ES / EN)
+│   ├── LocaleHelper.kt             ← i18n (ES / EN)
+│   └── SessionManager.kt          ← DataStore: sesión persistida entre reinicios
 └── viewmodel/
-    ├── AuthViewModel.kt
+    ├── AuthViewModel.kt            ← Room + SHA-256 + DataStore
     ├── HomeViewModel.kt
     ├── PurchaseViewModel.kt
     ├── AnalyticsViewModel.kt
@@ -109,6 +127,7 @@ com.undef.prowallet
 | Recuperar contraseña | `forgot_password` |
 | Verificar código | `verify_code` |
 | Nueva contraseña | `update_password` |
+| Contraseña actualizada | `update_password_success` |
 
 ---
 
