@@ -203,7 +203,106 @@
     <string name="team_here_for_you">Our team is here for you.</string>
     <string name="available_24_7">Available 24/7 for emergency support.</string>
     <string name="learn_more_settlement">Learn more about settlement times</string>
+    <!-- Verify Code Screen -->
+    <string name="verify_identity">Verify Identity</string>
+    <string name="verify_code_subtitle">We\'ve sent a 6-digit code to your email. Enter it below to continue.</string>
+    <string name="verify_code_button">Verify Code</string>
+    <string name="resend_code">Didn\'t receive a code? Resend</string>
+    <string name="secured_by_prowallet">Secured by ProWallet Encryption</string>
+
+    <!-- Forgot Password Screen -->
+    <string name="forgot_password_title">Forgot Password?</string>
+    <string name="forgot_password_subtitle">Enter your email address and we\'ll send you a code to reset your password.</string>
+    <string name="email_example_placeholder">name@example.com</string>
+    <string name="email_address_label">Email Address</string>
+    <string name="send_code_button">Send Code</string>
+    <string name="back_to_login">Back to Login</string>
+    <string name="copyright_text">© 2024 ProWallet Financial. All rights reserved.</string>
+
+    <!-- Update Password Screen -->
+    <string name="new_password_title">New Password</string>
+    <string name="new_password_subtitle">Choose a strong password to protect your account.</string>
+    <string name="new_password_label">New Password</string>
+    <string name="password_strength_hint">Strong passwords include at least 8 characters, with a mix of letters, numbers, and symbols to ensure maximum security.</string>
+    <string name="passwords_dont_match">Passwords do not match</string>
+    <string name="update_password_button">Update Password</string>
+
+    <!-- Update Password Success Screen -->
+    <string name="password_updated_title">Password Updated!</string>
+    <string name="password_updated_subtitle">Your password has been changed successfully. You will be redirected to the login screen in a moment.</string>
+
+    <!-- Purchase Success Screen -->
+    <string name="view_full_receipt">View Full Receipt</string>
+    <string name="back_to_home">Back to Home</string>
+    <string name="purchase_successful">Purchase Successful!</string>
+    <string name="payment_processed">Your payment has been processed securely.</string>
+    <string name="total_amount_paid">TOTAL AMOUNT PAID</string>
+    <string name="items_summary">Items Summary</string>
+    <string name="subtotal">Subtotal</string>
+    <string name="sales_tax">Sales Tax (5%%)</string>
+    <string name="updated_real_time">Updated real-time</string>
+
+    <!-- Chat AI Screen -->
+    <string name="pro_assistant_title">ProAssistant</string>
+    <string name="ask_proassistant_placeholder">Ask ProAssistant…</string>
+    <string name="proassistant_typing">ProAssistant is typing…</string>
+    <string name="suggestion_analyze_week">Analyze my last week</string>
+    <string name="suggestion_budget_check">Budget check</string>
+    <string name="suggestion_top_categories">Top categories</string>
+
+    <!-- Store Detail Screen -->
+    <string name="merchant_id_format">Merchant ID: %s</string>
+    <string name="unusual_activity_title">Unusual Activity Detected</string>
+    <string name="unusual_activity_desc">Your spending at %s is 24%% higher than your 6-month average.</string>
+    <string name="last_month">Last Month</string>
+    <string name="this_month">This Month</string>
+    <string name="safe_label">Safe</string>
+    <string name="peak_label">Peak</string>
+    <string name="category_distribution">Category Distribution</string>
+    <string name="beverages_coffee">Beverages &amp; Coffee</string>
+    <string name="food_snacks">Food &amp; Snacks</string>
+    <string name="merchandise_label">Merchandise</string>
+
+    <!-- Profile Screen -->
+    <string name="wealth_management_plan">Wealth Management Plan: Pro Plan</string>
+    <string name="financial_profile">Financial Profile</string>
+    <string name="active_label">Active</string>
+    <string name="monthly_income">Monthly Income</string>
+    <string name="budget_usage">Budget Usage</string>
+    <string name="management_section">Management</string>
+    <string name="linked_accounts">Linked Accounts</string>
+    <string name="banks_connected">3 Banks Connected</string>
+    <string name="fixed_expenses">Fixed Expenses</string>
+    <string name="rent_utilities_subscriptions">Rent, Utilities, Subscriptions</string>
+    <string name="auto_savings_amount">$500/mo automated</string>
+    <string name="support_safety">Support &amp; Safety</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="security_privacy">Security &amp; Privacy</string>
+    <string name="security_features">2FA, Biometrics, Permissions</string>
+
+    <!-- Monthly Setup Screen -->
+    <string name="monthly_setup_title">Monthly Setup</string>
+    <string name="finalize_budget">Finalize Budget</string>
+    <string name="settings_adjust_anytime">You can adjust these settings at any time in Preferences.</string>
+    <string name="step_1_of_2">Step 1 of 2</string>
+    <string name="define_your_success">Define Your Success</string>
+    <string name="monthly_income_hint">How much do you plan to bring in this month? Include all revenue sources.</string>
+    <string name="budget_allocation">Budget Allocation</string>
+    <string name="add_custom_category">Add Custom Category</string>
+    <string name="primary_job">Primary Job</string>
+    <string name="add_source">+ Add Source</string>
+    <string name="transport_label">Transport</string>
+    <string name="dining_out_label">Dining Out</string>
+
+    <!-- Settings Screen -->
+    <string name="save_profile_button">Save Profile</string>
+    <string name="app_settings_section">APP SETTINGS</string>
+
+    <!-- Purchase Detail Screen -->
+    <string name="items_count_format">%d items</string>
+
     <!-- Auto Savings Screen -->
+    <string name="main_savings">Main Savings</string>
     <string name="auto_savings_plan">Auto-Savings Plan</string>
     <string name="auto_savings_footer">Funds will be automatically transferred from your primary account on the scheduled date.</string>
     <string name="activate_plan">Activate Plan</string>

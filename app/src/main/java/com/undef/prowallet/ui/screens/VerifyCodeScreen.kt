@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -53,7 +54,7 @@ fun VerifyCodeScreen(
             ) {
                 Icon(Icons.Default.AccountBalanceWallet, contentDescription = null, tint = Primary)
                 Text(
-                    text = "ProWallet",
+                    text = stringResource(R.string.app_name),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = Primary
@@ -90,14 +91,14 @@ fun VerifyCodeScreen(
             Spacer(Modifier.height(24.dp))
 
             Text(
-                text = "Verify Identity",
+                text = stringResource(R.string.verify_identity),
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.Bold,
                 fontSize = 30.sp,
                 color = TextPrimary
             )
             Text(
-                text = "We've sent a 6-digit code to your email. Enter it below to continue.",
+                text = stringResource(R.string.verify_code_subtitle),
                 fontFamily = PlusJakartaSans,
                 fontSize = 16.sp,
                 color = Neutral,
@@ -161,7 +162,7 @@ fun VerifyCodeScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Text(
-                                text = "Verify Code",
+                                text = stringResource(R.string.verify_code_button),
                                 fontFamily = PlusJakartaSans,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp
@@ -172,7 +173,7 @@ fun VerifyCodeScreen(
 
                     TextButton(onClick = { }) {
                         Text(
-                            text = "Didn't receive a code? Resend",
+                            text = stringResource(R.string.resend_code),
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp,
@@ -195,7 +196,7 @@ fun VerifyCodeScreen(
                 ) {
                     Icon(Icons.Default.Shield, contentDescription = null, tint = Secondary, modifier = Modifier.size(20.dp))
                     Text(
-                        text = "Secured by ProWallet Encryption",
+                        text = stringResource(R.string.secured_by_prowallet),
                         fontFamily = PlusJakartaSans,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,

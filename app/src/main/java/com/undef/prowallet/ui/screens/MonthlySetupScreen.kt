@@ -31,7 +31,7 @@ fun MonthlySetupScreen(onNavigateBack: () -> Unit) {
 
     Scaffold(
         topBar = {
-            TopBar(title = "Monthly Setup", onNavigateBack = onNavigateBack)
+            TopBar(title = stringResource(R.string.monthly_setup_title), onNavigateBack = onNavigateBack)
         },
         containerColor = BackgroundLight,
         bottomBar = {
@@ -46,10 +46,10 @@ fun MonthlySetupScreen(onNavigateBack: () -> Unit) {
                     shape = RoundedCornerShape(28.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = PrimaryDarker)
                 ) {
-                    Text(text = "Finalize Budget", fontFamily = PlusJakartaSans, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                    Text(text = stringResource(R.string.finalize_budget), fontFamily = PlusJakartaSans, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 }
                 Text(
-                    text = "You can adjust these settings at any time in Preferences.",
+                    text = stringResource(R.string.settings_adjust_anytime),
                     fontSize = 11.sp,
                     color = Neutral,
                     textAlign = TextAlign.Center
@@ -73,8 +73,8 @@ fun MonthlySetupScreen(onNavigateBack: () -> Unit) {
                 ) {
                     Box(modifier = Modifier.fillMaxSize().background(Brush.horizontalGradient(listOf(PrimaryDark, PrimaryLight))))
                     Column(modifier = Modifier.padding(24.dp).align(Alignment.BottomStart)) {
-                        Text(text = "Step 1 of 2", color = Color.White.copy(alpha = 0.8f), fontSize = 12.sp, fontWeight = FontWeight.Medium)
-                        Text(text = "Define Your Success", color = Color.White, fontSize = 24.sp, fontWeight = FontWeight.ExtraBold)
+                        Text(text = stringResource(R.string.step_1_of_2), color = Color.White.copy(alpha = 0.8f), fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                        Text(text = stringResource(R.string.define_your_success), color = Color.White, fontSize = 24.sp, fontWeight = FontWeight.ExtraBold)
                     }
                     Icon(
                         Icons.Default.Wallet,
@@ -89,7 +89,7 @@ fun MonthlySetupScreen(onNavigateBack: () -> Unit) {
                 // Income Section
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = "Monthly Income", fontFamily = PlusJakartaSans, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = TextPrimary)
+                        Text(text = stringResource(R.string.monthly_income), fontFamily = PlusJakartaSans, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = TextPrimary)
                         Icon(Icons.Default.AccountBalanceWallet, contentDescription = null, tint = Neutral)
                     }
                     Card(
@@ -98,7 +98,7 @@ fun MonthlySetupScreen(onNavigateBack: () -> Unit) {
                         colors = CardDefaults.cardColors(containerColor = Color.White)
                     ) {
                         Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                            Text(text = "How much do you plan to bring in this month? Include all revenue sources.", fontSize = 14.sp, color = Neutral)
+                            Text(text = stringResource(R.string.monthly_income_hint), fontSize = 14.sp, color = Neutral)
                             OutlinedTextField(
                                 value = monthlyIncome,
                                 onValueChange = { monthlyIncome = it },
@@ -113,8 +113,8 @@ fun MonthlySetupScreen(onNavigateBack: () -> Unit) {
                                 textStyle = LocalTextStyle.current.copy(fontSize = 24.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
                             )
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                SuggestionChip(onClick = {}, label = { Text("Primary Job") }, shape = RoundedCornerShape(percent = 50))
-                                SuggestionChip(onClick = {}, label = { Text("+ Add Source") }, shape = RoundedCornerShape(percent = 50))
+                                SuggestionChip(onClick = {}, label = { Text(stringResource(R.string.primary_job)) }, shape = RoundedCornerShape(percent = 50))
+                                SuggestionChip(onClick = {}, label = { Text(stringResource(R.string.add_source)) }, shape = RoundedCornerShape(percent = 50))
                             }
                         }
                     }
@@ -125,16 +125,16 @@ fun MonthlySetupScreen(onNavigateBack: () -> Unit) {
                 // Budget Allocation Section
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = "Budget Allocation", fontFamily = PlusJakartaSans, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = TextPrimary)
+                        Text(text = stringResource(R.string.budget_allocation), fontFamily = PlusJakartaSans, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = TextPrimary)
                         Surface(color = Secondary.copy(alpha = 0.1f), shape = RoundedCornerShape(percent = 50)) {
                             Text(text = "85% Assigned", modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp), color = Secondary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                     
                     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                        BudgetItem(Icons.Default.ShoppingBasket, "Groceries", "$800", "Recommended: $600", 0.75f)
-                        BudgetItem(Icons.Default.Commute, "Transport", "$320", "Public & Fuel", 0.45f)
-                        BudgetItem(Icons.Default.Restaurant, "Dining Out", "$450", "Entertainment", 0.60f)
+                        BudgetItem(Icons.Default.ShoppingBasket, stringResource(R.string.groceries_label), "$800", "Recommended: $600", 0.75f)
+                        BudgetItem(Icons.Default.Commute, stringResource(R.string.transport_label), "$320", "Public & Fuel", 0.45f)
+                        BudgetItem(Icons.Default.Restaurant, stringResource(R.string.dining_out_label), "$450", "Entertainment", 0.60f)
                         
                         OutlinedButton(
                             onClick = { },
@@ -144,7 +144,7 @@ fun MonthlySetupScreen(onNavigateBack: () -> Unit) {
                         ) {
                             Icon(Icons.Default.AddCircle, contentDescription = null, tint = Neutral)
                             Spacer(Modifier.width(8.dp))
-                            Text(text = "Add Custom Category", color = Neutral, fontWeight = FontWeight.Bold)
+                            Text(text = stringResource(R.string.add_custom_category), color = Neutral, fontWeight = FontWeight.Bold)
                         }
                     }
                 }

@@ -113,7 +113,7 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                     )
                     
                     PrimaryButton(
-                        text = "Save Profile",
+                        text = stringResource(R.string.save_profile_button),
                         onClick = { },
                         modifier = Modifier.padding(top = 8.dp)
                     )
@@ -122,7 +122,7 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
 
             // App Settings
             Text(
-                text = "APP SETTINGS",
+                text = stringResource(R.string.app_settings_section),
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.Bold,
                 fontSize = 11.sp,

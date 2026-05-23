@@ -113,7 +113,7 @@ fun ForgotPasswordScreen(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Text(
-                        text = "Forgot Password?",
+                        text = stringResource(R.string.forgot_password_title),
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Bold,
                         fontSize = 30.sp,
@@ -122,7 +122,7 @@ fun ForgotPasswordScreen(
                     )
 
                     Text(
-                        text = "Enter your email address and we'll send you a code to reset your password.",
+                        text = stringResource(R.string.forgot_password_subtitle),
                         fontFamily = PlusJakartaSans,
                         fontSize = 16.sp,
                         color = Neutral,
@@ -135,9 +135,9 @@ fun ForgotPasswordScreen(
                     CustomTextField(
                         value = email,
                         onValueChange = { email = it },
-                        placeholder = "name@example.com",
+                        placeholder = stringResource(R.string.email_example_placeholder),
                         leadingIcon = Icons.Default.Email,
-                        label = "Email Address"
+                        label = stringResource(R.string.email_address_label)
                     )
 
                     Button(
@@ -154,7 +154,7 @@ fun ForgotPasswordScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Text(
-                                text = "Send Code",
+                                text = stringResource(R.string.send_code_button),
                                 fontFamily = PlusJakartaSans,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp
@@ -177,7 +177,7 @@ fun ForgotPasswordScreen(
             ) {
                 Icon(Icons.Default.ArrowBack, contentDescription = null, tint = Primary, modifier = Modifier.size(18.dp))
                 Text(
-                    text = "Back to Login",
+                    text = stringResource(R.string.back_to_login),
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
@@ -188,7 +188,7 @@ fun ForgotPasswordScreen(
             Spacer(Modifier.weight(1f))
 
             Text(
-                text = "© 2024 ProWallet Financial. All rights reserved.",
+                text = stringResource(R.string.copyright_text),
                 fontFamily = PlusJakartaSans,
                 fontSize = 12.sp,
                 color = NeutralLight,

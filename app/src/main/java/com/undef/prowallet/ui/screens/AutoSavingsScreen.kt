@@ -38,7 +38,7 @@ fun AutoSavingsScreen(
     Scaffold(
         topBar = {
             TopBar(
-                title = "Auto-Savings Plan",
+                title = stringResource(R.string.auto_savings_plan),
                 onNavigateBack = onNavigateBack,
                 actions = {
                     IconButton(onClick = onNavigateToNotifications) {
@@ -66,7 +66,7 @@ fun AutoSavingsScreen(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Text(
-                        text = "Funds will be automatically transferred from your primary account on the scheduled date.",
+                        text = stringResource(R.string.auto_savings_footer),
                         fontSize = 12.sp,
                         color = Neutral,
                         textAlign = TextAlign.Center,
@@ -78,7 +78,7 @@ fun AutoSavingsScreen(
                         shape = RoundedCornerShape(28.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = PrimaryDarker)
                     ) {
-                        Text("Activate Plan", fontFamily = PlusJakartaSans, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                        Text(stringResource(R.string.activate_plan), fontFamily = PlusJakartaSans, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                     }
                 }
             }
@@ -108,8 +108,8 @@ fun AutoSavingsScreen(
                             Icon(Icons.Default.Savings, contentDescription = null, tint = PrimaryDarker, modifier = Modifier.size(40.dp))
                         }
                         Column {
-                            Text(text = "Savings Goal", fontFamily = PlusJakartaSans, fontWeight = FontWeight.ExtraBold, fontSize = 20.sp, color = PrimaryDarker)
-                            Text(text = "You've saved $12,450 this year.", fontSize = 14.sp, color = Neutral)
+                            Text(text = stringResource(R.string.savings_goal), fontFamily = PlusJakartaSans, fontWeight = FontWeight.ExtraBold, fontSize = 20.sp, color = PrimaryDarker)
+                            Text(text = stringResource(R.string.savings_yearly_format, "$12,450"), fontSize = 14.sp, color = Neutral)
                             Spacer(Modifier.height(12.dp))
                             LinearProgressIndicator(
                                 progress = { 0.65f },
@@ -130,8 +130,8 @@ fun AutoSavingsScreen(
                     shape = RoundedCornerShape(percent = 50)
                 ) {
                     Row(modifier = Modifier.padding(4.dp)) {
-                        MethodTab("Percentage", selectedMethod == "Percentage", modifier = Modifier.weight(1f)) { selectedMethod = "Percentage" }
-                        MethodTab("Fixed Amount", selectedMethod == "Fixed Amount", modifier = Modifier.weight(1f)) { selectedMethod = "Fixed Amount" }
+                        MethodTab(stringResource(R.string.percentage), selectedMethod == "Percentage", modifier = Modifier.weight(1f)) { selectedMethod = "Percentage" }
+                        MethodTab(stringResource(R.string.fixed_amount), selectedMethod == "Fixed Amount", modifier = Modifier.weight(1f)) { selectedMethod = "Fixed Amount" }
                     }
                 }
             }
@@ -146,7 +146,7 @@ fun AutoSavingsScreen(
                     Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
                             Column {
-                                Text(text = "Current Income", fontSize = 12.sp, color = Neutral)
+                                Text(text = stringResource(R.string.current_income), fontSize = 12.sp, color = Neutral)
                                 Text(text = "$8,450.00", fontSize = 24.sp, fontWeight = FontWeight.ExtraBold, color = TextPrimary)
                             }
                             Text(text = "${savingsPercentage.toInt()}%", fontSize = 30.sp, fontWeight = FontWeight.Bold, color = PrimaryDarker)
@@ -169,7 +169,7 @@ fun AutoSavingsScreen(
                             shape = RoundedCornerShape(12.dp)
                         ) {
                             Row(modifier = Modifier.padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                                Text(text = "Estimated Monthly Savings", fontSize = 14.sp, color = Neutral)
+                                Text(text = stringResource(R.string.estimated_monthly_savings), fontSize = 14.sp, color = Neutral)
                                 Text(text = "$${String.format(Locale.getDefault(), "%.2f", 8450 * (savingsPercentage / 100))}", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = PrimaryDarker)
                             }
                         }
@@ -180,18 +180,18 @@ fun AutoSavingsScreen(
             // Frequency
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text(text = "Frequency", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Neutral, letterSpacing = 1.sp)
+                    Text(text = stringResource(R.string.frequency), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Neutral, letterSpacing = 1.sp)
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(20.dp),
                         colors = CardDefaults.cardColors(containerColor = Color.White)
                     ) {
                         Column(modifier = Modifier.padding(8.dp)) {
-                            FrequencyRow("Monthly", selectedFrequency == "Monthly") { selectedFrequency = "Monthly" }
+                            FrequencyRow(stringResource(R.string.monthly), selectedFrequency == "Monthly") { selectedFrequency = "Monthly" }
                             HorizontalDivider(color = Color(0xFFF8F8F8))
-                            FrequencyRow("Bi-weekly", selectedFrequency == "Bi-weekly") { selectedFrequency = "Bi-weekly" }
+                            FrequencyRow(stringResource(R.string.bi_weekly), selectedFrequency == "Bi-weekly") { selectedFrequency = "Bi-weekly" }
                             HorizontalDivider(color = Color(0xFFF8F8F8))
-                            FrequencyRow("Weekly", selectedFrequency == "Weekly") { selectedFrequency = "Weekly" }
+                            FrequencyRow(stringResource(R.string.weekly), selectedFrequency == "Weekly") { selectedFrequency = "Weekly" }
                         }
                     }
                 }
@@ -200,8 +200,8 @@ fun AutoSavingsScreen(
             // Destination Fund
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text(text = "Destination Fund", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Neutral, letterSpacing = 1.sp)
-                    DestinationFundCard(Icons.Default.Savings, "Main Savings", "APY 4.25%", Secondary.copy(alpha = 0.1f)) {
+                    Text(text = stringResource(R.string.destination_fund), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Neutral, letterSpacing = 1.sp)
+                    DestinationFundCard(Icons.Default.Savings, stringResource(R.string.main_savings), "APY 4.25%", Secondary.copy(alpha = 0.1f)) {
                         // Potential navigation to fund details
                     }
                 }

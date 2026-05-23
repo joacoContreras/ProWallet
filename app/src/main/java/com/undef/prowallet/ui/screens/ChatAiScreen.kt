@@ -42,11 +42,15 @@ fun ChatAiScreen(onNavigateBack: () -> Unit) {
         )
     }
 
-    val suggestions = listOf("Analyze my last week", "Budget check", "Top categories")
+    val suggestions = listOf(
+        stringResource(R.string.suggestion_analyze_week),
+        stringResource(R.string.suggestion_budget_check),
+        stringResource(R.string.suggestion_top_categories)
+    )
 
     Scaffold(
         topBar = {
-            TopBar(title = "ProAssistant", onNavigateBack = onNavigateBack)
+            TopBar(title = stringResource(R.string.pro_assistant_title), onNavigateBack = onNavigateBack)
         },
         containerColor = BackgroundLight,
         bottomBar = {
@@ -87,7 +91,7 @@ fun ChatAiScreen(onNavigateBack: () -> Unit) {
                         value = messageText,
                         onValueChange = { messageText = it },
                         modifier = Modifier.weight(1f),
-                        placeholder = { Text("Ask ProAssistant...", color = NeutralLight) },
+                        placeholder = { Text(stringResource(R.string.ask_proassistant_placeholder), color = NeutralLight) },
                         shape = RoundedCornerShape(24.dp),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedContainerColor = BackgroundLight,
@@ -129,7 +133,7 @@ fun ChatAiScreen(onNavigateBack: () -> Unit) {
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text(
-                            text = "Today",
+                            text = stringResource(R.string.today_section),
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                             fontSize = 11.sp,
                             color = Neutral
@@ -155,7 +159,7 @@ fun ChatAiScreen(onNavigateBack: () -> Unit) {
                         tint = Neutral
                     )
                     Text(
-                        text = "ProAssistant is typing...",
+                        text = stringResource(R.string.proassistant_typing),
                         fontSize = 12.sp,
                         fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
                         color = Neutral
@@ -216,7 +220,7 @@ fun ChatBubble(message: ChatMessage) {
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("Monthly Budget", fontSize = 11.sp, color = Neutral)
+                                Text(stringResource(R.string.monthly_budget), fontSize = 11.sp, color = Neutral)
                                 Text("85% left", fontSize = 11.sp, color = SuccessGreen, fontWeight = FontWeight.Bold)
                             }
                             LinearProgressIndicator(

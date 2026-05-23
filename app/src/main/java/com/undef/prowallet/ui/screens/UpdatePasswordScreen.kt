@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,6 +40,8 @@ fun UpdatePasswordScreen(
     var confirmPassword by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
+    val passwordsDoNotMatch = stringResource(R.string.passwords_dont_match)
+
     LaunchedEffect(state.passwordUpdated) {
         if (state.passwordUpdated) onSuccess()
     }
@@ -54,10 +57,10 @@ fun UpdatePasswordScreen(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = TextPrimary)
+                        Icon(Icons.Default.ArrowBack, contentDescription = null, tint = TextPrimary)
                     }
                     Text(
-                        text = "ProWallet",
+                        text = stringResource(R.string.app_name),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         color = Primary
@@ -77,14 +80,14 @@ fun UpdatePasswordScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "New Password",
+                text = stringResource(R.string.new_password_title),
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.Bold,
                 fontSize = 30.sp,
                 color = TextPrimary
             )
             Text(
-                text = "Choose a strong password to protect your account.",
+                text = stringResource(R.string.new_password_subtitle),
                 fontFamily = PlusJakartaSans,
                 fontSize = 16.sp,
                 color = Neutral
@@ -123,7 +126,7 @@ fun UpdatePasswordScreen(
                         placeholder = "••••••••",
                         leadingIcon = Icons.Default.Lock,
                         isPassword = true,
-                        label = "New Password"
+                        label = stringResource(R.string.new_password_label)
                     )
 
                     CustomTextField(
@@ -132,7 +135,7 @@ fun UpdatePasswordScreen(
                         placeholder = "••••••••",
                         leadingIcon = Icons.Default.Lock,
                         isPassword = true,
-                        label = "Confirm Password"
+                        label = stringResource(R.string.confirm_password_label)
                     )
 
                     if (errorMessage != null) {
@@ -149,7 +152,7 @@ fun UpdatePasswordScreen(
                         ) {
                             Icon(Icons.Default.VerifiedUser, contentDescription = null, tint = Secondary, modifier = Modifier.size(24.dp))
                             Text(
-                                text = "Strong passwords include at least 8 characters, with a mix of letters, numbers, and symbols to ensure maximum security.",
+                                text = stringResource(R.string.password_strength_hint),
                                 fontSize = 12.sp,
                                 color = SecondaryDark,
                                 lineHeight = 18.sp
@@ -162,7 +165,7 @@ fun UpdatePasswordScreen(
                             if (newPassword == confirmPassword) {
                                 viewModel.updatePassword(newPassword)
                             } else {
-                                errorMessage = "Passwords do not match"
+                                errorMessage = passwordsDoNotMatch
                             }
                         },
                         modifier = Modifier
@@ -173,7 +176,7 @@ fun UpdatePasswordScreen(
                         enabled = !state.isLoading
                     ) {
                         Text(
-                            text = "Update Password",
+                            text = stringResource(R.string.update_password_button),
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp

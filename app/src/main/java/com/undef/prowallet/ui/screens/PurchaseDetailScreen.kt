@@ -153,7 +153,7 @@ fun PurchaseDetailScreen(
                                 color = Neutral
                             )
                             Text(
-                                text = "${purchase.products.size} items",
+                                text = stringResource(R.string.items_count_format, purchase.products.size),
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = FontWeight.SemiBold,
                                 color = TextPrimary

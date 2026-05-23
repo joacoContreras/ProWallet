@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -53,7 +54,6 @@ fun UpdatePasswordSuccessScreen(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        // Background Deco Image
         Image(
             painter = painterResource(id = R.drawable.ic_app_logo_with_bg),
             contentDescription = null,
@@ -92,7 +92,7 @@ fun UpdatePasswordSuccessScreen(
                 }
 
                 Text(
-                    text = "Password Updated!",
+                    text = stringResource(R.string.password_updated_title),
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 28.sp,
@@ -101,7 +101,7 @@ fun UpdatePasswordSuccessScreen(
                 )
 
                 Text(
-                    text = "Your password has been changed successfully. You will be redirected to the login screen in a moment.",
+                    text = stringResource(R.string.password_updated_subtitle),
                     fontFamily = PlusJakartaSans,
                     fontSize = 16.sp,
                     color = Neutral,
@@ -120,7 +120,7 @@ fun UpdatePasswordSuccessScreen(
                     colors = ButtonDefaults.buttonColors(containerColor = Primary)
                 ) {
                     Text(
-                        text = "Back to Login",
+                        text = stringResource(R.string.back_to_login),
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp

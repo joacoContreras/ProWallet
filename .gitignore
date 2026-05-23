@@ -108,3 +108,7 @@ lint/reports/
 
 # Windows
 Thumbs.db
+
+# Claude
+.claude
+claude.md

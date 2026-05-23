@@ -203,7 +203,106 @@
     <string name="team_here_for_you">Nuestro equipo está aquí para vos.</string>
     <string name="available_24_7">Disponible 24/7 para soporte de emergencia.</string>
     <string name="learn_more_settlement">Más información sobre tiempos de liquidación</string>
+    <!-- Verify Code Screen -->
+    <string name="verify_identity">Verificar Identidad</string>
+    <string name="verify_code_subtitle">Te enviamos un código de 6 dígitos a tu correo. Ingrésalo a continuación para continuar.</string>
+    <string name="verify_code_button">Verificar Código</string>
+    <string name="resend_code">¿No recibiste el código? Reenviar</string>
+    <string name="secured_by_prowallet">Protegido por cifrado ProWallet</string>
+
+    <!-- Forgot Password Screen -->
+    <string name="forgot_password_title">¿Olvidaste tu contraseña?</string>
+    <string name="forgot_password_subtitle">Ingresa tu correo electrónico y te enviaremos un código para restablecer tu contraseña.</string>
+    <string name="email_example_placeholder">nombre@ejemplo.com</string>
+    <string name="email_address_label">Correo Electrónico</string>
+    <string name="send_code_button">Enviar Código</string>
+    <string name="back_to_login">Volver al inicio de sesión</string>
+    <string name="copyright_text">© 2024 ProWallet Financial. Todos los derechos reservados.</string>
+
+    <!-- Update Password Screen -->
+    <string name="new_password_title">Nueva Contraseña</string>
+    <string name="new_password_subtitle">Elige una contraseña segura para proteger tu cuenta.</string>
+    <string name="new_password_label">Nueva Contraseña</string>
+    <string name="password_strength_hint">Las contraseñas seguras incluyen al menos 8 caracteres, con una combinación de letras, números y símbolos para garantizar la máxima seguridad.</string>
+    <string name="passwords_dont_match">Las contraseñas no coinciden</string>
+    <string name="update_password_button">Actualizar Contraseña</string>
+
+    <!-- Update Password Success Screen -->
+    <string name="password_updated_title">¡Contraseña Actualizada!</string>
+    <string name="password_updated_subtitle">Tu contraseña ha sido cambiada con éxito. Serás redirigido a la pantalla de inicio de sesión en un momento.</string>
+
+    <!-- Purchase Success Screen -->
+    <string name="view_full_receipt">Ver Recibo Completo</string>
+    <string name="back_to_home">Volver al Inicio</string>
+    <string name="purchase_successful">¡Compra Exitosa!</string>
+    <string name="payment_processed">Tu pago fue procesado de forma segura.</string>
+    <string name="total_amount_paid">MONTO TOTAL PAGADO</string>
+    <string name="items_summary">Resumen de Artículos</string>
+    <string name="subtotal">Subtotal</string>
+    <string name="sales_tax">Impuesto (5%%)</string>
+    <string name="updated_real_time">Actualizado en tiempo real</string>
+
+    <!-- Chat AI Screen -->
+    <string name="pro_assistant_title">ProAsistente</string>
+    <string name="ask_proassistant_placeholder">Pregunta al ProAsistente…</string>
+    <string name="proassistant_typing">ProAsistente está escribiendo…</string>
+    <string name="suggestion_analyze_week">Analizar mi última semana</string>
+    <string name="suggestion_budget_check">Verificar presupuesto</string>
+    <string name="suggestion_top_categories">Categorías principales</string>
+
+    <!-- Store Detail Screen -->
+    <string name="merchant_id_format">ID de comerciante: %s</string>
+    <string name="unusual_activity_title">Actividad Inusual Detectada</string>
+    <string name="unusual_activity_desc">Tu gasto en %s es un 24%% más alto que tu promedio de 6 meses.</string>
+    <string name="last_month">Mes Anterior</string>
+    <string name="this_month">Este Mes</string>
+    <string name="safe_label">Seguro</string>
+    <string name="peak_label">Pico</string>
+    <string name="category_distribution">Distribución por Categoría</string>
+    <string name="beverages_coffee">Bebidas y Café</string>
+    <string name="food_snacks">Alimentos y Snacks</string>
+    <string name="merchandise_label">Mercancía</string>
+
+    <!-- Profile Screen -->
+    <string name="wealth_management_plan">Plan de Gestión: Plan Pro</string>
+    <string name="financial_profile">Perfil Financiero</string>
+    <string name="active_label">Activo</string>
+    <string name="monthly_income">Ingreso Mensual</string>
+    <string name="budget_usage">Uso del Presupuesto</string>
+    <string name="management_section">Administración</string>
+    <string name="linked_accounts">Cuentas Vinculadas</string>
+    <string name="banks_connected">3 Bancos Conectados</string>
+    <string name="fixed_expenses">Gastos Fijos</string>
+    <string name="rent_utilities_subscriptions">Alquiler, Servicios, Suscripciones</string>
+    <string name="auto_savings_amount">$500/mes automatizado</string>
+    <string name="support_safety">Soporte y Seguridad</string>
+    <string name="contact_us">Contáctanos</string>
+    <string name="security_privacy">Seguridad y Privacidad</string>
+    <string name="security_features">2FA, Biometría, Permisos</string>
+
+    <!-- Monthly Setup Screen -->
+    <string name="monthly_setup_title">Configuración Mensual</string>
+    <string name="finalize_budget">Finalizar Presupuesto</string>
+    <string name="settings_adjust_anytime">Puedes ajustar estas configuraciones en cualquier momento en Preferencias.</string>
+    <string name="step_1_of_2">Paso 1 de 2</string>
+    <string name="define_your_success">Define Tu Éxito</string>
+    <string name="monthly_income_hint">¿Cuánto planeas ganar este mes? Incluye todas las fuentes de ingresos.</string>
+    <string name="budget_allocation">Asignación de Presupuesto</string>
+    <string name="add_custom_category">Agregar Categoría Personalizada</string>
+    <string name="primary_job">Trabajo Principal</string>
+    <string name="add_source">+ Agregar Fuente</string>
+    <string name="transport_label">Transporte</string>
+    <string name="dining_out_label">Comer Fuera</string>
+
+    <!-- Settings Screen -->
+    <string name="save_profile_button">Guardar Perfil</string>
+    <string name="app_settings_section">AJUSTES DE LA APP</string>
+
+    <!-- Purchase Detail Screen -->
+    <string name="items_count_format">%d artículos</string>
+
     <!-- Auto Savings Screen -->
+    <string name="main_savings">Ahorros Principales</string>
     <string name="auto_savings_plan">Plan de ahorro automático</string>
     <string name="auto_savings_footer">Los fondos se transferirán automáticamente desde su cuenta principal en la fecha programada.</string>
     <string name="activate_plan">Activar plan</string>

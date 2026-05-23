@@ -62,7 +62,7 @@ fun PurchaseSuccessScreen(
                         Icon(Icons.Default.Receipt, contentDescription = null)
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            text = "View Full Receipt",
+                            text = stringResource(R.string.view_full_receipt),
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.Bold
                         )
@@ -78,7 +78,7 @@ fun PurchaseSuccessScreen(
                         Icon(Icons.Default.Home, contentDescription = null, tint = Neutral)
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            text = "Back to Home",
+                            text = stringResource(R.string.back_to_home),
                             fontFamily = PlusJakartaSans,
                             color = Neutral
                         )
@@ -122,14 +122,14 @@ fun PurchaseSuccessScreen(
                 }
                 Spacer(Modifier.height(16.dp))
                 Text(
-                    text = "Purchase Successful!",
+                    text = stringResource(R.string.purchase_successful),
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 28.sp,
                     color = TextPrimary
                 )
                 Text(
-                    text = "Your payment has been processed securely.",
+                    text = stringResource(R.string.payment_processed),
                     fontFamily = PlusJakartaSans,
                     fontSize = 14.sp,
                     color = Neutral,
@@ -151,7 +151,7 @@ fun PurchaseSuccessScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "TOTAL AMOUNT PAID",
+                            text = stringResource(R.string.total_amount_paid),
                             fontFamily = PlusJakartaSans,
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Bold,
@@ -183,7 +183,7 @@ fun PurchaseSuccessScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Items Summary",
+                                text = stringResource(R.string.items_summary),
                                 fontFamily = PlusJakartaSans,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp,
@@ -240,7 +240,7 @@ fun PurchaseSuccessScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Subtotal",
+                                text = stringResource(R.string.subtotal),
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 14.sp,
                                 color = Neutral
@@ -259,7 +259,7 @@ fun PurchaseSuccessScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Sales Tax (5%)",
+                                text = stringResource(R.string.sales_tax),
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 14.sp,
                                 color = Neutral
@@ -297,14 +297,14 @@ fun PurchaseSuccessScreen(
                             Spacer(Modifier.width(12.dp))
                             Column {
                                 Text(
-                                    text = "Monthly Spending Insight",
+                                    text = stringResource(R.string.monthly_spending_insight),
                                     fontFamily = PlusJakartaSans,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 14.sp,
                                     color = PrimaryDarker
                                 )
                                 Text(
-                                    text = "Updated real-time",
+                                    text = stringResource(R.string.updated_real_time),
                                     fontFamily = PlusJakartaSans,
                                     fontSize = 11.sp,
                                     color = PrimaryDarker.copy(alpha = 0.7f)

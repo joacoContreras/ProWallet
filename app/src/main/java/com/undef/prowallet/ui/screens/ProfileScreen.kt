@@ -122,7 +122,7 @@ fun ProfileScreen(
                     color = TextPrimary
                 )
                 Text(
-                    text = "Wealth Management Plan: Pro Plan",
+                    text = stringResource(R.string.wealth_management_plan),
                     fontFamily = PlusJakartaSans,
                     fontSize = 14.sp,
                     color = Neutral
@@ -137,7 +137,7 @@ fun ProfileScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Financial Profile",
+                        text = stringResource(R.string.financial_profile),
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
@@ -148,7 +148,7 @@ fun ProfileScreen(
                         shape = RoundedCornerShape(percent = 50)
                     ) {
                         Text(
-                            text = "Active",
+                            text = stringResource(R.string.active_label),
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                             color = PrimaryDarker,
                             fontSize = 12.sp,
@@ -166,13 +166,13 @@ fun ProfileScreen(
                         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                             FinancialStatCard(
                                 icon = Icons.Default.Payments,
-                                label = "Monthly Income",
+                                label = stringResource(R.string.monthly_income),
                                 value = "$8,450",
                                 modifier = Modifier.weight(1f)
                             )
                             FinancialStatCard(
                                 icon = Icons.Default.PieChart,
-                                label = "Budget Usage",
+                                label = stringResource(R.string.budget_usage),
                                 value = "64%",
                                 modifier = Modifier.weight(1f)
                             )
@@ -199,20 +199,20 @@ fun ProfileScreen(
 
             // Management Section
             ManagementSection(
-                title = "Management",
+                title = stringResource(R.string.management_section),
                 items = listOf(
-                    ManagementItem(Icons.Default.AccountBalance, "Linked Accounts", "3 Banks Connected", SecondaryLight.copy(alpha = 0.2f), SecondaryDark, onNavigateToManageAccounts),
-                    ManagementItem(Icons.Default.EventRepeat, "Fixed Expenses", "Rent, Utilities, Subscriptions", TertiaryDark.copy(alpha = 0.5f), SecondaryDark, onNavigateToMonthlySetup),
-                    ManagementItem(Icons.Default.Savings, "Auto-Savings Plan", "$500/mo automated", Primary.copy(alpha = 0.2f), PrimaryDarker, onNavigateToAutoSavings)
+                    ManagementItem(Icons.Default.AccountBalance, stringResource(R.string.linked_accounts), stringResource(R.string.banks_connected), SecondaryLight.copy(alpha = 0.2f), SecondaryDark, onNavigateToManageAccounts),
+                    ManagementItem(Icons.Default.EventRepeat, stringResource(R.string.fixed_expenses), stringResource(R.string.rent_utilities_subscriptions), TertiaryDark.copy(alpha = 0.5f), SecondaryDark, onNavigateToMonthlySetup),
+                    ManagementItem(Icons.Default.Savings, stringResource(R.string.auto_savings_plan), stringResource(R.string.auto_savings_amount), Primary.copy(alpha = 0.2f), PrimaryDarker, onNavigateToAutoSavings)
                 )
             )
 
             // Support Section
             ManagementSection(
-                title = "Support & Safety",
+                title = stringResource(R.string.support_safety),
                 items = listOf(
-                    ManagementItem(Icons.Default.SupportAgent, "Contact Us", "", BackgroundLight, Neutral, onNavigateToContactSupport),
-                    ManagementItem(Icons.Default.Security, "Security & Privacy", "2FA, Biometrics, Permissions", BackgroundLight, Neutral, { })
+                    ManagementItem(Icons.Default.SupportAgent, stringResource(R.string.contact_us), "", BackgroundLight, Neutral, onNavigateToContactSupport),
+                    ManagementItem(Icons.Default.Security, stringResource(R.string.security_privacy), stringResource(R.string.security_features), BackgroundLight, Neutral, { })
                 )
             )
 
@@ -227,7 +227,7 @@ fun ProfileScreen(
                 elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
             ) {
                 Text(
-                    text = "Log Out",
+                    text = stringResource(R.string.logout_button),
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp

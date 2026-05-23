@@ -109,7 +109,7 @@ fun StoreDetailScreen(
                             color = TextPrimary
                         )
                         Text(
-                            text = "Merchant ID: $merchantId",
+                            text = stringResource(R.string.merchant_id_format, merchantId),
                             fontFamily = PlusJakartaSans,
                             fontSize = 13.sp,
                             color = Neutral
@@ -157,14 +157,14 @@ fun StoreDetailScreen(
                         )
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text(
-                                text = "Unusual Activity Detected",
+                                text = stringResource(R.string.unusual_activity_title),
                                 fontFamily = PlusJakartaSans,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 14.sp,
                                 color = ErrorRed
                             )
                             Text(
-                                text = "Your spending at $storeName is 24% higher than your 6-month average.",
+                                text = stringResource(R.string.unusual_activity_desc, storeName),
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 13.sp,
                                 color = ErrorRed.copy(alpha = 0.8f),
@@ -179,16 +179,16 @@ fun StoreDetailScreen(
             item {
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     ComparisonCard(
-                        label = "Last Month",
+                        label = stringResource(R.string.last_month),
                         amount = lastMonthSpend,
-                        tagText = "Safe",
+                        tagText = stringResource(R.string.safe_label),
                         tagColor = SuccessGreen,
                         modifier = Modifier.weight(1f)
                     )
                     ComparisonCard(
-                        label = "This Month",
+                        label = stringResource(R.string.this_month),
                         amount = totalMonthlySpend,
-                        tagText = "Peak",
+                        tagText = stringResource(R.string.peak_label),
                         tagColor = ErrorRed,
                         modifier = Modifier.weight(1f)
                     )
@@ -199,7 +199,7 @@ fun StoreDetailScreen(
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Text(
-                        text = "Category Distribution",
+                        text = stringResource(R.string.category_distribution),
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
@@ -211,9 +211,9 @@ fun StoreDetailScreen(
                         colors = CardDefaults.cardColors(containerColor = Color.White)
                     ) {
                         Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                            DistributionRow(label = "Beverages & Coffee", amount = 320.00, percentage = 0.78f, color = PrimaryDarker)
-                            DistributionRow(label = "Food & Snacks", amount = 72.50, percentage = 0.18f, color = Secondary)
-                            DistributionRow(label = "Merchandise", amount = 20.00, percentage = 0.04f, color = Neutral)
+                            DistributionRow(label = stringResource(R.string.beverages_coffee), amount = 320.00, percentage = 0.78f, color = PrimaryDarker)
+                            DistributionRow(label = stringResource(R.string.food_snacks), amount = 72.50, percentage = 0.18f, color = Secondary)
+                            DistributionRow(label = stringResource(R.string.merchandise_label), amount = 20.00, percentage = 0.04f, color = Neutral)
                         }
                     }
                 }
