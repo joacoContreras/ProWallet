@@ -37,9 +37,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     val isLoggedIn: Flow<Boolean> = sessionManager.isLoggedIn
 
+    private var pendingEmail: String? = null
+
     fun login(email: String, password: String) {
         val trimmedEmail = email.trim().lowercase()
-
         if (email.isBlank() || password.isBlank()) {
             _uiState.value = _uiState.value.copy(error = "Completá todos los campos")
             return
@@ -48,26 +49,15 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             _uiState.value = _uiState.value.copy(error = "Email inválido")
             return
         }
-
         _uiState.value = _uiState.value.copy(isLoading = true, error = null)
         viewModelScope.launch {
             val user = userDao.getUserByEmail(trimmedEmail)
             when {
-                user == null -> _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    error = "No existe una cuenta con ese email"
-                )
-                user.password != hashPassword(password) -> _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    error = "Contraseña incorrecta"
-                )
+                user == null -> _uiState.value = _uiState.value.copy(isLoading = false, error = "No existe una cuenta con ese email")
+                user.password != hashPassword(password) -> _uiState.value = _uiState.value.copy(isLoading = false, error = "Contraseña incorrecta")
                 else -> {
                     sessionManager.saveSession(user.email)
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        isLoggedIn = true,
-                        user = user.toDomain()
-                    )
+                    _uiState.value = _uiState.value.copy(isLoading = false, isLoggedIn = true, user = user.toDomain())
                 }
             }
         }
@@ -76,7 +66,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     fun register(fullName: String, email: String, password: String, confirmPassword: String) {
         val trimmedEmail = email.trim().lowercase()
         val trimmedName = fullName.trim()
-
         when {
             trimmedName.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank() -> {
                 _uiState.value = _uiState.value.copy(error = "Completá todos los campos")
@@ -99,31 +88,60 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         _uiState.value = _uiState.value.copy(isLoading = true, error = null)
         viewModelScope.launch {
             if (userDao.getUserByEmail(trimmedEmail) != null) {
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    error = "Ya existe una cuenta con ese email"
-                )
+                _uiState.value = _uiState.value.copy(isLoading = false, error = "Ya existe una cuenta con ese email")
                 return@launch
             }
-
             val nameParts = trimmedName.split(" ", limit = 2)
-            val entity = UserEntity(
-                name = nameParts[0],
-                lastname = nameParts.getOrElse(1) { "" },
-                email = trimmedEmail,
-                password = hashPassword(password)
+            userDao.insert(
+                UserEntity(
+                    name = nameParts[0],
+                    lastname = nameParts.getOrElse(1) { "" },
+                    email = trimmedEmail,
+                    password = hashPassword(password)
+                )
             )
-            userDao.insert(entity)
             sessionManager.saveSession(trimmedEmail)
             _uiState.value = _uiState.value.copy(
                 isLoading = false,
                 registrationSuccess = true,
-                user = User(
-                    id = trimmedEmail,
-                    fullName = trimmedName,
-                    email = trimmedEmail
-                )
+                user = User(id = trimmedEmail, fullName = trimmedName, email = trimmedEmail)
             )
+        }
+    }
+
+    fun sendResetCode(email: String) {
+        val trimmedEmail = email.trim().lowercase()
+        if (trimmedEmail.isBlank()) {
+            _uiState.value = _uiState.value.copy(error = "Ingresá tu email")
+            return
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(trimmedEmail).matches()) {
+            _uiState.value = _uiState.value.copy(error = "Email inválido")
+            return
+        }
+        _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+        viewModelScope.launch {
+            if (userDao.getUserByEmail(trimmedEmail) == null) {
+                _uiState.value = _uiState.value.copy(isLoading = false, error = "No existe una cuenta con ese email")
+                return@launch
+            }
+            pendingEmail = trimmedEmail
+            _uiState.value = _uiState.value.copy(isLoading = false, resetEmailSent = true)
+        }
+    }
+
+    fun updatePassword(password: String) {
+        val email = pendingEmail ?: return
+        if (password.length < 6) {
+            _uiState.value = _uiState.value.copy(error = "La contraseña debe tener al menos 6 caracteres")
+            return
+        }
+        _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+        viewModelScope.launch {
+            val user = userDao.getUserByEmail(email) ?: return@launch
+            userDao.update(user.copy(password = hashPassword(password)))
+            pendingEmail = null
+            _uiState.value = _uiState.value.copy(isLoading = false, passwordUpdated = true)
         }
     }
 
@@ -142,20 +160,11 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         _uiState.value = _uiState.value.copy(error = null)
     }
 
-    fun sendResetCode(email: String) {
-        _uiState.value = _uiState.value.copy(isLoading = true, error = null)
-        _uiState.value = _uiState.value.copy(isLoading = false, resetEmailSent = true)
-    }
-
     fun verifyCode(code: String) {
-        _uiState.value = _uiState.value.copy(isLoading = true, error = null)
-        _uiState.value = _uiState.value.copy(isLoading = false, codeVerified = true)
+        _uiState.value = _uiState.value.copy(codeVerified = true)
     }
 
-    fun updatePassword(password: String) {
-        _uiState.value = _uiState.value.copy(isLoading = true, error = null)
-        _uiState.value = _uiState.value.copy(isLoading = false, passwordUpdated = true)
-    }
+    fun resendCode() { }
 
     fun resetFlow() {
         _uiState.value = _uiState.value.copy(

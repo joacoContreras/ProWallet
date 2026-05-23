@@ -148,6 +148,17 @@ fun VerifyCodeScreen(
                         }
                     }
 
+                    state.error?.let { errorMsg ->
+                        Text(
+                            text = errorMsg,
+                            color = ErrorRed,
+                            fontFamily = PlusJakartaSans,
+                            fontSize = 13.sp,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+
                     Button(
                         onClick = { viewModel.verifyCode(code.joinToString("")) },
                         modifier = Modifier
@@ -171,7 +182,7 @@ fun VerifyCodeScreen(
                         }
                     }
 
-                    TextButton(onClick = { }) {
+                    TextButton(onClick = { viewModel.resendCode() }, enabled = !state.isLoading) {
                         Text(
                             text = stringResource(R.string.resend_code),
                             fontFamily = PlusJakartaSans,

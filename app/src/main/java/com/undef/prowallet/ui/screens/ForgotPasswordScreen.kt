@@ -140,6 +140,16 @@ fun ForgotPasswordScreen(
                         label = stringResource(R.string.email_address_label)
                     )
 
+                    state.error?.let { errorMsg ->
+                        Text(
+                            text = errorMsg,
+                            color = ErrorRed,
+                            fontFamily = PlusJakartaSans,
+                            fontSize = 13.sp,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+
                     Button(
                         onClick = { viewModel.sendResetCode(email) },
                         modifier = Modifier
