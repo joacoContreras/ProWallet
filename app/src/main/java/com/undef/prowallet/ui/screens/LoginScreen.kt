@@ -138,6 +138,16 @@ fun LoginScreen(
                     }
                 }
 
+                state.error?.let { errorMsg ->
+                    Text(
+                        text = errorMsg,
+                        color = ErrorRed,
+                        fontFamily = PlusJakartaSans,
+                        fontSize = 13.sp,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
                 PrimaryButton(
                     text = stringResource(R.string.login_button),
                     onClick = { viewModel.login(email, password) },

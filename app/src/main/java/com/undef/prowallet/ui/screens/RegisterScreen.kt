@@ -139,9 +139,19 @@ fun RegisterScreen(
                     )
                 }
 
+                state.error?.let { errorMsg ->
+                    Text(
+                        text = errorMsg,
+                        color = ErrorRed,
+                        fontFamily = PlusJakartaSans,
+                        fontSize = 13.sp,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
                 PrimaryButton(
                     text = stringResource(R.string.register_button),
-                    onClick = { viewModel.register(fullName, email, password) },
+                    onClick = { viewModel.register(fullName, email, password, confirmPassword) },
                     enabled = !state.isLoading
                 )
 
