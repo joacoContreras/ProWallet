@@ -34,11 +34,15 @@ data class ChatMessage(
 @Composable
 fun ChatAiScreen(onNavigateBack: () -> Unit) {
     var messageText by remember { mutableStateOf("") }
+    val greeting = stringResource(R.string.proassistant_greeting)
+    val userEx = stringResource(R.string.chat_user_example)
+    val assistantEx = stringResource(R.string.chat_assistant_example)
+    
     val messages = remember {
         mutableStateListOf(
-            ChatMessage("Hello! I'm your ProAssistant. How can I help you achieve your financial goals today?", false),
-            ChatMessage("Can you check my spending on coffee this month?", true),
-            ChatMessage("You've spent $42.50 at coffee shops this month across 8 transactions.", false, true)
+            ChatMessage(greeting, false),
+            ChatMessage(userEx, true),
+            ChatMessage(assistantEx, false, true)
         )
     }
 
@@ -221,7 +225,7 @@ fun ChatBubble(message: ChatMessage) {
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text(stringResource(R.string.monthly_budget), fontSize = 11.sp, color = Neutral)
-                                Text("85% left", fontSize = 11.sp, color = SuccessGreen, fontWeight = FontWeight.Bold)
+                                Text(stringResource(R.string.left_label_format, "85%"), fontSize = 11.sp, color = SuccessGreen, fontWeight = FontWeight.Bold)
                             }
                             LinearProgressIndicator(
                                 progress = { 0.15f },

@@ -249,6 +249,10 @@
     <string name="suggestion_analyze_week">Analizar mi última semana</string>
     <string name="suggestion_budget_check">Verificar presupuesto</string>
     <string name="suggestion_top_categories">Categorías principales</string>
+    <string name="proassistant_greeting">¡Hola! Soy tu ProAsistente. ¿Cómo puedo ayudarte a alcanzar tus metas financieras hoy?</string>
+    <string name="chat_user_example">¿Podés revisar mi gasto en café este mes?</string>
+    <string name="chat_assistant_example">Has gastado $42.50 en cafeterías este mes en 8 transacciones.</string>
+    <string name="left_label_format">%s restante</string>
 
     <!-- Store Detail Screen -->
     <string name="merchant_id_format">ID de comerciante: %s</string>
