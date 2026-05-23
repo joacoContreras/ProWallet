@@ -8,19 +8,22 @@ import com.undef.prowallet.data.dao.CategoryDao
 import com.undef.prowallet.data.dao.ProductDao
 import com.undef.prowallet.data.dao.PurchaseDao
 import com.undef.prowallet.data.dao.PurchasedItemDao
+import com.undef.prowallet.data.dao.UserDao
 
 @Database(
     entities = [
+        UserEntity::class,
         PurchaseEntity::class,
         ProductEntity::class,
         PurchasedItemEntity::class,
         CategoryEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class ProWalletDatabase : RoomDatabase() {
 
+    abstract fun userDao(): UserDao
     abstract fun purchaseDao(): PurchaseDao
     abstract fun productDao(): ProductDao
     abstract fun purchasedItemDao(): PurchasedItemDao
