@@ -23,14 +23,12 @@ import com.undef.prowallet.ui.components.ProductItem
 import com.undef.prowallet.ui.components.SectionCard
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
-import com.undef.prowallet.viewmodel.HomeViewModel
-import com.undef.prowallet.viewmodel.PurchaseViewModel
+import com.undef.prowallet.viewmodel.PurchaseDetailViewModel
 
 @Composable
 fun PurchaseDetailScreen(
     purchaseId: String,
-    viewModel: PurchaseViewModel,
-    homeViewModel: HomeViewModel,
+    viewModel: PurchaseDetailViewModel,
     onNavigateBack: () -> Unit,
     onNavigateToEdit: (String) -> Unit
 ) {
@@ -63,8 +61,8 @@ fun PurchaseDetailScreen(
                 IconButton(onClick = { onNavigateToEdit(purchaseId) }) {
                     Icon(Icons.Default.Edit, contentDescription = "Edit", tint = PrimaryDarker)
                 }
-                IconButton(onClick = { 
-                    homeViewModel.deletePurchase(purchaseId)
+                IconButton(onClick = {
+                    viewModel.deletePurchase(purchaseId)
                     onNavigateBack()
                 }) {
                     Icon(Icons.Default.Delete, contentDescription = "Delete", tint = ErrorRed)

@@ -1,7 +1,7 @@
 package com.undef.prowallet.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.undef.prowallet.data.MockRepository
+import com.undef.prowallet.data.PurchaseRepository
 import com.undef.prowallet.domain.Product
 import com.undef.prowallet.domain.Purchase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +23,7 @@ data class PurchaseUiState(
 )
 
 class PurchaseViewModel : ViewModel() {
-    
+
     private val _uiState = MutableStateFlow(PurchaseUiState())
     val uiState: StateFlow<PurchaseUiState> = _uiState.asStateFlow()
 
@@ -62,9 +62,9 @@ class PurchaseViewModel : ViewModel() {
     fun addOrUpdateProduct() {
         val state = _uiState.value
         if (state.currentProductName.isBlank()) return
-        
+
         val newProducts = if (state.editingProductId != null) {
-            state.products.map { 
+            state.products.map {
                 if (it.id == state.editingProductId) {
                     it.copy(
                         code = state.currentProductCode,
@@ -84,7 +84,7 @@ class PurchaseViewModel : ViewModel() {
             )
             state.products + product
         }
-        
+
         _uiState.value = state.copy(
             products = newProducts,
             currentProductName = "",
@@ -112,6 +112,17 @@ class PurchaseViewModel : ViewModel() {
     }
 
     fun savePurchase() {
+        val state = _uiState.value
+        val purchase = Purchase(
+            id = "pur_${System.currentTimeMillis()}",
+            storeName = state.storeName,
+            date = state.date,
+            time = state.time,
+            totalAmount = state.totalAmount.toDoubleOrNull() ?: state.products.sumOf { it.price },
+            category = "Other",
+            products = state.products
+        )
+        PurchaseRepository.addPurchase(purchase)
         _uiState.value = _uiState.value.copy(savedSuccess = true)
     }
 
@@ -122,7 +133,4 @@ class PurchaseViewModel : ViewModel() {
     fun resetForm() {
         _uiState.value = PurchaseUiState()
     }
-
-    fun getPurchaseById(id: String): Purchase? =
-        MockRepository.mockPurchases.find { it.id == id }
 }

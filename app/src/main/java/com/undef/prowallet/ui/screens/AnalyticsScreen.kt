@@ -25,17 +25,17 @@ import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.BottomNavBar
 import com.undef.prowallet.ui.components.SectionCard
 import com.undef.prowallet.ui.theme.*
-import com.undef.prowallet.viewmodel.HomeViewModel
+import com.undef.prowallet.viewmodel.AnalyticsViewModel
 
 @Composable
 fun AnalyticsScreen(
-    homeViewModel: HomeViewModel,
+    viewModel: AnalyticsViewModel,
     onNavigateToHome: () -> Unit,
     onNavigateToNewPurchase: () -> Unit,
     onNavigateToTopStores: () -> Unit,
     onNavigateToPersonalInflation: () -> Unit
 ) {
-    val state by homeViewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsState()
 
     Scaffold(
         bottomBar = {

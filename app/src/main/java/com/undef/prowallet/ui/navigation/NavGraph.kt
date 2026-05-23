@@ -8,9 +8,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.undef.prowallet.ui.screens.*
+import com.undef.prowallet.viewmodel.AnalyticsViewModel
 import com.undef.prowallet.viewmodel.AuthViewModel
+import com.undef.prowallet.viewmodel.HistoryViewModel
 import com.undef.prowallet.viewmodel.HomeViewModel
+import com.undef.prowallet.viewmodel.PurchaseDetailViewModel
 import com.undef.prowallet.viewmodel.PurchaseViewModel
+import com.undef.prowallet.viewmodel.TopStoresViewModel
 
 sealed class Screen(val route: String) {
     object Splash : Screen("splash")
@@ -47,7 +51,6 @@ sealed class Screen(val route: String) {
 @Composable
 fun AppNavGraph(navController: NavHostController) {
     val authViewModel: AuthViewModel = viewModel()
-    val homeViewModel: HomeViewModel = viewModel()
     val purchaseViewModel: PurchaseViewModel = viewModel()
 
     NavHost(
@@ -102,6 +105,7 @@ fun AppNavGraph(navController: NavHostController) {
         }
 
         composable(Screen.Home.route) {
+            val homeViewModel: HomeViewModel = viewModel()
             HomeScreen(
                 homeViewModel = homeViewModel,
                 onNavigateToNewPurchase = { navController.navigate(Screen.NewPurchase.route) },
@@ -124,7 +128,7 @@ fun AppNavGraph(navController: NavHostController) {
         composable(Screen.NewPurchase.route) {
             NewPurchaseScreen(
                 viewModel = purchaseViewModel,
-                onSaveSuccess = { 
+                onSaveSuccess = {
                     navController.navigate(Screen.PurchaseSuccess.route)
                 },
                 onNavigateBack = { navController.popBackStack() },
@@ -154,10 +158,10 @@ fun AppNavGraph(navController: NavHostController) {
             arguments = listOf(navArgument("purchaseId") { type = NavType.StringType })
         ) { backStackEntry ->
             val purchaseId = backStackEntry.arguments?.getString("purchaseId") ?: ""
+            val purchaseDetailViewModel: PurchaseDetailViewModel = viewModel()
             PurchaseDetailScreen(
                 purchaseId = purchaseId,
-                viewModel = purchaseViewModel,
-                homeViewModel = homeViewModel,
+                viewModel = purchaseDetailViewModel,
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToEdit = { _ ->
                     navController.navigate(Screen.NewPurchase.route)
@@ -166,8 +170,9 @@ fun AppNavGraph(navController: NavHostController) {
         }
 
         composable(Screen.History.route) {
+            val historyViewModel: HistoryViewModel = viewModel()
             HistoryScreen(
-                homeViewModel = homeViewModel,
+                viewModel = historyViewModel,
                 onNavigateToPurchaseDetail = { id ->
                     navController.navigate(Screen.PurchaseDetail.createRoute(id))
                 },
@@ -176,8 +181,9 @@ fun AppNavGraph(navController: NavHostController) {
         }
 
         composable(Screen.Analytics.route) {
+            val analyticsViewModel: AnalyticsViewModel = viewModel()
             AnalyticsScreen(
-                homeViewModel = homeViewModel,
+                viewModel = analyticsViewModel,
                 onNavigateToHome = {
                     navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.Home.route) { inclusive = true }
@@ -193,14 +199,15 @@ fun AppNavGraph(navController: NavHostController) {
             PersonalInflationScreen(
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToNotifications = {
-                    navController.navigate(Screen.Notifications.route) // 3. Definimos la acción de ir a notificaciones
+                    navController.navigate(Screen.Notifications.route)
                 }
             )
         }
 
         composable(Screen.TopStores.route) {
+            val topStoresViewModel: TopStoresViewModel = viewModel()
             TopStoresScreen(
-                homeViewModel = homeViewModel,
+                viewModel = topStoresViewModel,
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToStoreDetail = { name ->
                     navController.navigate(Screen.StoreDetail.createRoute(name))
@@ -260,6 +267,7 @@ fun AppNavGraph(navController: NavHostController) {
                 onNavigateBack = { navController.popBackStack() }
             )
         }
+
         composable(Screen.AutoSavings.route) {
             AutoSavingsScreen(
                 onNavigateBack = { navController.popBackStack() },
@@ -301,6 +309,7 @@ fun AppNavGraph(navController: NavHostController) {
                 }
             )
         }
+
         composable(Screen.ContactSupport.route) {
             ContactSupportScreen(
                 onNavigateBack = { navController.popBackStack() }

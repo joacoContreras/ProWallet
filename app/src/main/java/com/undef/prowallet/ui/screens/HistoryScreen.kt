@@ -17,15 +17,15 @@ import com.undef.prowallet.ui.components.PurchaseCard
 import com.undef.prowallet.ui.components.SectionCard
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
-import com.undef.prowallet.viewmodel.HomeViewModel
+import com.undef.prowallet.viewmodel.HistoryViewModel
 
 @Composable
 fun HistoryScreen(
-    homeViewModel: HomeViewModel,
+    viewModel: HistoryViewModel,
     onNavigateToPurchaseDetail: (String) -> Unit,
     onNavigateBack: () -> Unit
 ) {
-    val state by homeViewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier
