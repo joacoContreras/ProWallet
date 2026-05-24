@@ -18,7 +18,7 @@ import com.undef.prowallet.data.dao.UserDao
         PurchasedItemEntity::class,
         CategoryEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class ProWalletDatabase : RoomDatabase() {
@@ -39,7 +39,7 @@ abstract class ProWalletDatabase : RoomDatabase() {
                     context.applicationContext, // evita memory leaks, no retiene referencias a Activities.
                     ProWalletDatabase::class.java,
                     "prowallet.db"
-                ).build().also { INSTANCE = it }
+                ).fallbackToDestructiveMigration().build().also { INSTANCE = it }
             }
     }
 }
