@@ -171,7 +171,7 @@ fun HomeScreen(
                                 color = SecondaryDark.copy(alpha = 0.7f)
                             )
                             Text(
-                                text = stringResource(R.string.of_budget, "${((state.totalMonthlySpend / state.monthlyBudget) * 100).toInt()}%"),
+                                text = stringResource(R.string.of_budget, "${state.budgetPercent}%"),
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
@@ -180,7 +180,7 @@ fun HomeScreen(
                         }
                         Spacer(Modifier.height(6.dp))
                         LinearProgressIndicator(
-                            progress = { (state.totalMonthlySpend / state.monthlyBudget).toFloat() },
+                            progress = { state.budgetProgress },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(8.dp)

@@ -19,7 +19,9 @@ data class HomeUiState(
     val monthlyBudget: Double = 0.0,
     val remaining: Double = 0.0,
     val percentageVsLastMonth: Int = 0,
-    val recentPurchases: List<Purchase> = emptyList()
+    val recentPurchases: List<Purchase> = emptyList(),
+    val budgetProgress: Float = 0f,
+    val budgetPercent: Int = 0
 )
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
@@ -42,16 +44,39 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         viewModelScope.launch {
+            sessionManager.monthlyBudget.collect { budget ->
+                val spent = _uiState.value.totalMonthlySpend
+                _uiState.value = _uiState.value.copy(
+                    monthlyBudget = budget,
+                    remaining = budget - spent,
+                    budgetProgress = safeProgress(spent, budget),
+                    budgetPercent = safePercent(spent, budget)
+                )
+            }
+        }
+        viewModelScope.launch {
             repository.seedDefaultCategories()
             repository.purchasesFlow.collect { purchases ->
-                val totalSpent = purchases.sumOf { it.totalAmount }
+                val spent = purchases.sumOf { it.totalAmount }
                 val budget = _uiState.value.monthlyBudget
                 _uiState.value = _uiState.value.copy(
                     recentPurchases = purchases.take(3),
-                    totalMonthlySpend = totalSpent,
-                    remaining = budget - totalSpent
+                    totalMonthlySpend = spent,
+                    remaining = budget - spent,
+                    budgetProgress = safeProgress(spent, budget),
+                    budgetPercent = safePercent(spent, budget)
                 )
             }
         }
     }
+
+    fun setBudget(amount: Double) {
+        viewModelScope.launch { sessionManager.saveBudget(amount) }
+    }
+
+    private fun safeProgress(spent: Double, budget: Double): Float =
+        if (budget > 0) (spent / budget).toFloat().coerceIn(0f, 1f) else 0f
+
+    private fun safePercent(spent: Double, budget: Double): Int =
+        if (budget > 0) ((spent / budget) * 100).toInt().coerceAtLeast(0) else 0
 }
