@@ -335,4 +335,7 @@
     <string name="bi_weekly">Quincenal</string>
     <string name="weekly">Semanal</string>
     <string name="destination_fund">Fondo de destino</string>
+
+    <!-- New Purchase Screen errors -->
+    <string name="error_save_purchase">Error al guardar la compra. Intente nuevamente.</string>
 </resources>

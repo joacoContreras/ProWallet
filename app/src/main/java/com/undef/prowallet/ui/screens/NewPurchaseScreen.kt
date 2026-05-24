@@ -56,10 +56,20 @@ fun NewPurchaseScreen(
         }
     }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val saveErrorMsg = stringResource(R.string.error_save_purchase)
+
     LaunchedEffect(state.savedSuccess) {
         if (state.savedSuccess) {
             onSaveSuccess()
             viewModel.clearSavedSuccess()
+        }
+    }
+
+    LaunchedEffect(state.saveError) {
+        if (state.saveError) {
+            snackbarHostState.showSnackbar(saveErrorMsg)
+            viewModel.clearSaveError()
         }
     }
 
@@ -124,6 +134,7 @@ fun NewPurchaseScreen(
                 onAnalyticsClick = onNavigateToAnalytics
             )
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = BackgroundLight
     ) { padding ->
         Column(

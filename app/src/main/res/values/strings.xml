@@ -335,4 +335,7 @@
     <string name="bi_weekly">Bi-weekly</string>
     <string name="weekly">Weekly</string>
     <string name="destination_fund">Destination Fund</string>
+
+    <!-- New Purchase Screen errors -->
+    <string name="error_save_purchase">Failed to save purchase. Please try again.</string>
 </resources>

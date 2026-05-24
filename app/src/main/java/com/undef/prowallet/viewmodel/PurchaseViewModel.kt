@@ -27,7 +27,8 @@ data class PurchaseUiState(
     val currentProductPrice: String = "",
     val editingProductId: String? = null,
     val isSaving: Boolean = false,
-    val savedSuccess: Boolean = false
+    val savedSuccess: Boolean = false,
+    val saveError: Boolean = false
 )
 
 val CATEGORIES = listOf("Groceries", "Transport", "Dining", "Coffee", "Other")
@@ -115,14 +116,22 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
             products = state.products
         )
 
-        _uiState.value = state.copy(isSaving = true)
+        _uiState.value = state.copy(isSaving = true, saveError = false)
         viewModelScope.launch {
-            repository.savePurchase(purchase)
-            _uiState.value = _uiState.value.copy(isSaving = false, savedSuccess = true)
+            try {
+                repository.savePurchase(purchase)
+                _uiState.value = _uiState.value.copy(savedSuccess = true)
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(saveError = true)
+            } finally {
+                _uiState.value = _uiState.value.copy(isSaving = false)
+            }
         }
     }
 
     fun clearSavedSuccess() { _uiState.value = _uiState.value.copy(savedSuccess = false) }
+
+    fun clearSaveError() { _uiState.value = _uiState.value.copy(saveError = false) }
 
     fun resetForm() { _uiState.value = PurchaseUiState() }
 }
