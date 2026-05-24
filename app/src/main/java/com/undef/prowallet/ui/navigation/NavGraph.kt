@@ -283,7 +283,7 @@ fun AppNavGraph(navController: NavHostController) {
             ForgotPasswordScreen(
                 viewModel = authViewModel,
                 onCodeSent = {
-                    navController.navigate(Screen.UpdatePassword.route)
+                    navController.navigate(Screen.VerifyCode.route)
                 },
                 onNavigateBack = { navController.popBackStack() }
             )

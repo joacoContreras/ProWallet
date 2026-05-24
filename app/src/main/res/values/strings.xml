@@ -216,6 +216,7 @@
     <string name="error_password_too_short">Password must be at least 6 characters</string>
     <string name="error_password_mismatch">Passwords do not match</string>
     <string name="error_enter_email">Please enter your email</string>
+    <string name="error_invalid_code">Please enter a valid 6-digit code</string>
 
     <!-- Verify Code Screen -->
     <string name="verify_identity">Verify Identity</string>

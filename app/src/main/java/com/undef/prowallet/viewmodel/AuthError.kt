@@ -12,4 +12,5 @@ sealed class AuthError(@StringRes val messageRes: Int) {
     object PasswordTooShort   : AuthError(R.string.error_password_too_short)
     object PasswordMismatch   : AuthError(R.string.error_password_mismatch)
     object EnterEmail         : AuthError(R.string.error_enter_email)
+    object InvalidCode        : AuthError(R.string.error_invalid_code)
 }

@@ -139,6 +139,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun updatePassword(password: String) {
+        if (!_uiState.value.codeVerified) return
         val email = pendingEmail ?: return
         if (password.length < 6) {
             _uiState.value = _uiState.value.copy(error = AuthError.PasswordTooShort)
@@ -170,6 +171,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun verifyCode(code: String) {
+        if (code.length != 6 || !code.all { it.isDigit() }) {
+            _uiState.value = _uiState.value.copy(error = AuthError.InvalidCode)
+            return
+        }
         _uiState.value = _uiState.value.copy(codeVerified = true)
     }
 
