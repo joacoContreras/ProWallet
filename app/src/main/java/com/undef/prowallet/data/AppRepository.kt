@@ -1,6 +1,8 @@
 package com.undef.prowallet.data
 
 import android.content.Context
+import com.undef.prowallet.data.remote.ProductDto
+import com.undef.prowallet.data.remote.RetrofitClient
 import com.undef.prowallet.domain.Product
 import com.undef.prowallet.domain.Purchase
 import kotlinx.coroutines.flow.Flow
@@ -79,6 +81,9 @@ class AppRepository(context: Context) {
         val productMap = productDao.getAllProductsOnce().associateBy { it.id }
         return pwi.toDomain(categoryMap, productMap)
     }
+
+    suspend fun getApiProducts(): List<ProductDto> =
+        RetrofitClient.productApiService.getProducts().productos
 
     suspend fun seedDefaultCategories() {
         listOf("Groceries", "Transport", "Dining", "Coffee", "Other").forEach { name ->

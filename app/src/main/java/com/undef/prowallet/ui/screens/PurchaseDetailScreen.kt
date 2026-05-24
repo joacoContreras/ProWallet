@@ -186,6 +186,10 @@ fun PurchaseDetailScreen(
                     SectionCard {
                         p.products.forEachIndexed { idx, product ->
                             ProductItem(product = product)
+                            val apiPrice = state.apiPriceMap[product.name.trim().lowercase()]
+                            if (apiPrice != null) {
+                                PriceComparisonBadge(paidPrice = product.price, apiPrice = apiPrice)
+                            }
                             if (idx < p.products.lastIndex) {
                                 Divider(color = Color(0xFFF0F0F0), thickness = 0.5.dp)
                             }
@@ -217,5 +221,28 @@ fun PurchaseDetailScreen(
 
             item { Spacer(Modifier.height(16.dp)) }
         }
+    }
+}
+
+@Composable
+private fun PriceComparisonBadge(paidPrice: Double, apiPrice: Double) {
+    val ratio = paidPrice / apiPrice
+    val (icon, label, color) = when {
+        ratio < 0.90 -> Triple(Icons.Default.CheckCircle, stringResource(R.string.price_good), Color(0xFF2E7D32))
+        ratio > 1.10 -> Triple(Icons.Default.Warning, stringResource(R.string.price_high), MaterialTheme.colorScheme.error)
+        else         -> Triple(Icons.Default.Info, stringResource(R.string.price_fair), TextSecondary)
+    }
+    Row(
+        modifier = Modifier.padding(start = 4.dp, bottom = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(14.dp))
+        Text(label, style = MaterialTheme.typography.labelSmall, color = color)
+        Text(
+            stringResource(R.string.price_api_reference, apiPrice),
+            style = MaterialTheme.typography.labelSmall,
+            color = TextSecondary
+        )
     }
 }

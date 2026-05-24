@@ -338,4 +338,10 @@
 
     <!-- New Purchase Screen errors -->
     <string name="error_save_purchase">Failed to save purchase. Please try again.</string>
+
+    <!-- Price comparison badges -->
+    <string name="price_good">Good price</string>
+    <string name="price_high">High price</string>
+    <string name="price_fair">Fair price</string>
+    <string name="price_api_reference">API avg: $%.2f</string>
 </resources>

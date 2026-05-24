@@ -12,7 +12,8 @@ import kotlinx.coroutines.launch
 
 data class PurchaseDetailUiState(
     val isLoading: Boolean = true,
-    val purchase: Purchase? = null
+    val purchase: Purchase? = null,
+    val apiPriceMap: Map<String, Double> = emptyMap()
 )
 
 class PurchaseDetailViewModel(application: Application) : AndroidViewModel(application) {
@@ -23,11 +24,22 @@ class PurchaseDetailViewModel(application: Application) : AndroidViewModel(appli
     val uiState: StateFlow<PurchaseDetailUiState> = _uiState.asStateFlow()
 
     fun loadPurchase(id: String) {
+        val numericId = id.toIntOrNull() ?: run {
+            _uiState.value = PurchaseDetailUiState(isLoading = false)
+            return
+        }
         _uiState.value = PurchaseDetailUiState(isLoading = true)
         viewModelScope.launch {
-            val numericId = id.toIntOrNull()
-            val purchase = if (numericId != null) repository.getPurchaseById(numericId) else null
-            _uiState.value = PurchaseDetailUiState(isLoading = false, purchase = purchase)
+            val purchase = repository.getPurchaseById(numericId)
+            _uiState.value = _uiState.value.copy(isLoading = false, purchase = purchase)
+        }
+        viewModelScope.launch {
+            val apiMap = try {
+                repository.getApiProducts()
+                    .associateBy { it.nombre.trim().lowercase() }
+                    .mapValues { it.value.precioPromedio }
+            } catch (e: Exception) { emptyMap() }
+            _uiState.value = _uiState.value.copy(apiPriceMap = apiMap)
         }
     }
 
