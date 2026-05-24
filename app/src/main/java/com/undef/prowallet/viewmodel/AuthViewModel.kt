@@ -20,7 +20,7 @@ data class AuthUiState(
     val isLoading: Boolean = false,
     val isLoggedIn: Boolean = false,
     val user: User? = null,
-    val error: String? = null,
+    val error: AuthError? = null,
     val registrationSuccess: Boolean = false,
     val resetEmailSent: Boolean = false,
     val codeVerified: Boolean = false,
@@ -42,19 +42,19 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     fun login(email: String, password: String) {
         val trimmedEmail = email.trim().lowercase()
         if (email.isBlank() || password.isBlank()) {
-            _uiState.value = _uiState.value.copy(error = "Completá todos los campos")
+            _uiState.value = _uiState.value.copy(error = AuthError.EmptyFields)
             return
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(trimmedEmail).matches()) {
-            _uiState.value = _uiState.value.copy(error = "Email inválido")
+            _uiState.value = _uiState.value.copy(error = AuthError.InvalidEmail)
             return
         }
         _uiState.value = _uiState.value.copy(isLoading = true, error = null)
         viewModelScope.launch {
             val user = userDao.getUserByEmail(trimmedEmail)
             when {
-                user == null -> _uiState.value = _uiState.value.copy(isLoading = false, error = "No existe una cuenta con ese email")
-                user.password != hashPassword(password) -> _uiState.value = _uiState.value.copy(isLoading = false, error = "Contraseña incorrecta")
+                user == null -> _uiState.value = _uiState.value.copy(isLoading = false, error = AuthError.EmailNotFound)
+                user.password != hashPassword(password) -> _uiState.value = _uiState.value.copy(isLoading = false, error = AuthError.WrongPassword)
                 else -> {
                     sessionManager.saveSession(user.email)
                     _uiState.value = _uiState.value.copy(isLoading = false, isLoggedIn = true, user = user.toDomain())
@@ -68,19 +68,19 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         val trimmedName = fullName.trim()
         when {
             trimmedName.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank() -> {
-                _uiState.value = _uiState.value.copy(error = "Completá todos los campos")
+                _uiState.value = _uiState.value.copy(error = AuthError.EmptyFields)
                 return
             }
             !Patterns.EMAIL_ADDRESS.matcher(trimmedEmail).matches() -> {
-                _uiState.value = _uiState.value.copy(error = "Email inválido")
+                _uiState.value = _uiState.value.copy(error = AuthError.InvalidEmail)
                 return
             }
             password.length < 6 -> {
-                _uiState.value = _uiState.value.copy(error = "La contraseña debe tener al menos 6 caracteres")
+                _uiState.value = _uiState.value.copy(error = AuthError.PasswordTooShort)
                 return
             }
             password != confirmPassword -> {
-                _uiState.value = _uiState.value.copy(error = "Las contraseñas no coinciden")
+                _uiState.value = _uiState.value.copy(error = AuthError.PasswordMismatch)
                 return
             }
         }
@@ -88,7 +88,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         _uiState.value = _uiState.value.copy(isLoading = true, error = null)
         viewModelScope.launch {
             if (userDao.getUserByEmail(trimmedEmail) != null) {
-                _uiState.value = _uiState.value.copy(isLoading = false, error = "Ya existe una cuenta con ese email")
+                _uiState.value = _uiState.value.copy(isLoading = false, error = AuthError.EmailAlreadyExists)
                 return@launch
             }
             val nameParts = trimmedName.split(" ", limit = 2)
@@ -112,17 +112,17 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     fun sendResetCode(email: String) {
         val trimmedEmail = email.trim().lowercase()
         if (trimmedEmail.isBlank()) {
-            _uiState.value = _uiState.value.copy(error = "Ingresá tu email")
+            _uiState.value = _uiState.value.copy(error = AuthError.EnterEmail)
             return
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(trimmedEmail).matches()) {
-            _uiState.value = _uiState.value.copy(error = "Email inválido")
+            _uiState.value = _uiState.value.copy(error = AuthError.InvalidEmail)
             return
         }
         _uiState.value = _uiState.value.copy(isLoading = true, error = null)
         viewModelScope.launch {
             if (userDao.getUserByEmail(trimmedEmail) == null) {
-                _uiState.value = _uiState.value.copy(isLoading = false, error = "No existe una cuenta con ese email")
+                _uiState.value = _uiState.value.copy(isLoading = false, error = AuthError.EmailNotFound)
                 return@launch
             }
             pendingEmail = trimmedEmail
@@ -133,7 +133,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     fun updatePassword(password: String) {
         val email = pendingEmail ?: return
         if (password.length < 6) {
-            _uiState.value = _uiState.value.copy(error = "La contraseña debe tener al menos 6 caracteres")
+            _uiState.value = _uiState.value.copy(error = AuthError.PasswordTooShort)
             return
         }
         _uiState.value = _uiState.value.copy(isLoading = true, error = null)

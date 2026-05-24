@@ -203,6 +203,16 @@
     <string name="team_here_for_you">Our team is here for you.</string>
     <string name="available_24_7">Available 24/7 for emergency support.</string>
     <string name="learn_more_settlement">Learn more about settlement times</string>
+    <!-- Auth errors -->
+    <string name="error_empty_fields">Please fill in all fields</string>
+    <string name="error_invalid_email">Invalid email address</string>
+    <string name="error_email_not_found">No account found with that email</string>
+    <string name="error_wrong_password">Incorrect password</string>
+    <string name="error_email_already_exists">An account with that email already exists</string>
+    <string name="error_password_too_short">Password must be at least 6 characters</string>
+    <string name="error_password_mismatch">Passwords do not match</string>
+    <string name="error_enter_email">Please enter your email</string>
+
     <!-- Verify Code Screen -->
     <string name="verify_identity">Verify Identity</string>
     <string name="verify_code_subtitle">We\'ve sent a 6-digit code to your email. Enter it below to continue.</string>

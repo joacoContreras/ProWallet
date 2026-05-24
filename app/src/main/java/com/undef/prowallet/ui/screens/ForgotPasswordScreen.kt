@@ -140,9 +140,9 @@ fun ForgotPasswordScreen(
                         label = stringResource(R.string.email_address_label)
                     )
 
-                    state.error?.let { errorMsg ->
+                    state.error?.let { error ->
                         Text(
-                            text = errorMsg,
+                            text = stringResource(error.messageRes),
                             color = ErrorRed,
                             fontFamily = PlusJakartaSans,
                             fontSize = 13.sp,
