@@ -28,7 +28,11 @@ class AppRepository(context: Context) {
 
     suspend fun savePurchase(purchase: Purchase) {
         val categoryId = categoryDao.getCategoryByName(purchase.category)?.id
-            ?: categoryDao.insert(CategoryEntity(name = purchase.category)).toInt()
+            ?: run {
+                val inserted = categoryDao.insert(CategoryEntity(name = purchase.category))
+                if (inserted != -1L) inserted.toInt()
+                else categoryDao.getCategoryByName(purchase.category)!!.id
+            }
 
         val purchaseId = purchaseDao.insert(
             PurchaseEntity(
