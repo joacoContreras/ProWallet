@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.UUID
 
 data class PurchaseUiState(
     val storeName: String = "",
@@ -54,10 +55,12 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
         val state = _uiState.value
         if (state.currentProductName.isBlank()) return
 
+        val resolvedCode = state.currentProductCode.trim().ifBlank { UUID.randomUUID().toString() }
+
         val newProducts = if (state.editingProductId != null) {
             state.products.map {
                 if (it.id == state.editingProductId) it.copy(
-                    code = state.currentProductCode,
+                    code = resolvedCode,
                     name = state.currentProductName,
                     description = state.currentProductDescription,
                     price = state.currentProductPrice.toDoubleOrNull() ?: 0.0
@@ -66,7 +69,7 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
         } else {
             state.products + Product(
                 id = "tmp_${System.currentTimeMillis()}",
-                code = state.currentProductCode,
+                code = resolvedCode,
                 name = state.currentProductName,
                 description = state.currentProductDescription,
                 price = state.currentProductPrice.toDoubleOrNull() ?: 0.0

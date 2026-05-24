@@ -264,7 +264,7 @@ fun NewPurchaseScreen(
                             onExpandedChange = { showCategoryMenu = it }
                         ) {
                             OutlinedTextField(
-                                value = state.category,
+                                value = categoryDisplayName(state.category),
                                 onValueChange = {},
                                 readOnly = true,
                                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = showCategoryMenu) },
@@ -286,7 +286,7 @@ fun NewPurchaseScreen(
                             ) {
                                 CATEGORIES.forEach { cat ->
                                     DropdownMenuItem(
-                                        text = { Text(cat, fontFamily = PlusJakartaSans) },
+                                        text = { Text(categoryDisplayName(cat), fontFamily = PlusJakartaSans) },
                                         onClick = {
                                             viewModel.onCategoryChange(cat)
                                             showCategoryMenu = false
@@ -406,10 +406,10 @@ fun NewPurchaseScreen(
                                 )
                             }
                             IconButton(onClick = { viewModel.editProduct(product) }) {
-                                Icon(Icons.Default.Edit, contentDescription = "Edit", tint = Secondary, modifier = Modifier.size(20.dp))
+                                Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.edit_label), tint = Secondary, modifier = Modifier.size(20.dp))
                             }
                             IconButton(onClick = { viewModel.removeProduct(product.id) }) {
-                                Icon(Icons.Default.Delete, contentDescription = "Delete", tint = ErrorRed, modifier = Modifier.size(20.dp))
+                                Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete_label), tint = ErrorRed, modifier = Modifier.size(20.dp))
                             }
                         }
                         HorizontalDivider(color = Color(0xFFF8F8F8))
@@ -457,4 +457,13 @@ fun NewPurchaseScreen(
             Spacer(Modifier.height(16.dp))
         }
     }
+}
+
+@Composable
+private fun categoryDisplayName(key: String): String = when (key) {
+    "Groceries" -> stringResource(R.string.category_groceries)
+    "Transport" -> stringResource(R.string.category_transport)
+    "Dining"    -> stringResource(R.string.category_dining)
+    "Coffee"    -> stringResource(R.string.category_coffee)
+    else        -> stringResource(R.string.category_other)
 }

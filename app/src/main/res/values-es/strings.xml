@@ -178,6 +178,8 @@
     <string name="add_new_account">Añadir nueva cuenta</string>
     <string name="primary_label">Primaria</string>
     <string name="edit_label">Editar</string>
+    <string name="delete_label">Eliminar</string>
+    <string name="help_label">Ayuda</string>
 
     <!-- Personal Inflation Screen -->
     <string name="monthly_inflation">Inflación mensual</string>
@@ -344,4 +346,11 @@
     <string name="price_high">Precio alto</string>
     <string name="price_fair">Precio justo</string>
     <string name="price_api_reference">Ref. API: $%.2f</string>
+
+    <!-- Category names -->
+    <string name="category_groceries">Comestibles</string>
+    <string name="category_transport">Transporte</string>
+    <string name="category_dining">Gastronomía</string>
+    <string name="category_coffee">Café</string>
+    <string name="category_other">Otro</string>
 </resources>

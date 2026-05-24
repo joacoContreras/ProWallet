@@ -162,7 +162,7 @@ fun AccountCard(account: BankAccount) {
                     contentPadding = PaddingValues(0.dp),
                     border = androidx.compose.foundation.BorderStroke(1.dp, NeutralLight.copy(alpha = 0.3f))
                 ) {
-                    Icon(Icons.Default.Delete, contentDescription = "Delete", tint = ErrorRed, modifier = Modifier.size(18.dp))
+                    Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete_label), tint = ErrorRed, modifier = Modifier.size(18.dp))
                 }
             }
         }

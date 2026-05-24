@@ -130,7 +130,8 @@ class AppRepository(context: Context) {
             totalAmount = purchase.amount,
             category = categoryName,
             products = products,
-            ticketImageUri = purchase.ticketImagePath
+            ticketImageUri = purchase.ticketImagePath,
+            timestampMs = purchase.timestamp
         )
     }
 }

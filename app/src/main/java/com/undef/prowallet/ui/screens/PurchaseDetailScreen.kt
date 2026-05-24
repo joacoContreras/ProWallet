@@ -70,12 +70,12 @@ fun PurchaseDetailScreen(
             onNavigateBack = onNavigateBack,
             actions = {
                 IconButton(onClick = { onNavigateToEdit(purchaseId) }) {
-                    Icon(Icons.Default.Edit, contentDescription = "Edit", tint = PrimaryDarker)
+                    Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.edit_label), tint = PrimaryDarker)
                 }
                 IconButton(onClick = {
                     viewModel.deletePurchase(purchaseId, onDone = onNavigateBack)
                 }) {
-                    Icon(Icons.Default.Delete, contentDescription = "Delete", tint = ErrorRed)
+                    Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete_label), tint = ErrorRed)
                 }
             }
         )
@@ -187,7 +187,7 @@ fun PurchaseDetailScreen(
                         p.products.forEachIndexed { idx, product ->
                             ProductItem(product = product)
                             val apiPrice = state.apiPriceMap[product.name.trim().lowercase()]
-                            if (apiPrice != null) {
+                            if (apiPrice != null && apiPrice > 0.0) {
                                 PriceComparisonBadge(paidPrice = product.price, apiPrice = apiPrice)
                             }
                             if (idx < p.products.lastIndex) {
@@ -226,6 +226,7 @@ fun PurchaseDetailScreen(
 
 @Composable
 private fun PriceComparisonBadge(paidPrice: Double, apiPrice: Double) {
+    if (apiPrice <= 0.0) return
     val ratio = paidPrice / apiPrice
     val (icon, label, color) = when {
         ratio < 0.90 -> Triple(Icons.Default.CheckCircle, stringResource(R.string.price_good), Color(0xFF2E7D32))

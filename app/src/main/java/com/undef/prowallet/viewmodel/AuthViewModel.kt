@@ -160,7 +160,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         }
         _uiState.value = _uiState.value.copy(isLoading = true, error = null)
         viewModelScope.launch {
-            val user = userDao.getUserByEmail(email) ?: return@launch
+            val user = userDao.getUserByEmail(email) ?: run {
+                _uiState.value = _uiState.value.copy(isLoading = false, error = AuthError.EmailNotFound)
+                return@launch
+            }
             val hashed = withContext(Dispatchers.Default) { hashPassword(password) }
             userDao.update(user.copy(password = hashed))
             pendingEmail = null

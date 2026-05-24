@@ -253,7 +253,8 @@ fun AnalyticsScreen(
                                 verticalAlignment = Alignment.Bottom
                             ) {
                                 val maxVal = state.monthlyTrend.maxOfOrNull { it.second } ?: 1f
-                                state.monthlyTrend.forEach { (month, value) ->
+                                state.monthlyTrend.forEachIndexed { idx, (month, value) ->
+                                    val isCurrent = idx == state.monthlyTrend.lastIndex
                                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                         val barHeight = ((value / maxVal) * 70).dp
                                         Box(
@@ -262,7 +263,7 @@ fun AnalyticsScreen(
                                                 .height(barHeight)
                                                 .clip(RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp))
                                                 .background(
-                                                    if (month == "Oct") Secondary else Primary.copy(alpha = 0.6f)
+                                                    if (isCurrent) Secondary else Primary.copy(alpha = 0.6f)
                                                 )
                                         )
                                         Spacer(Modifier.height(4.dp))
@@ -270,7 +271,7 @@ fun AnalyticsScreen(
                                             text = month,
                                             fontFamily = PlusJakartaSans,
                                             fontSize = 10.sp,
-                                            color = if (month == "Oct") Secondary else Neutral
+                                            color = if (isCurrent) Secondary else Neutral
                                         )
                                     }
                                 }

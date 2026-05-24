@@ -5,11 +5,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.undef.prowallet.data.AppRepository
 import com.undef.prowallet.domain.Purchase
+import com.undef.prowallet.util.isInMonth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
+import java.text.DateFormatSymbols
 import java.util.Calendar
 import java.util.Locale
 
@@ -43,25 +44,14 @@ class AnalyticsViewModel(application: Application) : AndroidViewModel(applicatio
     private fun computeAnalytics(purchases: List<Purchase>): AnalyticsUiState {
         if (purchases.isEmpty()) return AnalyticsUiState()
 
-        val sdf = SimpleDateFormat("MM/dd/yy", Locale.getDefault())
         val now = Calendar.getInstance()
         val thisMonth = now.get(Calendar.MONTH)
         val thisYear = now.get(Calendar.YEAR)
+        val lastMonth = if (thisMonth == 0) 11 else thisMonth - 1
+        val lastMonthYear = if (thisMonth == 0) thisYear - 1 else thisYear
 
-        fun Purchase.calendar(): Calendar? = try {
-            Calendar.getInstance().also { it.time = sdf.parse(date)!! }
-        } catch (e: Exception) { null }
-
-        val thisMonthPurchases = purchases.filter { p ->
-            val cal = p.calendar() ?: return@filter false
-            cal.get(Calendar.MONTH) == thisMonth && cal.get(Calendar.YEAR) == thisYear
-        }
-        val lastMonthPurchases = purchases.filter { p ->
-            val cal = p.calendar() ?: return@filter false
-            val lm = if (thisMonth == 0) 11 else thisMonth - 1
-            val ly = if (thisMonth == 0) thisYear - 1 else thisYear
-            cal.get(Calendar.MONTH) == lm && cal.get(Calendar.YEAR) == ly
-        }
+        val thisMonthPurchases = purchases.filter { it.isInMonth(thisYear, thisMonth) }
+        val lastMonthPurchases = purchases.filter { it.isInMonth(lastMonthYear, lastMonth) }
 
         val totalThisMonth = thisMonthPurchases.sumOf { it.totalAmount }
         val totalLastMonth = lastMonthPurchases.sumOf { it.totalAmount }
@@ -87,20 +77,16 @@ class AnalyticsViewModel(application: Application) : AndroidViewModel(applicatio
             }
 
         // Monthly trend: last 6 calendar months
-        val monthNames = listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun",
-            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+        val shortMonths = DateFormatSymbols.getInstance(Locale.getDefault()).shortMonths
         val monthlyTrend = (5 downTo 0).map { monthsAgo ->
             val cal = Calendar.getInstance().also { it.add(Calendar.MONTH, -monthsAgo) }
             val m = cal.get(Calendar.MONTH)
             val y = cal.get(Calendar.YEAR)
             val total = purchases
-                .filter { p ->
-                    val pc = p.calendar() ?: return@filter false
-                    pc.get(Calendar.MONTH) == m && pc.get(Calendar.YEAR) == y
-                }
+                .filter { it.isInMonth(y, m) }
                 .sumOf { it.totalAmount }
                 .toFloat()
-            Pair(monthNames[m], total)
+            Pair(shortMonths[m], total)
         }
 
         return AnalyticsUiState(

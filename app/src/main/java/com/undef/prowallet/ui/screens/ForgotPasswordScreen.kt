@@ -66,7 +66,7 @@ fun ForgotPasswordScreen(
                         .clip(CircleShape)
                         .background(BackgroundLight)
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help", tint = Primary)
+                    Icon(Icons.AutoMirrored.Filled.Help, contentDescription = stringResource(R.string.help_label), tint = Primary)
                 }
             }
         },

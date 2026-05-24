@@ -178,6 +178,8 @@
     <string name="add_new_account">Add New Account</string>
     <string name="primary_label">Primary</string>
     <string name="edit_label">Edit</string>
+    <string name="delete_label">Delete</string>
+    <string name="help_label">Help</string>
 
     <!-- Personal Inflation Screen -->
     <string name="monthly_inflation">Monthly Inflation</string>
@@ -344,4 +346,11 @@
     <string name="price_high">High price</string>
     <string name="price_fair">Fair price</string>
     <string name="price_api_reference">API avg: $%.2f</string>
+
+    <!-- Category names (stable EN keys stored in DB; localized for display) -->
+    <string name="category_groceries">Groceries</string>
+    <string name="category_transport">Transport</string>
+    <string name="category_dining">Dining</string>
+    <string name="category_coffee">Coffee</string>
+    <string name="category_other">Other</string>
 </resources>
