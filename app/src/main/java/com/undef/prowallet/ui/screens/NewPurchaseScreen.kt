@@ -24,27 +24,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.*
 import com.undef.prowallet.ui.theme.*
+import com.undef.prowallet.viewmodel.CATEGORIES
 import com.undef.prowallet.viewmodel.PurchaseViewModel
 import java.text.SimpleDateFormat
 import java.util.*
-
-@Preview(showBackground = true)
-@Composable
-fun NewPurchaseScreenPreview() {
-    ProWalletTheme {
-        NewPurchaseScreen(
-            viewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
-            onSaveSuccess = {},
-            onNavigateBack = {},
-            onNavigateToHome = {},
-            onNavigateToAnalytics = {}
-        )
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,6 +44,7 @@ fun NewPurchaseScreen(
     val state by viewModel.uiState.collectAsState()
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
+    var showCategoryMenu by remember { mutableStateOf(false) }
 
     val datePickerState = rememberDatePickerState()
     
@@ -253,6 +240,51 @@ fun NewPurchaseScreen(
                         leadingIcon = Icons.Default.AttachMoney,
                         label = stringResource(R.string.total_amount_label)
                     )
+                    // Category selector
+                    Column {
+                        Text(
+                            text = stringResource(R.string.category_label),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = TextPrimary,
+                            modifier = Modifier.padding(bottom = 6.dp)
+                        )
+                        ExposedDropdownMenuBox(
+                            expanded = showCategoryMenu,
+                            onExpandedChange = { showCategoryMenu = it }
+                        ) {
+                            OutlinedTextField(
+                                value = state.category,
+                                onValueChange = {},
+                                readOnly = true,
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = showCategoryMenu) },
+                                leadingIcon = { Icon(Icons.Default.Category, contentDescription = null, tint = NeutralLight, modifier = Modifier.size(20.dp)) },
+                                shape = RoundedCornerShape(12.dp),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Primary,
+                                    unfocusedBorderColor = Color(0xFFE8ECEF),
+                                    focusedContainerColor = Color.White,
+                                    unfocusedContainerColor = Color(0xFFF8FAFB),
+                                    focusedTextColor = TextPrimary,
+                                    unfocusedTextColor = TextPrimary
+                                ),
+                                modifier = Modifier.fillMaxWidth().menuAnchor()
+                            )
+                            ExposedDropdownMenu(
+                                expanded = showCategoryMenu,
+                                onDismissRequest = { showCategoryMenu = false }
+                            ) {
+                                CATEGORIES.forEach { cat ->
+                                    DropdownMenuItem(
+                                        text = { Text(cat, fontFamily = PlusJakartaSans) },
+                                        onClick = {
+                                            viewModel.onCategoryChange(cat)
+                                            showCategoryMenu = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
             }
 

@@ -161,6 +161,7 @@
 
     <!-- Navigation -->
     <string name="navigate_back">Back</string>
+    <string name="category_label">Category</string>
 
     <!-- Bottom Bar -->
     <string name="nav_home">Home</string>

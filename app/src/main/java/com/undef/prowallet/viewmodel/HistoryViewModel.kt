@@ -1,8 +1,9 @@
 package com.undef.prowallet.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.undef.prowallet.data.PurchaseRepository
+import com.undef.prowallet.data.AppRepository
 import com.undef.prowallet.domain.Purchase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,14 +14,16 @@ data class HistoryUiState(
     val allPurchases: List<Purchase> = emptyList()
 )
 
-class HistoryViewModel : ViewModel() {
+class HistoryViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val repository = AppRepository(application)
 
     private val _uiState = MutableStateFlow(HistoryUiState())
     val uiState: StateFlow<HistoryUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            PurchaseRepository.purchases.collect { purchases ->
+            repository.purchasesFlow.collect { purchases ->
                 _uiState.value = HistoryUiState(allPurchases = purchases)
             }
         }

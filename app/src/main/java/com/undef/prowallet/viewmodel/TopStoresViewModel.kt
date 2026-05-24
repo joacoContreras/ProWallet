@@ -1,8 +1,9 @@
 package com.undef.prowallet.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.undef.prowallet.data.PurchaseRepository
+import com.undef.prowallet.data.AppRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,17 +13,17 @@ data class TopStoresUiState(
     val totalSpentMonth: Double = 0.0
 )
 
-class TopStoresViewModel : ViewModel() {
+class TopStoresViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val repository = AppRepository(application)
 
     private val _uiState = MutableStateFlow(TopStoresUiState())
     val uiState: StateFlow<TopStoresUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            PurchaseRepository.purchases.collect { purchases ->
-                _uiState.value = TopStoresUiState(
-                    totalSpentMonth = purchases.sumOf { it.totalAmount }
-                )
+            repository.purchasesFlow.collect { purchases ->
+                _uiState.value = TopStoresUiState(totalSpentMonth = purchases.sumOf { it.totalAmount })
             }
         }
     }

@@ -32,16 +32,22 @@ fun PurchaseDetailScreen(
     onNavigateBack: () -> Unit,
     onNavigateToEdit: (String) -> Unit
 ) {
-    val purchase = remember { viewModel.getPurchaseById(purchaseId) }
+    val purchase by viewModel.purchase.collectAsState()
+
+    LaunchedEffect(purchaseId) {
+        viewModel.loadPurchase(purchaseId)
+    }
 
     if (purchase == null) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(stringResource(R.string.purchase_not_found))
+            CircularProgressIndicator()
         }
         return
     }
 
-    val categoryIcon = when (purchase.category) {
+    val p = purchase!!
+
+    val categoryIcon = when (p.category) {
         "Groceries" -> Icons.Default.ShoppingCart
         "Transport" -> Icons.Default.DirectionsCar
         "Dining" -> Icons.Default.Restaurant
@@ -62,8 +68,7 @@ fun PurchaseDetailScreen(
                     Icon(Icons.Default.Edit, contentDescription = "Edit", tint = PrimaryDarker)
                 }
                 IconButton(onClick = {
-                    viewModel.deletePurchase(purchaseId)
-                    onNavigateBack()
+                    viewModel.deletePurchase(purchaseId, onDone = onNavigateBack)
                 }) {
                     Icon(Icons.Default.Delete, contentDescription = "Delete", tint = ErrorRed)
                 }
@@ -101,21 +106,21 @@ fun PurchaseDetailScreen(
                         }
                         Spacer(Modifier.height(12.dp))
                         Text(
-                            text = purchase.storeName,
+                            text = p.storeName,
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.Bold,
                             fontSize = 22.sp,
                             color = Color.White
                         )
                         Text(
-                            text = purchase.category,
+                            text = p.category,
                             fontFamily = PlusJakartaSans,
                             fontSize = 13.sp,
                             color = Color.White.copy(alpha = 0.7f)
                         )
                         Spacer(Modifier.height(16.dp))
                         Text(
-                            text = "$${String.format("%.2f", purchase.totalAmount)}",
+                            text = "$${String.format("%.2f", p.totalAmount)}",
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.Bold,
                             fontSize = 40.sp,
@@ -138,7 +143,7 @@ fun PurchaseDetailScreen(
                                 color = Neutral
                             )
                             Text(
-                                text = purchase.date,
+                                text = p.date,
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = FontWeight.SemiBold,
                                 color = TextPrimary
@@ -151,7 +156,7 @@ fun PurchaseDetailScreen(
                                 color = Neutral
                             )
                             Text(
-                                text = stringResource(R.string.items_count_format, purchase.products.size),
+                                text = stringResource(R.string.items_count_format, p.products.size),
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = FontWeight.SemiBold,
                                 color = TextPrimary
@@ -161,7 +166,7 @@ fun PurchaseDetailScreen(
                 }
             }
 
-            if (purchase.products.isNotEmpty()) {
+            if (p.products.isNotEmpty()) {
                 item {
                     Text(
                         text = stringResource(R.string.products_label),
@@ -174,9 +179,9 @@ fun PurchaseDetailScreen(
 
                 item {
                     SectionCard {
-                        purchase.products.forEachIndexed { idx, product ->
+                        p.products.forEachIndexed { idx, product ->
                             ProductItem(product = product)
-                            if (idx < purchase.products.lastIndex) {
+                            if (idx < p.products.lastIndex) {
                                 Divider(color = Color(0xFFF0F0F0), thickness = 0.5.dp)
                             }
                         }
@@ -194,7 +199,7 @@ fun PurchaseDetailScreen(
                                 color = TextPrimary
                             )
                             Text(
-                                text = "$${String.format("%.2f", purchase.totalAmount)}",
+                                text = "$${String.format("%.2f", p.totalAmount)}",
                                 fontFamily = PlusJakartaSans,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp,
