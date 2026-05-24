@@ -213,7 +213,7 @@
     <string name="error_email_not_found">No existe una cuenta con ese email</string>
     <string name="error_wrong_password">Contraseña incorrecta</string>
     <string name="error_email_already_exists">Ya existe una cuenta con ese email</string>
-    <string name="error_password_too_short">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="error_password_too_short">La contraseña debe tener al menos 8 caracteres</string>
     <string name="error_password_mismatch">Las contraseñas no coinciden</string>
     <string name="error_enter_email">Ingresá tu email</string>
     <string name="error_invalid_code">Ingresá un código válido de 6 dígitos</string>

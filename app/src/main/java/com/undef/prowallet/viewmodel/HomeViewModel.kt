@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 data class HomeUiState(
     val userName: String = "",
@@ -57,7 +58,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             repository.seedDefaultCategories()
             repository.purchasesFlow.collect { purchases ->
-                val spent = purchases.sumOf { it.totalAmount }
+                val now = Calendar.getInstance()
+                val spent = purchases
+                    .filter { it.isCurrentMonth(now) }
+                    .sumOf { it.totalAmount }
                 val budget = _uiState.value.monthlyBudget
                 _uiState.value = _uiState.value.copy(
                     recentPurchases = purchases.take(3),
@@ -79,4 +83,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun safePercent(spent: Double, budget: Double): Int =
         if (budget > 0) ((spent / budget) * 100).toInt().coerceAtLeast(0) else 0
+
+    private fun Purchase.isCurrentMonth(now: Calendar): Boolean {
+        return try {
+            val cal = Calendar.getInstance()
+            cal.time = java.text.SimpleDateFormat("MM/dd/yy", java.util.Locale.getDefault()).parse(date)!!
+            cal.get(Calendar.YEAR) == now.get(Calendar.YEAR) &&
+                cal.get(Calendar.MONTH) == now.get(Calendar.MONTH)
+        } catch (e: Exception) { false }
+    }
 }

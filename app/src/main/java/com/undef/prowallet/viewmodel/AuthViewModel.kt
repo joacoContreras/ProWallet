@@ -82,7 +82,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 _uiState.value = _uiState.value.copy(error = AuthError.InvalidEmail)
                 return
             }
-            password.length < 6 -> {
+            password.length < 8 -> {
                 _uiState.value = _uiState.value.copy(error = AuthError.PasswordTooShort)
                 return
             }
@@ -141,7 +141,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     fun updatePassword(password: String) {
         if (!_uiState.value.codeVerified) return
         val email = pendingEmail ?: return
-        if (password.length < 6) {
+        if (password.length < 8) {
             _uiState.value = _uiState.value.copy(error = AuthError.PasswordTooShort)
             return
         }
@@ -178,7 +178,11 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         _uiState.value = _uiState.value.copy(codeVerified = true)
     }
 
-    fun resendCode() { }
+    fun resendCode() {
+        val email = pendingEmail ?: return
+        _uiState.value = _uiState.value.copy(codeVerified = false, error = null)
+        sendResetCode(email)
+    }
 
     fun resetFlow() {
         _uiState.value = _uiState.value.copy(

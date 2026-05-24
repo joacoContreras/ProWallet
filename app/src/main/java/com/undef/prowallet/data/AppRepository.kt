@@ -5,6 +5,7 @@ import com.undef.prowallet.data.remote.ProductDto
 import com.undef.prowallet.data.remote.RetrofitClient
 import com.undef.prowallet.domain.Product
 import com.undef.prowallet.domain.Purchase
+import androidx.room.withTransaction
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.text.SimpleDateFormat
@@ -29,45 +30,47 @@ class AppRepository(context: Context) {
         }
 
     suspend fun savePurchase(purchase: Purchase) {
-        val categoryId = categoryDao.getCategoryByName(purchase.category)?.id
-            ?: run {
-                val inserted = categoryDao.insert(CategoryEntity(name = purchase.category))
-                if (inserted != -1L) inserted.toInt()
-                else categoryDao.getCategoryByName(purchase.category)!!.id
-            }
-
-        val purchaseId = purchaseDao.insert(
-            PurchaseEntity(
-                categoryId = categoryId,
-                amount = purchase.totalAmount,
-                storeName = purchase.storeName,
-                description = "",
-                timestamp = parseTimestamp(purchase.date, purchase.time),
-                ticketImagePath = purchase.ticketImageUri
-            )
-        ).toInt()
-
-        purchase.products.forEach { product ->
-            val productId = productDao.getProductByCode(product.code)?.id
+        db.withTransaction {
+            val categoryId = categoryDao.getCategoryByName(purchase.category)?.id
                 ?: run {
-                    val inserted = productDao.insert(
-                        ProductEntity(
-                            name = product.name,
-                            description = product.description,
-                            code = product.code
-                        )
-                    )
+                    val inserted = categoryDao.insert(CategoryEntity(name = purchase.category))
                     if (inserted != -1L) inserted.toInt()
-                    else productDao.getProductByCode(product.code)!!.id
+                    else categoryDao.getCategoryByName(purchase.category)!!.id
                 }
-            purchasedItemDao.insert(
-                PurchasedItemEntity(
-                    purchaseId = purchaseId,
-                    productId = productId,
-                    quantity = 1,
-                    price = product.price
+
+            val purchaseId = purchaseDao.insert(
+                PurchaseEntity(
+                    categoryId = categoryId,
+                    amount = purchase.totalAmount,
+                    storeName = purchase.storeName,
+                    description = "",
+                    timestamp = parseTimestamp(purchase.date, purchase.time),
+                    ticketImagePath = purchase.ticketImageUri
                 )
-            )
+            ).toInt()
+
+            purchase.products.forEach { product ->
+                val productId = productDao.getProductByCode(product.code)?.id
+                    ?: run {
+                        val inserted = productDao.insert(
+                            ProductEntity(
+                                name = product.name,
+                                description = product.description,
+                                code = product.code
+                            )
+                        )
+                        if (inserted != -1L) inserted.toInt()
+                        else productDao.getProductByCode(product.code)!!.id
+                    }
+                purchasedItemDao.insert(
+                    PurchasedItemEntity(
+                        purchaseId = purchaseId,
+                        productId = productId,
+                        quantity = 1,
+                        price = product.price
+                    )
+                )
+            }
         }
     }
 

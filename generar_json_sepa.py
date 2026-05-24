@@ -1,5 +1,5 @@
 """
-Script para procesar el dataset real del SEPA y generar productos.json
+Script para procesar el dataset real del SEPA y generar productos_sepa.json
 Uso:
   1. Descargá cualquier ZIP de https://www.datos.gob.ar/dataset/produccion-precios-claros---base-sepa
   2. Descomprimilo (obtendrás un .csv o carpeta con CSVs)
@@ -41,11 +41,13 @@ def procesar_sepa(ruta_csv: str, max_productos: int = 250):
             productos.append({
                 "nombre": nombre,
                 "descripcion": "",
-                "precio_promedio": promedio
+                "precio_promedio": promedio,
+                "_count": len(precios)
             })
 
     # Ordenar por cantidad de registros (más representativos primero) y tomar los mejores
-    top = sorted(productos, key=lambda x: x["precio_promedio"])[:max_productos]
+    top_raw = sorted(productos, key=lambda x: x["_count"], reverse=True)[:max_productos]
+    top = [{k: v for k, v in p.items() if k != "_count"} for p in top_raw]
 
     resultado = {"productos": top}
     with open("productos_sepa.json", "w", encoding="utf-8") as f:
