@@ -17,15 +17,13 @@ class AppRepository(context: Context) {
     private val purchasedItemDao = db.purchasedItemDao()
     private val categoryDao = db.categoryDao()
 
-    val purchasesFlow: Flow<List<Purchase>> = purchaseDao.getAllPurchases()
-        .map { entities ->
-            entities.map { entity ->
-                val categoryName = entity.categoryId
-                    ?.let { categoryDao.getCategoryById(it)?.name }
-                    ?: "Other"
-                val items = purchasedItemDao.getItemsWithProductsByPurchaseId(entity.id)
-                entity.toDomain(categoryName, items)
-            }
+    // @Transaction query tracks purchases + purchase_items — no race condition.
+    // Per emission: 1 query for categories, 1 for products → 3 total, no N+1.
+    val purchasesFlow: Flow<List<Purchase>> = purchaseDao.getAllPurchasesWithItems()
+        .map { purchasesWithItems ->
+            val categoryMap = categoryDao.getAllCategoriesOnce().associateBy { it.id }
+            val productMap = productDao.getAllProductsOnce().associateBy { it.id }
+            purchasesWithItems.map { it.toDomain(categoryMap, productMap) }
         }
 
     suspend fun savePurchase(purchase: Purchase) {
@@ -68,12 +66,10 @@ class AppRepository(context: Context) {
     }
 
     suspend fun getPurchaseById(id: Int): Purchase? {
-        val entity = purchaseDao.getPurchaseById(id) ?: return null
-        val categoryName = entity.categoryId
-            ?.let { categoryDao.getCategoryById(it)?.name }
-            ?: "Other"
-        val items = purchasedItemDao.getItemsWithProductsByPurchaseId(entity.id)
-        return entity.toDomain(categoryName, items)
+        val pwi = purchaseDao.getPurchaseWithItemsById(id) ?: return null
+        val categoryMap = categoryDao.getAllCategoriesOnce().associateBy { it.id }
+        val productMap = productDao.getAllProductsOnce().associateBy { it.id }
+        return pwi.toDomain(categoryMap, productMap)
     }
 
     suspend fun seedDefaultCategories() {
@@ -93,28 +89,32 @@ class AppRepository(context: Context) {
         }
     }
 
-    private fun PurchaseEntity.toDomain(
-        categoryName: String,
-        items: List<PurchasedItemWithProduct>
+    private fun PurchaseWithItems.toDomain(
+        categoryMap: Map<Int, CategoryEntity>,
+        productMap: Map<Int, ProductEntity>
     ): Purchase {
-        val date = Date(timestamp)
+        val date = Date(purchase.timestamp)
+        val categoryName = purchase.categoryId?.let { categoryMap[it]?.name } ?: "Other"
+        val products = items.mapNotNull { item ->
+            productMap[item.productId]?.let { p ->
+                Product(
+                    id = item.productId.toString(),
+                    code = p.code,
+                    name = p.name,
+                    description = p.description ?: "",
+                    price = item.price
+                )
+            }
+        }
         return Purchase(
-            id = id.toString(),
-            storeName = storeName,
+            id = purchase.id.toString(),
+            storeName = purchase.storeName,
             date = SimpleDateFormat("MM/dd/yy", Locale.getDefault()).format(date),
             time = SimpleDateFormat("HH:mm", Locale.getDefault()).format(date),
-            totalAmount = amount,
+            totalAmount = purchase.amount,
             category = categoryName,
-            products = items.map { it.toProduct() },
-            ticketImageUri = ticketImagePath
+            products = products,
+            ticketImageUri = purchase.ticketImagePath
         )
     }
-
-    private fun PurchasedItemWithProduct.toProduct() = Product(
-        id = item.productId.toString(),
-        code = productCode,
-        name = productName,
-        description = productDescription ?: "",
-        price = item.price
-    )
 }

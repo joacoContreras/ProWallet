@@ -27,4 +27,7 @@ interface ProductDao {
 
     @Query("SELECT * FROM products WHERE code = :code LIMIT 1")
     suspend fun getProductByCode(code: String): ProductEntity?
+
+    @Query("SELECT * FROM products")
+    suspend fun getAllProductsOnce(): List<ProductEntity>
 }
