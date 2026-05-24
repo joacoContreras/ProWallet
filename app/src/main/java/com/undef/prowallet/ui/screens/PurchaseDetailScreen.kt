@@ -32,20 +32,25 @@ fun PurchaseDetailScreen(
     onNavigateBack: () -> Unit,
     onNavigateToEdit: (String) -> Unit
 ) {
-    val purchase by viewModel.purchase.collectAsState()
+    val state by viewModel.uiState.collectAsState()
 
     LaunchedEffect(purchaseId) {
         viewModel.loadPurchase(purchaseId)
     }
 
-    if (purchase == null) {
+    if (state.isLoading) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
         return
     }
 
-    val p = purchase!!
+    val p = state.purchase ?: run {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text(stringResource(R.string.purchase_not_found))
+        }
+        return
+    }
 
     val categoryIcon = when (p.category) {
         "Groceries" -> Icons.Default.ShoppingCart

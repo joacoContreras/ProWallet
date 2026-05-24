@@ -10,16 +10,24 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+data class PurchaseDetailUiState(
+    val isLoading: Boolean = true,
+    val purchase: Purchase? = null
+)
+
 class PurchaseDetailViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = AppRepository(application)
 
-    private val _purchase = MutableStateFlow<Purchase?>(null)
-    val purchase: StateFlow<Purchase?> = _purchase.asStateFlow()
+    private val _uiState = MutableStateFlow(PurchaseDetailUiState())
+    val uiState: StateFlow<PurchaseDetailUiState> = _uiState.asStateFlow()
 
     fun loadPurchase(id: String) {
+        _uiState.value = PurchaseDetailUiState(isLoading = true)
         viewModelScope.launch {
-            _purchase.value = repository.getPurchaseById(id.toIntOrNull() ?: return@launch)
+            val numericId = id.toIntOrNull()
+            val purchase = if (numericId != null) repository.getPurchaseById(numericId) else null
+            _uiState.value = PurchaseDetailUiState(isLoading = false, purchase = purchase)
         }
     }
 
