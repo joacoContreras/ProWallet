@@ -51,6 +51,7 @@ Aplicación Android de gestión de gastos personales desarrollada como proyecto 
 - **Room** — base de datos local (usuarios, compras, productos, categorías)
 - **DataStore Preferences** — persistencia de sesión entre reinicios
 - **Coroutines** + **Flow** — operaciones asíncronas con `viewModelScope`
+- **Retrofit** + **Gson** — consumo de API REST (precios de referencia de productos)
 - **compileSdk 35 / minSdk 26** (Android 8.0+)
 
 ---
@@ -60,23 +61,16 @@ Aplicación Android de gestión de gastos personales desarrollada como proyecto 
 ```
 com.undef.prowallet
 ├── data/
-│   ├── dao/
-│   │   ├── UserDao.kt
-│   │   ├── PurchaseDao.kt
-│   │   ├── ProductDao.kt
-│   │   ├── PurchasedItemDao.kt
-│   │   └── CategoryDao.kt
-│   ├── MockRepository.kt           ← datos de prueba (compras, budget)
-│   ├── PurchaseRepository.kt       ← fuente de verdad compartida (StateFlow)
+│   ├── dao/                        ← UserDao, PurchaseDao, ProductDao, PurchasedItemDao, CategoryDao
+│   ├── remote/
+│   │   ├── ProductDto.kt           ← DTOs de la API
+│   │   ├── ProductApiService.kt    ← interfaz Retrofit
+│   │   └── RetrofitClient.kt       ← cliente Retrofit (singleton)
+│   ├── AppRepository.kt            ← fuente de verdad: Room + Retrofit
 │   ├── ProWalletDatabase.kt        ← Room database singleton
-│   ├── UserEntity.kt
-│   ├── PurchaseEntity.kt
-│   ├── ProductEntity.kt
-│   ├── PurchasedItemEntity.kt
-│   ├── CategoryEntity.kt
-│   ├── PurchaseWithItems.kt
-│   ├── PurchasedItemWithProduct.kt
-│   └── StoreTotal.kt
+│   ├── UserEntity.kt / PurchaseEntity.kt / ProductEntity.kt
+│   ├── PurchasedItemEntity.kt / CategoryEntity.kt
+│   ├── PurchaseWithItems.kt / PurchasedItemWithProduct.kt / StoreTotal.kt
 ├── domain/
 │   └── models.kt                   ← User, Product, Purchase
 ├── ui/
@@ -89,12 +83,12 @@ com.undef.prowallet
 │   └── SessionManager.kt          ← DataStore: sesión persistida entre reinicios
 └── viewmodel/
     ├── AuthViewModel.kt            ← Room + SHA-256 + DataStore
-    ├── HomeViewModel.kt
-    ├── PurchaseViewModel.kt
+    ├── HomeViewModel.kt            ← AppRepository + presupuesto mensual (DataStore)
+    ├── PurchaseViewModel.kt        ← formulario de compra + persistencia Room
+    ├── PurchaseDetailViewModel.kt  ← detalle + comparación de precios (Retrofit)
     ├── AnalyticsViewModel.kt
     ├── HistoryViewModel.kt
-    ├── TopStoresViewModel.kt
-    └── PurchaseDetailViewModel.kt
+    └── TopStoresViewModel.kt
 ```
 
 ---

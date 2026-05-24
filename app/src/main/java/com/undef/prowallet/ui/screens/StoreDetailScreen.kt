@@ -116,7 +116,7 @@ fun StoreDetailScreen(
                         )
                         
                         Spacer(Modifier.height(20.dp))
-                        Divider(color = Color(0xFFF0F0F0))
+                        HorizontalDivider(color = Color(0xFFF0F0F0))
                         Spacer(Modifier.height(16.dp))
                         
                         Text(

@@ -5,59 +5,81 @@ Aplicación Android de gestión de gastos personales, desarrollada como proyecto
 ## Estado actual: rama `2nd_delivery`
 
 La **1ra entrega** está completa: UI, navegación y datos mockeados.  
-La **2da entrega** requiere reemplazar los mocks por funcionalidad real.
+La **2da entrega** está en curso — mocks eliminados, Room + DataStore + Retrofit operativos.
 
 ## Uso de git
 No hacer commits propios. Dejar que el usuario haga los commits.
 
 ### Requisitos de la 2da entrega
-- Persistencia local de sesión o preferencias (DataStore)
-- Base de datos local para compras y productos (Room)
-- Operaciones con corrutinas
-- Networking (Retrofit o similar)
-- Menús y diálogos
-- Carga real de datos
-- Al menos una funcionalidad con Intents (ej: compartir compra)
+- ✅ Persistencia local de sesión o preferencias (DataStore)
+- ✅ Base de datos local para compras y productos (Room)
+- ✅ Operaciones con corrutinas
+- ✅ Networking (Retrofit + Gson)
+- ✅ Menús y diálogos
+- ✅ Carga real de datos
+- ⬜ Al menos una funcionalidad con Intents (ej: compartir compra)
 
 ## Stack tecnológico
 
 - **Kotlin** + **Jetpack Compose** (Material 3)
 - **Navigation Compose** — navegación declarativa
 - **ViewModel** + **StateFlow** — patrón MVVM
+- **Room** — base de datos local (v4): usuarios, compras, productos, categorías
+- **DataStore Preferences** — sesión persistida entre reinicios + presupuesto mensual
+- **Retrofit** + **Gson** — consumo de API REST (precios de referencia de productos)
+- **Coroutines** + **Flow** — operaciones asíncronas con `viewModelScope`
 - **compileSdk 35 / minSdk 26** (Android 8.0+)
 - **Coil** — carga de imágenes
-- Fuente prevista: Plus Jakarta Sans (actualmente usa `FontFamily.SansSerif`)
-
-### Dependencias aún NO agregadas (necesarias para 2da entrega)
-- Room (persistencia local)
-- DataStore Preferences (sesión de usuario)
-- Retrofit + Gson/Moshi (networking)
-- Coroutines (ya disponible via lifecycle, pero sin uso real aún)
+- **Plus Jakarta Sans** — fuente tipográfica
 
 ## Arquitectura
 
 ```
 com.undef.prowallet
 ├── data/
-│   └── MockRepository.kt       ← todos los datos son mock; reemplazar con Room + Retrofit
+│   ├── dao/
+│   │   ├── UserDao.kt
+│   │   ├── PurchaseDao.kt
+│   │   ├── ProductDao.kt
+│   │   ├── PurchasedItemDao.kt
+│   │   └── CategoryDao.kt
+│   ├── remote/
+│   │   ├── ProductDto.kt           ← DTOs (ProductDto, ProductsResponse)
+│   │   ├── ProductApiService.kt    ← interfaz Retrofit (@GET npoint.io)
+│   │   └── RetrofitClient.kt       ← singleton Retrofit con GsonConverterFactory
+│   ├── AppRepository.kt            ← fuente de verdad: Room + Retrofit
+│   ├── ProWalletDatabase.kt        ← Room singleton, version=4, fallbackToDestructiveMigration
+│   ├── UserEntity.kt
+│   ├── PurchaseEntity.kt
+│   ├── ProductEntity.kt            ← UNIQUE index en code
+│   ├── PurchasedItemEntity.kt      ← PK autoincremental
+│   ├── CategoryEntity.kt           ← UNIQUE index en name
+│   ├── PurchaseWithItems.kt
+│   ├── PurchasedItemWithProduct.kt
+│   └── StoreTotal.kt
 ├── domain/
-│   └── models.kt               ← User, Product, Purchase
+│   └── models.kt                   ← User, Product, Purchase
 ├── ui/
 │   ├── components/
-│   │   └── Components.kt       ← PrimaryButton, CustomTextField y otros reutilizables
+│   │   └── Components.kt           ← PrimaryButton, CustomTextField, TopBar, ProductItem, etc.
 │   ├── navigation/
-│   │   └── NavGraph.kt         ← sealed class Screen + AppNavGraph
-│   ├── screens/                ← una pantalla por archivo (ver lista abajo)
+│   │   └── NavGraph.kt             ← sealed class Screen + AppNavGraph
+│   ├── screens/                    ← una pantalla por archivo (25 pantallas)
 │   └── theme/
 │       ├── Color.kt
 │       ├── Theme.kt
 │       └── Type.kt
 ├── util/
-│   └── LocaleHelper.kt         ← internacionalización (API 33+ y AppCompat fallback)
+│   ├── LocaleHelper.kt             ← i18n: API 33+ LocaleManager, fallback AppCompatDelegate
+│   └── SessionManager.kt          ← DataStore: isLoggedIn, email, monthlyBudget
 └── viewmodel/
     ├── AuthViewModel.kt
     ├── HomeViewModel.kt
-    └── PurchaseViewModel.kt
+    ├── PurchaseViewModel.kt
+    ├── PurchaseDetailViewModel.kt
+    ├── AnalyticsViewModel.kt
+    ├── HistoryViewModel.kt
+    └── TopStoresViewModel.kt
 ```
 
 ## Pantallas y rutas
@@ -71,7 +93,7 @@ com.undef.prowallet
 | HomeScreen | `home` | Dashboard principal |
 | NewPurchaseScreen | `new_purchase` | Formulario de nueva compra |
 | PurchaseSuccessScreen | `purchase_success` | Confirmación de compra guardada |
-| PurchaseDetailScreen | `purchase_detail/{purchaseId}` | Detalle de una compra |
+| PurchaseDetailScreen | `purchase_detail/{purchaseId}` | Detalle + comparación de precios API |
 | HistoryScreen | `history` | Historial de compras |
 | AnalyticsScreen | `analytics` | Estadísticas y gráficos |
 | PersonalInflationScreen | `personal_inflation` | Inflación personal |
@@ -86,7 +108,7 @@ com.undef.prowallet
 | NotificationsScreen | `notifications` | Notificaciones |
 | ContactSupportScreen | `contact_support` | Soporte |
 | ForgotPasswordScreen | `forgot_password` | Recuperar contraseña |
-| VerifyCodeScreen | `verify_code` | Verificar código |
+| VerifyCodeScreen | `verify_code` | Verificar código (6 dígitos) |
 | UpdatePasswordScreen | `update_password` | Nueva contraseña |
 | UpdatePasswordSuccessScreen | `update_password_success` | Confirmación cambio contraseña |
 
@@ -102,23 +124,31 @@ data class Purchase(id, storeName, date, time, totalAmount: Double, category, pr
 
 ### AuthViewModel
 - Estado: `AuthUiState` (isLoading, isLoggedIn, user, error, registrationSuccess, resetEmailSent, codeVerified, passwordUpdated)
-- Todas las operaciones son mock (siempre exitosas). Necesita: Room para user local, DataStore para sesión persistente.
+- Registro e inicio de sesión persisten en Room (`UserDao`) con hash SHA-256 de contraseña
+- Sesión guardada en `SessionManager` (DataStore): `isLoggedIn`, `userEmail`
+- `verifyCode()` valida 6 dígitos; `updatePassword()` tiene guard `codeVerified`
 
 ### HomeViewModel
-- Estado: `HomeUiState` (userName, totalMonthlySpend, monthlyBudget, remaining, recentPurchases, allPurchases, topStores, monthlyTrend, analytics)
-- Carga datos desde `MockRepository`. Necesita: Room DAO para leer/escribir compras reales.
-- `deletePurchase(id)` opera solo en memoria (sin persistencia).
+- Estado: `HomeUiState` (userName, totalMonthlySpend, monthlyBudget, remaining, budgetProgress, budgetPercent, recentPurchases, …)
+- Colecta `AppRepository.purchasesFlow` (Flow reactivo desde Room)
+- Presupuesto mensual persistido en `SessionManager.monthlyBudget` (DataStore)
+- `budgetProgress` y `budgetPercent` son pre-calculados en el ViewModel (safe division)
 
 ### PurchaseViewModel
-- Estado: `PurchaseUiState` (campos del formulario de compra + lista de productos)
-- `savePurchase()` solo pone `savedSuccess = true`, no persiste nada. Necesita: Room para guardar compras.
-- `getPurchaseById(id)` busca en `MockRepository.mockPurchases` (estático).
+- Estado: `PurchaseUiState` (campos del formulario + lista de productos + isSaving + savedSuccess + saveError)
+- `savePurchase()` persiste en Room via `AppRepository`; try/catch/finally garantiza que `isSaving` siempre se resetea
 
-## MockRepository (a reemplazar)
-- `currentUser` — usuario hardcodeado
-- `mockPurchases` — 6 compras de ejemplo
-- `mockProducts` — 5 productos de ejemplo
-- `monthlyBudget`, `totalMonthlySpend`, `topStores`, `monthlyTrend` — datos estáticos
+### PurchaseDetailViewModel
+- Estado: `PurchaseDetailUiState` (isLoading, purchase, apiPriceMap)
+- `loadPurchase()` lanza dos coroutines independientes: una para Room, otra para la API
+- Si la API falla, `apiPriceMap` queda vacío; la pantalla funciona sin badge de comparación
+
+## AppRepository
+- Única fuente de verdad para datos de compras/productos/categorías
+- `purchasesFlow`: @Transaction query (getAllPurchasesWithItems) + 2 bulk maps — sin N+1
+- `savePurchase()`: upsert de categoría + producto por nombre/código, luego inserta la compra
+- `getApiProducts()`: llama a `RetrofitClient.productApiService.getProducts().productos`
+- Categorías y productos tienen constraint UNIQUE (índice) + `OnConflictStrategy.IGNORE` + fallback lookup para manejar races
 
 ## Sistema de colores (Color.kt)
 
@@ -138,6 +168,4 @@ data class Purchase(id, storeName, date, time, totalAmount: Double, category, pr
 - Jetpack Compose (no XML layouts)
 - Corrutinas para operaciones asíncronas
 - Versionado en GitHub (rama activa: `2nd_delivery`)
-- Readme: El enunciado pide explícitamente: "GIF o capturas de la app" y "APK compilada". 
-  El README está bien estructurado pero no tiene capturas, ni GIF, ni link al APK, ni mención de los integrantes del grupo. 
-  Linkear APK desde el README. Falta material visual (el profesor también insistió mucho en esto en clase).
+- El README necesita capturas/GIF reales y el link al APK actualizado antes de la entrega final

@@ -9,10 +9,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Help
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -66,7 +66,7 @@ fun ForgotPasswordScreen(
                         .clip(CircleShape)
                         .background(BackgroundLight)
                 ) {
-                    Icon(Icons.Default.Help, contentDescription = "Help", tint = Primary)
+                    Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help", tint = Primary)
                 }
             }
         },
@@ -169,7 +169,7 @@ fun ForgotPasswordScreen(
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp
                             )
-                            Icon(Icons.Default.ArrowForward, contentDescription = null, modifier = Modifier.size(20.dp))
+                            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, modifier = Modifier.size(20.dp))
                         }
                     }
                 }
@@ -185,7 +185,7 @@ fun ForgotPasswordScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Icon(Icons.Default.ArrowBack, contentDescription = null, tint = Primary, modifier = Modifier.size(18.dp))
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = Primary, modifier = Modifier.size(18.dp))
                 Text(
                     text = stringResource(R.string.back_to_login),
                     fontFamily = PlusJakartaSans,

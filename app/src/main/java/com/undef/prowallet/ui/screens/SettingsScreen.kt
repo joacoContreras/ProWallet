@@ -146,7 +146,7 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                         }
                     }
                 )
-                Divider(color = Color(0xFFF8F8F8))
+                HorizontalDivider(color = Color(0xFFF8F8F8))
                 SettingsSwitch(
                     icon = Icons.Default.Notifications,
                     iconBg = Primary.copy(alpha = 0.15f),
@@ -156,7 +156,7 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                     checked = notificationsEnabled,
                     onCheckedChange = { notificationsEnabled = it }
                 )
-                Divider(color = Color(0xFFF8F8F8))
+                HorizontalDivider(color = Color(0xFFF8F8F8))
                 SettingsSwitch(
                     icon = Icons.Default.Fingerprint,
                     iconBg = ErrorRed.copy(alpha = 0.1f),
@@ -166,7 +166,7 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                     checked = biometricEnabled,
                     onCheckedChange = { biometricEnabled = it }
                 )
-                Divider(color = Color(0xFFF8F8F8))
+                HorizontalDivider(color = Color(0xFFF8F8F8))
                 SettingsSwitch(
                     icon = Icons.Default.DarkMode,
                     iconBg = NeutralDark.copy(alpha = 0.1f),

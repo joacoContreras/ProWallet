@@ -191,10 +191,10 @@ fun PurchaseDetailScreen(
                                 PriceComparisonBadge(paidPrice = product.price, apiPrice = apiPrice)
                             }
                             if (idx < p.products.lastIndex) {
-                                Divider(color = Color(0xFFF0F0F0), thickness = 0.5.dp)
+                                HorizontalDivider(color = Color(0xFFF0F0F0), thickness = 0.5.dp)
                             }
                         }
-                        Divider(color = Color(0xFFE8ECEF), thickness = 1.dp)
+                        HorizontalDivider(color = Color(0xFFE8ECEF), thickness = 1.dp)
                         Spacer(Modifier.height(8.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),

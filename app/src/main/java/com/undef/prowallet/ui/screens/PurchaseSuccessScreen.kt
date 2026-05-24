@@ -227,12 +227,12 @@ fun PurchaseSuccessScreen(
                                 )
                             }
                             if (index < state.products.lastIndex) {
-                                Divider(color = Color(0xFFF8F8F8), thickness = 1.dp)
+                                HorizontalDivider(color = Color(0xFFF8F8F8), thickness = 1.dp)
                             }
                         }
                         
                         Spacer(Modifier.height(16.dp))
-                        Divider(modifier = Modifier.fillMaxWidth(), color = NeutralLight.copy(alpha = 0.2f))
+                        HorizontalDivider(modifier = Modifier.fillMaxWidth(), color = NeutralLight.copy(alpha = 0.2f))
                         Spacer(Modifier.height(16.dp))
                         
                         Row(

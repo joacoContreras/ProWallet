@@ -56,7 +56,7 @@ fun HistoryScreen(
                             onClick = { onNavigateToPurchaseDetail(purchase.id) }
                         )
                         if (idx < state.allPurchases.lastIndex) {
-                            Divider(color = Color(0xFFF0F0F0), thickness = 0.5.dp)
+                            HorizontalDivider(color = Color(0xFFF0F0F0), thickness = 0.5.dp)
                         }
                     }
                 }

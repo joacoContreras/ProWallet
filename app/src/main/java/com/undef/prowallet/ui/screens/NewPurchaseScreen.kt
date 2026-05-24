@@ -116,7 +116,7 @@ fun NewPurchaseScreen(
                                 fontSize = 16.sp,
                                 textAlign = TextAlign.Center
                             )
-                            Divider(color = Color(0xFFF0F0F0))
+                            HorizontalDivider(color = Color(0xFFF0F0F0))
                         }
                     }
                 }
@@ -383,7 +383,7 @@ fun NewPurchaseScreen(
                     )
                 } else {
                     Spacer(Modifier.height(16.dp))
-                    Divider(color = Color(0xFFF0F0F0))
+                    HorizontalDivider(color = Color(0xFFF0F0F0))
                     state.products.forEach { product ->
                         Row(
                             modifier = Modifier
@@ -412,7 +412,7 @@ fun NewPurchaseScreen(
                                 Icon(Icons.Default.Delete, contentDescription = "Delete", tint = ErrorRed, modifier = Modifier.size(20.dp))
                             }
                         }
-                        Divider(color = Color(0xFFF8F8F8))
+                        HorizontalDivider(color = Color(0xFFF8F8F8))
                     }
                 }
             }

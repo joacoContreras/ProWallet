@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingDown
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -263,7 +264,7 @@ fun HomeScreen(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
-                                    Icons.Default.TrendingDown,
+                                    Icons.AutoMirrored.Filled.TrendingDown,
                                     contentDescription = null,
                                     tint = SecondaryDark,
                                     modifier = Modifier.size(20.dp)
@@ -324,7 +325,7 @@ fun HomeScreen(
                             onClick = { onNavigateToPurchaseDetail(purchase.id) }
                         )
                         if (idx < state.recentPurchases.lastIndex) {
-                            Divider(color = Color(0xFFF0F0F0), thickness = 0.5.dp)
+                            HorizontalDivider(color = Color(0xFFF0F0F0), thickness = 0.5.dp)
                         }
                     }
                 }

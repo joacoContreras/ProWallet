@@ -342,7 +342,7 @@ fun AnalyticsScreen(
                                 )
                             }
                             if (idx < state.mostPurchasedProducts.lastIndex) {
-                                Divider(color = Color(0xFFF0F0F0), thickness = 0.5.dp)
+                                HorizontalDivider(color = Color(0xFFF0F0F0), thickness = 0.5.dp)
                             }
                         }
                     }
@@ -421,7 +421,7 @@ fun AnalyticsScreen(
                             )
                         }
                         if (idx < state.topStores.lastIndex) {
-                            Divider(color = Color(0xFFF0F0F0), thickness = 0.5.dp)
+                            HorizontalDivider(color = Color(0xFFF0F0F0), thickness = 0.5.dp)
                         }
                     }
                 }
