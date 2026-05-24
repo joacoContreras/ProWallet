@@ -13,8 +13,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.security.MessageDigest
+import java.security.SecureRandom
+import java.util.Base64
+import javax.crypto.SecretKeyFactory
+import javax.crypto.spec.PBEKeySpec
 
 data class AuthUiState(
     val isLoading: Boolean = false,
@@ -54,7 +60,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             val user = userDao.getUserByEmail(trimmedEmail)
             when {
                 user == null -> _uiState.value = _uiState.value.copy(isLoading = false, error = AuthError.EmailNotFound)
-                user.password != hashPassword(password) -> _uiState.value = _uiState.value.copy(isLoading = false, error = AuthError.WrongPassword)
+                !withContext(Dispatchers.Default) { verifyPassword(password, user.password) } ->
+                    _uiState.value = _uiState.value.copy(isLoading = false, error = AuthError.WrongPassword)
                 else -> {
                     sessionManager.saveSession(user.email)
                     _uiState.value = _uiState.value.copy(isLoading = false, isLoggedIn = true, user = user.toDomain())
@@ -92,12 +99,13 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 return@launch
             }
             val nameParts = trimmedName.split(" ", limit = 2)
+            val hashed = withContext(Dispatchers.Default) { hashPassword(password) }
             userDao.insert(
                 UserEntity(
                     name = nameParts[0],
                     lastname = nameParts.getOrElse(1) { "" },
                     email = trimmedEmail,
-                    password = hashPassword(password)
+                    password = hashed
                 )
             )
             sessionManager.saveSession(trimmedEmail)
@@ -139,7 +147,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         _uiState.value = _uiState.value.copy(isLoading = true, error = null)
         viewModelScope.launch {
             val user = userDao.getUserByEmail(email) ?: return@launch
-            userDao.update(user.copy(password = hashPassword(password)))
+            val hashed = withContext(Dispatchers.Default) { hashPassword(password) }
+            userDao.update(user.copy(password = hashed))
             pendingEmail = null
             _uiState.value = _uiState.value.copy(isLoading = false, passwordUpdated = true)
         }
@@ -176,8 +185,24 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun hashPassword(password: String): String {
-        val bytes = MessageDigest.getInstance("SHA-256").digest(password.toByteArray())
-        return bytes.joinToString("") { "%02x".format(it) }
+        val salt = ByteArray(16).also { SecureRandom().nextBytes(it) }
+        val spec = PBEKeySpec(password.toCharArray(), salt, 65_536, 256)
+        val hash = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256").generateSecret(spec).encoded
+        spec.clearPassword()
+        val enc = Base64.getEncoder()
+        return "${enc.encodeToString(salt)}:${enc.encodeToString(hash)}"
+    }
+
+    private fun verifyPassword(password: String, stored: String): Boolean {
+        val parts = stored.split(":")
+        if (parts.size != 2) return false
+        val dec = Base64.getDecoder()
+        val salt = dec.decode(parts[0])
+        val expectedHash = dec.decode(parts[1])
+        val spec = PBEKeySpec(password.toCharArray(), salt, 65_536, 256)
+        val actualHash = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256").generateSecret(spec).encoded
+        spec.clearPassword()
+        return MessageDigest.isEqual(expectedHash, actualHash)
     }
 
     private fun UserEntity.toDomain() = User(
