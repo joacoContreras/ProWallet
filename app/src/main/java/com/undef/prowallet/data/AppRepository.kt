@@ -47,13 +47,17 @@ class AppRepository(context: Context) {
 
         purchase.products.forEach { product ->
             val productId = productDao.getProductByCode(product.code)?.id
-                ?: productDao.insert(
-                    ProductEntity(
-                        name = product.name,
-                        description = product.description,
-                        code = product.code
+                ?: run {
+                    val inserted = productDao.insert(
+                        ProductEntity(
+                            name = product.name,
+                            description = product.description,
+                            code = product.code
+                        )
                     )
-                ).toInt()
+                    if (inserted != -1L) inserted.toInt()
+                    else productDao.getProductByCode(product.code)!!.id
+                }
             purchasedItemDao.insert(
                 PurchasedItemEntity(
                     purchaseId = purchaseId,

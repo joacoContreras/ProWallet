@@ -18,7 +18,7 @@ import com.undef.prowallet.data.dao.UserDao
         PurchasedItemEntity::class,
         CategoryEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class ProWalletDatabase : RoomDatabase() {
