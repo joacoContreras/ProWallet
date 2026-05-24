@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -44,6 +45,18 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     val isLoggedIn: Flow<Boolean> = sessionManager.isLoggedIn
 
     private var pendingEmail: String? = null
+
+    init {
+        viewModelScope.launch {
+            val loggedIn = sessionManager.isLoggedIn.first()
+            if (loggedIn) {
+                val email = sessionManager.email.first()
+                if (email == null || userDao.getUserByEmail(email) == null) {
+                    sessionManager.clearSession()
+                }
+            }
+        }
+    }
 
     fun login(email: String, password: String) {
         val trimmedEmail = email.trim().lowercase()
