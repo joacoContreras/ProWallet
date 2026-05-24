@@ -32,8 +32,9 @@ class PurchaseDetailViewModel(application: Application) : AndroidViewModel(appli
     }
 
     fun deletePurchase(id: String, onDone: () -> Unit) {
+        val numericId = id.toIntOrNull() ?: return
         viewModelScope.launch {
-            repository.deletePurchase(id.toIntOrNull() ?: return@launch)
+            repository.deletePurchase(numericId)
             onDone()
         }
     }
