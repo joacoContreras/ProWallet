@@ -159,6 +159,9 @@
     <string name="of_budget">%s del Presupuesto</string>
     <string name="less_than_last_mo">Menos que el mes pasado</string>
 
+    <!-- Navigation -->
+    <string name="navigate_back">Atrás</string>
+
     <!-- Bottom Bar -->
     <string name="nav_home">Inicio</string>
     <string name="nav_new">Nuevo</string>

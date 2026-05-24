@@ -292,7 +292,7 @@ fun TopBar(
             ) {
                 Icon(
                     Icons.Default.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(R.string.navigate_back),
                     tint = TextPrimary
                 )
             }

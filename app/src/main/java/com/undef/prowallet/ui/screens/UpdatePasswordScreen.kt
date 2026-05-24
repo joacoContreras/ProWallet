@@ -57,7 +57,7 @@ fun UpdatePasswordScreen(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null, tint = TextPrimary)
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.navigate_back), tint = TextPrimary)
                     }
                     Text(
                         text = stringResource(R.string.app_name),

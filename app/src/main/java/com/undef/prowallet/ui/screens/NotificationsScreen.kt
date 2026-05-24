@@ -33,7 +33,7 @@ fun NotificationsScreen(onNavigateBack: () -> Unit) {
                 title = { },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = TextPrimary)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.navigate_back), tint = TextPrimary)
                     }
                 },
                 actions = {
