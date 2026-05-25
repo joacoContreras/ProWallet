@@ -25,9 +25,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.undef.prowallet.R
+import com.undef.prowallet.data.CategoryEntity
 import com.undef.prowallet.ui.components.*
 import com.undef.prowallet.ui.theme.*
-import com.undef.prowallet.viewmodel.CATEGORIES
 import com.undef.prowallet.viewmodel.PurchaseViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -45,6 +45,10 @@ fun NewPurchaseScreen(
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
     var showCategoryMenu by remember { mutableStateOf(false) }
+    var showAddCategoryDialog by remember { mutableStateOf(false) }
+    var showEditCategoryDialog by remember { mutableStateOf(false) }
+    var editingCategory by remember { mutableStateOf<CategoryEntity?>(null) }
+    var categoryInputText by remember { mutableStateOf("") }
 
     val datePickerState = rememberDatePickerState()
     
@@ -58,6 +62,11 @@ fun NewPurchaseScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
     val saveErrorMsg = stringResource(R.string.error_save_purchase)
+    val validationErrorMsg = stringResource(R.string.error_store_name_required)
+
+    LaunchedEffect(Unit) {
+        viewModel.resetForm()
+    }
 
     LaunchedEffect(state.savedSuccess) {
         if (state.savedSuccess) {
@@ -70,6 +79,74 @@ fun NewPurchaseScreen(
         if (state.saveError) {
             snackbarHostState.showSnackbar(saveErrorMsg)
             viewModel.clearSaveError()
+        }
+    }
+
+    LaunchedEffect(state.validationError) {
+        if (state.validationError) {
+            snackbarHostState.showSnackbar(validationErrorMsg)
+            viewModel.clearValidationError()
+        }
+    }
+
+    if (showAddCategoryDialog) {
+        AlertDialog(
+            onDismissRequest = { showAddCategoryDialog = false },
+            title = { Text(stringResource(R.string.category_add), fontFamily = PlusJakartaSans) },
+            text = {
+                OutlinedTextField(
+                    value = categoryInputText,
+                    onValueChange = { categoryInputText = it },
+                    label = { Text(stringResource(R.string.category_name_hint)) },
+                    singleLine = true
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    if (categoryInputText.isNotBlank()) {
+                        viewModel.addCategory(categoryInputText.trim())
+                        categoryInputText = ""
+                        showAddCategoryDialog = false
+                    }
+                }) { Text(stringResource(R.string.ok)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { showAddCategoryDialog = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
+
+    if (showEditCategoryDialog) {
+        val cat = editingCategory
+        if (cat != null) {
+            AlertDialog(
+                onDismissRequest = { showEditCategoryDialog = false; editingCategory = null },
+                title = { Text(stringResource(R.string.category_edit_title), fontFamily = PlusJakartaSans) },
+                text = {
+                    OutlinedTextField(
+                        value = categoryInputText,
+                        onValueChange = { categoryInputText = it },
+                        label = { Text(stringResource(R.string.category_name_hint)) },
+                        singleLine = true
+                    )
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        if (categoryInputText.isNotBlank()) {
+                            viewModel.updateCategoryName(cat.id, categoryInputText.trim())
+                            showEditCategoryDialog = false
+                            editingCategory = null
+                        }
+                    }) { Text(stringResource(R.string.ok)) }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showEditCategoryDialog = false; editingCategory = null }) {
+                        Text(stringResource(R.string.cancel))
+                    }
+                }
+            )
         }
     }
 
@@ -155,39 +232,6 @@ fun NewPurchaseScreen(
 
             Spacer(Modifier.height(20.dp))
 
-            // Ticket capture area
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .height(100.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .border(
-                        BorderStroke(1.5.dp, NeutralLight.copy(alpha = 0.5f)),
-                        RoundedCornerShape(16.dp)
-                    )
-                    .background(Color(0xFFF8FAFB)),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        Icons.Default.CameraAlt,
-                        contentDescription = null,
-                        tint = NeutralLight,
-                        modifier = Modifier.size(32.dp)
-                    )
-                    Spacer(Modifier.height(4.dp))
-                    Text(
-                        text = stringResource(R.string.capture_ticket),
-                        fontFamily = PlusJakartaSans,
-                        fontSize = 12.sp,
-                        color = Neutral
-                    )
-                }
-            }
-
-            Spacer(Modifier.height(20.dp))
-
             // Purchase details
             SectionCard(modifier = Modifier.padding(horizontal = 20.dp)) {
                 Text(
@@ -244,13 +288,6 @@ fun NewPurchaseScreen(
                             modifier = Modifier.weight(1f)
                         )
                     }
-                    CustomTextField(
-                        value = state.totalAmount,
-                        onValueChange = viewModel::onTotalAmountChange,
-                        placeholder = "0.00",
-                        leadingIcon = Icons.Default.AttachMoney,
-                        label = stringResource(R.string.total_amount_label)
-                    )
                     // Category selector
                     Column {
                         Text(
@@ -271,7 +308,7 @@ fun NewPurchaseScreen(
                                 leadingIcon = { Icon(Icons.Default.Category, contentDescription = null, tint = NeutralLight, modifier = Modifier.size(20.dp)) },
                                 shape = RoundedCornerShape(12.dp),
                                 colors = OutlinedTextFieldDefaults.colors(
-                                    focusedBorderColor = Primary,
+                                    focusedBorderColor = Color(0xFFE8ECEF),
                                     unfocusedBorderColor = Color(0xFFE8ECEF),
                                     focusedContainerColor = Color.White,
                                     unfocusedContainerColor = Color(0xFFF8FAFB),
@@ -284,15 +321,60 @@ fun NewPurchaseScreen(
                                 expanded = showCategoryMenu,
                                 onDismissRequest = { showCategoryMenu = false }
                             ) {
-                                CATEGORIES.forEach { cat ->
+                                state.categories.forEach { cat ->
                                     DropdownMenuItem(
-                                        text = { Text(categoryDisplayName(cat), fontFamily = PlusJakartaSans) },
+                                        text = {
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(
+                                                    categoryDisplayName(cat.name),
+                                                    fontFamily = PlusJakartaSans,
+                                                    modifier = Modifier.weight(1f)
+                                                )
+                                                Row {
+                                                    IconButton(
+                                                        onClick = {
+                                                            editingCategory = cat
+                                                            categoryInputText = cat.name
+                                                            showEditCategoryDialog = true
+                                                        },
+                                                        modifier = Modifier.size(32.dp)
+                                                    ) {
+                                                        Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.edit_label), tint = Secondary, modifier = Modifier.size(16.dp))
+                                                    }
+                                                    IconButton(
+                                                        onClick = { viewModel.deleteCategory(cat.id) },
+                                                        modifier = Modifier.size(32.dp)
+                                                    ) {
+                                                        Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete_label), tint = ErrorRed, modifier = Modifier.size(16.dp))
+                                                    }
+                                                }
+                                            }
+                                        },
                                         onClick = {
-                                            viewModel.onCategoryChange(cat)
+                                            viewModel.onCategoryChange(cat.name)
                                             showCategoryMenu = false
                                         }
                                     )
                                 }
+                                HorizontalDivider()
+                                DropdownMenuItem(
+                                    text = {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Icon(Icons.Default.Add, contentDescription = null, tint = Secondary, modifier = Modifier.size(16.dp))
+                                            Spacer(Modifier.width(8.dp))
+                                            Text(stringResource(R.string.category_add), fontFamily = PlusJakartaSans, color = Secondary)
+                                        }
+                                    },
+                                    onClick = {
+                                        categoryInputText = ""
+                                        showCategoryMenu = false
+                                        showAddCategoryDialog = true
+                                    }
+                                )
                             }
                         }
                     }
@@ -465,5 +547,6 @@ private fun categoryDisplayName(key: String): String = when (key) {
     "Transport" -> stringResource(R.string.category_transport)
     "Dining"    -> stringResource(R.string.category_dining)
     "Coffee"    -> stringResource(R.string.category_coffee)
-    else        -> stringResource(R.string.category_other)
+    "Other"     -> stringResource(R.string.category_other)
+    else        -> key
 }

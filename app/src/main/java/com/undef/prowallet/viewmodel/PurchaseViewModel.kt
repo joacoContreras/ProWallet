@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.undef.prowallet.data.AppRepository
+import com.undef.prowallet.data.CategoryEntity
 import com.undef.prowallet.domain.Product
 import com.undef.prowallet.domain.Purchase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,8 +20,8 @@ data class PurchaseUiState(
     val storeName: String = "",
     val date: String = SimpleDateFormat("MM/dd/yy", Locale.getDefault()).format(Date()),
     val time: String = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date()),
-    val totalAmount: String = "",
     val category: String = "Other",
+    val categories: List<CategoryEntity> = emptyList(),
     val products: List<Product> = emptyList(),
     val currentProductCode: String = "",
     val currentProductName: String = "",
@@ -29,10 +30,9 @@ data class PurchaseUiState(
     val editingProductId: String? = null,
     val isSaving: Boolean = false,
     val savedSuccess: Boolean = false,
-    val saveError: Boolean = false
+    val saveError: Boolean = false,
+    val validationError: Boolean = false
 )
-
-val CATEGORIES = listOf("Groceries", "Transport", "Dining", "Coffee", "Other")
 
 class PurchaseViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -41,10 +41,17 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
     private val _uiState = MutableStateFlow(PurchaseUiState())
     val uiState: StateFlow<PurchaseUiState> = _uiState.asStateFlow()
 
+    init {
+        viewModelScope.launch {
+            repository.categoriesFlow.collect { cats ->
+                _uiState.value = _uiState.value.copy(categories = cats)
+            }
+        }
+    }
+
     fun onStoreNameChange(value: String) { _uiState.value = _uiState.value.copy(storeName = value) }
     fun onDateChange(value: String) { _uiState.value = _uiState.value.copy(date = value) }
     fun onTimeChange(value: String) { _uiState.value = _uiState.value.copy(time = value) }
-    fun onTotalAmountChange(value: String) { _uiState.value = _uiState.value.copy(totalAmount = value) }
     fun onCategoryChange(value: String) { _uiState.value = _uiState.value.copy(category = value) }
     fun onProductCodeChange(value: String) { _uiState.value = _uiState.value.copy(currentProductCode = value) }
     fun onProductNameChange(value: String) { _uiState.value = _uiState.value.copy(currentProductName = value) }
@@ -102,12 +109,28 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
         )
     }
 
+    fun addCategory(name: String) {
+        viewModelScope.launch { repository.addCategory(name) }
+    }
+
+    fun deleteCategory(id: Int) {
+        viewModelScope.launch { repository.deleteCategory(id) }
+    }
+
+    fun updateCategoryName(id: Int, newName: String) {
+        viewModelScope.launch { repository.updateCategory(id, newName) }
+    }
+
     fun savePurchase() {
         val state = _uiState.value
-        if (state.storeName.isBlank() || state.isSaving) return
+        if (state.isSaving) return
 
-        val totalAmount = state.totalAmount.toDoubleOrNull()
-            ?: state.products.sumOf { it.price }
+        if (state.storeName.isBlank()) {
+            _uiState.value = state.copy(validationError = true)
+            return
+        }
+
+        val totalAmount = state.products.sumOf { it.price }
 
         val purchase = Purchase(
             id = "",
@@ -133,8 +156,25 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun clearSavedSuccess() { _uiState.value = _uiState.value.copy(savedSuccess = false) }
-
     fun clearSaveError() { _uiState.value = _uiState.value.copy(saveError = false) }
+    fun clearValidationError() { _uiState.value = _uiState.value.copy(validationError = false) }
 
-    fun resetForm() { _uiState.value = PurchaseUiState() }
+    fun resetForm() {
+        _uiState.value = _uiState.value.copy(
+            storeName = "",
+            date = SimpleDateFormat("MM/dd/yy", Locale.getDefault()).format(Date()),
+            time = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date()),
+            category = "Other",
+            products = emptyList(),
+            currentProductCode = "",
+            currentProductName = "",
+            currentProductDescription = "",
+            currentProductPrice = "",
+            editingProductId = null,
+            isSaving = false,
+            savedSuccess = false,
+            saveError = false,
+            validationError = false
+        )
+    }
 }

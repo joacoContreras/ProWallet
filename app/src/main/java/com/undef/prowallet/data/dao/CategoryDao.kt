@@ -31,4 +31,7 @@ interface CategoryDao {
 
     @Query("SELECT * FROM categories")
     suspend fun getAllCategoriesOnce(): List<CategoryEntity>
+
+    @Query("UPDATE categories SET name = :newName WHERE id = :id")
+    suspend fun updateName(id: Int, newName: String)
 }

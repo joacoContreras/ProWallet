@@ -240,7 +240,8 @@ fun PurchaseCard(
 @Composable
 fun ProductItem(
     product: Product,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showCode: Boolean = false
 ) {
     Row(
         modifier = modifier
@@ -255,11 +256,13 @@ fun ProductItem(
                 color = TextPrimary,
                 fontWeight = FontWeight.Medium
             )
-            Text(
-                text = "ID: ${product.code}",
-                style = MaterialTheme.typography.labelSmall,
-                color = TextSecondary
-            )
+            if (showCode) {
+                Text(
+                    text = "ID: ${product.code}",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = TextSecondary
+                )
+            }
         }
         Text(
             text = "$${String.format("%.2f", product.price)}",

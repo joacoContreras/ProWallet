@@ -347,6 +347,12 @@
     <string name="price_fair">Fair price</string>
     <string name="price_api_reference">API avg: $%.2f</string>
 
+    <!-- Category CRUD -->
+    <string name="category_add">Add category</string>
+    <string name="category_edit_title">Edit category</string>
+    <string name="category_name_hint">Category name</string>
+    <string name="error_store_name_required">Store name is required</string>
+
     <!-- Category names (stable EN keys stored in DB; localized for display) -->
     <string name="category_groceries">Groceries</string>
     <string name="category_transport">Transport</string>

@@ -22,6 +22,21 @@ class AppRepository(context: Context) {
 
     // @Transaction query tracks purchases + purchase_items — no race condition.
     // Per emission: 1 query for categories, 1 for products → 3 total, no N+1.
+    val categoriesFlow: Flow<List<CategoryEntity>> = categoryDao.getAllCategories()
+
+    suspend fun addCategory(name: String): Boolean {
+        val trimmed = name.trim()
+        if (trimmed.isBlank()) return false
+        return categoryDao.insert(CategoryEntity(name = trimmed)) != -1L
+    }
+
+    suspend fun deleteCategory(id: Int) = categoryDao.deleteById(id)
+
+    suspend fun updateCategory(id: Int, newName: String) {
+        val trimmed = newName.trim()
+        if (trimmed.isNotBlank()) categoryDao.updateName(id, trimmed)
+    }
+
     val purchasesFlow: Flow<List<Purchase>> = purchaseDao.getAllPurchasesWithItems()
         .map { purchasesWithItems ->
             val categoryMap = categoryDao.getAllCategoriesOnce().associateBy { it.id }

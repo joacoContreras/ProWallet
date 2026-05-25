@@ -231,46 +231,6 @@ fun PurchaseSuccessScreen(
                             }
                         }
                         
-                        Spacer(Modifier.height(16.dp))
-                        HorizontalDivider(modifier = Modifier.fillMaxWidth(), color = NeutralLight.copy(alpha = 0.2f))
-                        Spacer(Modifier.height(16.dp))
-                        
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = stringResource(R.string.subtotal),
-                                fontFamily = PlusJakartaSans,
-                                fontSize = 14.sp,
-                                color = Neutral
-                            )
-                            Text(
-                                text = "$${String.format(Locale.getDefault(), "%.2f", totalAmount * 0.95)}",
-                                fontFamily = PlusJakartaSans,
-                                fontSize = 14.sp,
-                                color = TextPrimary
-                            )
-                        }
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 4.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = stringResource(R.string.sales_tax),
-                                fontFamily = PlusJakartaSans,
-                                fontSize = 14.sp,
-                                color = Neutral
-                            )
-                            Text(
-                                text = "$${String.format(Locale.getDefault(), "%.2f", totalAmount * 0.05)}",
-                                fontFamily = PlusJakartaSans,
-                                fontSize = 14.sp,
-                                color = TextPrimary
-                            )
-                        }
                     }
                 }
             }

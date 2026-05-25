@@ -347,6 +347,12 @@
     <string name="price_fair">Precio justo</string>
     <string name="price_api_reference">Ref. API: $%.2f</string>
 
+    <!-- Category CRUD -->
+    <string name="category_add">Agregar categoría</string>
+    <string name="category_edit_title">Editar categoría</string>
+    <string name="category_name_hint">Nombre de categoría</string>
+    <string name="error_store_name_required">El nombre de la tienda es obligatorio</string>
+
     <!-- Category names -->
     <string name="category_groceries">Comestibles</string>
     <string name="category_transport">Transporte</string>
