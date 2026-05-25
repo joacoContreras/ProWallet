@@ -80,7 +80,8 @@ com.undef.prowallet
 │   └── theme/                      ← Color.kt · Type.kt · Theme.kt
 ├── util/
 │   ├── LocaleHelper.kt             ← i18n (ES / EN)
-│   └── SessionManager.kt          ← DataStore: sesión persistida entre reinicios
+│   ├── SessionManager.kt          ← DataStore: sesión persistida entre reinicios
+│   └── DateUtils.kt               ← extensiones de Purchase: isCurrentMonth(), isInMonth()
 └── viewmodel/
     ├── AuthViewModel.kt            ← Room + SHA-256 + DataStore
     ├── HomeViewModel.kt            ← AppRepository + presupuesto mensual (DataStore)
