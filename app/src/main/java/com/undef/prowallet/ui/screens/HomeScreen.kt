@@ -318,14 +318,39 @@ fun HomeScreen(
             }
 
             item {
-                SectionCard(modifier = Modifier.padding(horizontal = 20.dp)) {
-                    state.recentPurchases.forEachIndexed { idx, purchase ->
-                        PurchaseCard(
-                            purchase = purchase,
-                            onClick = { onNavigateToPurchaseDetail(purchase.id) }
-                        )
-                        if (idx < state.recentPurchases.lastIndex) {
-                            HorizontalDivider(color = Color(0xFFF0F0F0), thickness = 0.5.dp)
+                if (state.recentPurchases.isEmpty()) {
+                    SectionCard(modifier = Modifier.padding(horizontal = 20.dp)) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 24.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.ReceiptLong,
+                                contentDescription = null,
+                                modifier = Modifier.size(40.dp),
+                                tint = Neutral.copy(alpha = 0.4f)
+                            )
+                            Text(
+                                text = stringResource(R.string.no_recent_purchases),
+                                fontFamily = PlusJakartaSans,
+                                fontSize = 14.sp,
+                                color = Neutral
+                            )
+                        }
+                    }
+                } else {
+                    SectionCard(modifier = Modifier.padding(horizontal = 20.dp)) {
+                        state.recentPurchases.forEachIndexed { idx, purchase ->
+                            PurchaseCard(
+                                purchase = purchase,
+                                onClick = { onNavigateToPurchaseDetail(purchase.id) }
+                            )
+                            if (idx < state.recentPurchases.lastIndex) {
+                                HorizontalDivider(color = Color(0xFFF0F0F0), thickness = 0.5.dp)
+                            }
                         }
                     }
                 }
