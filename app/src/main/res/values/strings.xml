@@ -35,6 +35,9 @@
     <string name="top_stores">Top Stores</string>
     <string name="monthly_trend">Monthly Trend</string>
     <string name="transactions_count">%d transactions logged</string>
+    <string name="no_purchases_title">No purchases yet</string>
+    <string name="no_purchases_subtitle">Start by registering your first purchase.</string>
+    <string name="no_recent_purchases">No recent purchases this month.</string>
     <string name="settings_title">Settings</string>
     <string name="profile_title">Profile</string>
     <string name="edit_profile">Edit Profile</string>
