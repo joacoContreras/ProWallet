@@ -36,11 +36,13 @@ import java.util.*
 @Composable
 fun NewPurchaseScreen(
     viewModel: PurchaseViewModel,
+    purchaseId: String? = null,
     onSaveSuccess: () -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToHome: () -> Unit,
     onNavigateToAnalytics: () -> Unit
 ) {
+    val isEditMode = purchaseId != null
     val state by viewModel.uiState.collectAsState()
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
@@ -51,7 +53,7 @@ fun NewPurchaseScreen(
     var categoryInputText by remember { mutableStateOf("") }
 
     val datePickerState = rememberDatePickerState()
-    
+
     val timeSlots = remember {
         (0 until 24).flatMap { hour ->
             listOf("00", "15", "30", "45").map { minute ->
@@ -65,7 +67,7 @@ fun NewPurchaseScreen(
     val validationErrorMsg = stringResource(R.string.error_store_name_required)
 
     LaunchedEffect(Unit) {
-        viewModel.resetForm()
+        if (isEditMode) viewModel.loadForEdit(purchaseId!!) else viewModel.resetForm()
     }
 
     LaunchedEffect(state.savedSuccess) {
@@ -220,7 +222,10 @@ fun NewPurchaseScreen(
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
         ) {
-            TopBar(title = stringResource(R.string.new_purchase_title), onNavigateBack = onNavigateBack)
+            TopBar(
+                title = if (isEditMode) stringResource(R.string.edit_purchase_title) else stringResource(R.string.new_purchase_title),
+                onNavigateBack = onNavigateBack
+            )
 
             Text(
                 text = stringResource(R.string.new_purchase_subtitle),
@@ -517,7 +522,7 @@ fun NewPurchaseScreen(
             Spacer(Modifier.height(24.dp))
 
             Button(
-                onClick = viewModel::savePurchase,
+                onClick = if (isEditMode) viewModel::updatePurchase else viewModel::savePurchase,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
@@ -544,7 +549,7 @@ fun NewPurchaseScreen(
                 }
                 Spacer(Modifier.width(12.dp))
                 Text(
-                    text = stringResource(R.string.save_purchase),
+                    text = if (isEditMode) stringResource(R.string.update_purchase) else stringResource(R.string.save_purchase),
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp

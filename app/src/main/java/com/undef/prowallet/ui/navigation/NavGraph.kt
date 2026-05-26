@@ -38,6 +38,9 @@ sealed class Screen(val route: String) {
         fun createRoute(storeName: String) = "store_detail/$storeName"
     }
     object PurchaseSuccess : Screen("purchase_success")
+    object EditPurchase : Screen("edit_purchase/{purchaseId}") {
+        fun createRoute(purchaseId: String) = "edit_purchase/$purchaseId"
+    }
     object ChatAi : Screen("chat_ai")
     object ManageAccounts : Screen("manage_accounts")
     object MonthlySetup : Screen("monthly_setup")
@@ -153,7 +156,11 @@ fun AppNavGraph(navController: NavHostController) {
                         popUpTo(0) { inclusive = true }
                     }
                 },
-                onViewReceipt = { /* Logic for receipt */ }
+                onViewReceipt = {
+                    purchaseViewModel.uiState.value.savedPurchaseId?.let { id ->
+                        navController.navigate(Screen.PurchaseDetail.createRoute(id))
+                    }
+                }
             )
         }
 
@@ -167,9 +174,34 @@ fun AppNavGraph(navController: NavHostController) {
                 purchaseId = purchaseId,
                 viewModel = purchaseDetailViewModel,
                 onNavigateBack = { navController.popBackStack() },
-                onNavigateToEdit = { _ ->
-                    navController.navigate(Screen.NewPurchase.route)
+                onNavigateToEdit = { id ->
+                    navController.navigate(Screen.EditPurchase.createRoute(id))
                 }
+            )
+        }
+
+        composable(
+            route = Screen.EditPurchase.route,
+            arguments = listOf(navArgument("purchaseId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val purchaseId = backStackEntry.arguments?.getString("purchaseId") ?: ""
+            NewPurchaseScreen(
+                viewModel = purchaseViewModel,
+                purchaseId = purchaseId,
+                onSaveSuccess = {
+                    purchaseViewModel.uiState.value.savedPurchaseId?.let { id ->
+                        navController.navigate(Screen.PurchaseDetail.createRoute(id)) {
+                            popUpTo(Screen.EditPurchase.route) { inclusive = true }
+                        }
+                    }
+                },
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToHome = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Home.route) { inclusive = true }
+                    }
+                },
+                onNavigateToAnalytics = { navController.navigate(Screen.Analytics.route) }
             )
         }
 

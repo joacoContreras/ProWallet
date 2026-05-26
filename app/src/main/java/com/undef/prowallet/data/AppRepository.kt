@@ -44,8 +44,8 @@ class AppRepository(context: Context) {
             purchasesWithItems.map { it.toDomain(categoryMap, productMap) }
         }
 
-    suspend fun savePurchase(purchase: Purchase) {
-        db.withTransaction {
+    suspend fun savePurchase(purchase: Purchase): Int {
+        return db.withTransaction {
             val categoryId = categoryDao.getCategoryByName(purchase.category)?.id
                 ?: run {
                     val inserted = categoryDao.insert(CategoryEntity(name = purchase.category))
@@ -80,6 +80,55 @@ class AppRepository(context: Context) {
                 purchasedItemDao.insert(
                     PurchasedItemEntity(
                         purchaseId = purchaseId,
+                        productId = productId,
+                        quantity = 1,
+                        price = product.price
+                    )
+                )
+            }
+            purchaseId
+        }
+    }
+
+    suspend fun updatePurchase(id: Int, purchase: Purchase) {
+        db.withTransaction {
+            val categoryId = categoryDao.getCategoryByName(purchase.category)?.id
+                ?: run {
+                    val inserted = categoryDao.insert(CategoryEntity(name = purchase.category))
+                    if (inserted != -1L) inserted.toInt()
+                    else categoryDao.getCategoryByName(purchase.category)!!.id
+                }
+
+            purchaseDao.update(
+                PurchaseEntity(
+                    id = id,
+                    categoryId = categoryId,
+                    amount = purchase.totalAmount,
+                    storeName = purchase.storeName,
+                    description = "",
+                    timestamp = parseTimestamp(purchase.date, purchase.time),
+                    ticketImagePath = purchase.ticketImageUri
+                )
+            )
+
+            purchasedItemDao.deleteByPurchaseId(id)
+
+            purchase.products.forEach { product ->
+                val productId = productDao.getProductByCode(product.code)?.id
+                    ?: run {
+                        val inserted = productDao.insert(
+                            ProductEntity(
+                                name = product.name,
+                                description = product.description,
+                                code = product.code
+                            )
+                        )
+                        if (inserted != -1L) inserted.toInt()
+                        else productDao.getProductByCode(product.code)!!.id
+                    }
+                purchasedItemDao.insert(
+                    PurchasedItemEntity(
+                        purchaseId = id,
                         productId = productId,
                         quantity = 1,
                         price = product.price

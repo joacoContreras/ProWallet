@@ -375,6 +375,8 @@
     <string name="category_edit_title">Edit category</string>
     <string name="category_name_hint">Category name</string>
     <string name="error_store_name_required">Store name is required</string>
+    <string name="edit_purchase_title">Edit Purchase</string>
+    <string name="update_purchase">Update Purchase</string>
 
     <!-- Category names (stable EN keys stored in DB; localized for display) -->
     <string name="category_groceries">Groceries</string>

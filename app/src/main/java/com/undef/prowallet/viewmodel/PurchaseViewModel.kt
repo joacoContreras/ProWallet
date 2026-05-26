@@ -30,9 +30,11 @@ data class PurchaseUiState(
     val editingProductId: String? = null,
     val isSaving: Boolean = false,
     val savedSuccess: Boolean = false,
+    val savedPurchaseId: String? = null,
     val saveError: Boolean = false,
     val validationError: Boolean = false,
-    val productError: Boolean = false
+    val productError: Boolean = false,
+    val editingPurchaseId: String? = null
 )
 
 class PurchaseViewModel(application: Application) : AndroidViewModel(application) {
@@ -152,8 +154,8 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
         _uiState.value = state.copy(isSaving = true, saveError = false)
         viewModelScope.launch {
             try {
-                repository.savePurchase(purchase)
-                _uiState.value = _uiState.value.copy(savedSuccess = true)
+                val id = repository.savePurchase(purchase)
+                _uiState.value = _uiState.value.copy(savedSuccess = true, savedPurchaseId = id.toString())
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(saveError = true)
             } finally {
@@ -165,6 +167,64 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
     fun clearSavedSuccess() { _uiState.value = _uiState.value.copy(savedSuccess = false) }
     fun clearSaveError() { _uiState.value = _uiState.value.copy(saveError = false) }
     fun clearValidationError() { _uiState.value = _uiState.value.copy(validationError = false) }
+
+    fun loadForEdit(purchaseId: String) {
+        viewModelScope.launch {
+            val purchase = repository.getPurchaseById(purchaseId.toInt()) ?: return@launch
+            _uiState.value = _uiState.value.copy(
+                editingPurchaseId = purchaseId,
+                storeName = purchase.storeName,
+                date = purchase.date,
+                time = purchase.time,
+                category = purchase.category,
+                products = purchase.products,
+                currentProductCode = "",
+                currentProductName = "",
+                currentProductDescription = "",
+                currentProductPrice = "",
+                editingProductId = null,
+                isSaving = false,
+                savedSuccess = false,
+                savedPurchaseId = null,
+                saveError = false,
+                validationError = false
+            )
+        }
+    }
+
+    fun updatePurchase() {
+        val state = _uiState.value
+        val id = state.editingPurchaseId?.toIntOrNull() ?: return
+        if (state.isSaving) return
+
+        if (state.storeName.isBlank()) {
+            _uiState.value = state.copy(validationError = true)
+            return
+        }
+
+        val totalAmount = state.products.sumOf { it.price }
+        val purchase = Purchase(
+            id = id.toString(),
+            storeName = state.storeName,
+            date = state.date,
+            time = state.time,
+            totalAmount = totalAmount,
+            category = state.category,
+            products = state.products
+        )
+
+        _uiState.value = state.copy(isSaving = true, saveError = false)
+        viewModelScope.launch {
+            try {
+                repository.updatePurchase(id, purchase)
+                _uiState.value = _uiState.value.copy(savedSuccess = true, savedPurchaseId = id.toString())
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(saveError = true)
+            } finally {
+                _uiState.value = _uiState.value.copy(isSaving = false)
+            }
+        }
+    }
 
     fun resetForm() {
         _uiState.value = _uiState.value.copy(
@@ -178,6 +238,8 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
             currentProductDescription = "",
             currentProductPrice = "",
             editingProductId = null,
+            editingPurchaseId = null,
+            savedPurchaseId = null,
             isSaving = false,
             savedSuccess = false,
             saveError = false,
