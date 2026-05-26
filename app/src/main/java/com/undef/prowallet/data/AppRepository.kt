@@ -19,6 +19,21 @@ class AppRepository(context: Context) {
     private val productDao = db.productDao()
     private val purchasedItemDao = db.purchasedItemDao()
     private val categoryDao = db.categoryDao()
+    private val fixedExpenseDao = db.fixedExpenseDao()
+
+    val fixedExpensesFlow: Flow<List<FixedExpenseEntity>> = fixedExpenseDao.getAll()
+
+    suspend fun addFixedExpense(name: String, amount: Double, category: String, frequency: String): Boolean {
+        if (name.isBlank() || amount <= 0) return false
+        return fixedExpenseDao.insert(FixedExpenseEntity(name = name, amount = amount, category = category, frequency = frequency)) != -1L
+    }
+
+    suspend fun updateFixedExpense(id: Int, name: String, amount: Double, category: String, frequency: String) {
+        if (name.isBlank() || amount <= 0) return
+        fixedExpenseDao.update(FixedExpenseEntity(id = id, name = name, amount = amount, category = category, frequency = frequency))
+    }
+
+    suspend fun deleteFixedExpense(id: Int) = fixedExpenseDao.deleteById(id)
 
     // @Transaction query tracks purchases + purchase_items — no race condition.
     // Per emission: 1 query for categories, 1 for products → 3 total, no N+1.

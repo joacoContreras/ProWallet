@@ -39,6 +39,7 @@ fun ProfileScreenPreview() {
             onNavigateToSettings = {},
             onNavigateToManageAccounts = {},
             onNavigateToMonthlySetup = {},
+            onNavigateToFixedExpenses = {},
             onNavigateToAutoSavings = {},
             onNavigateToContactSupport = {},
             onLogout = {}
@@ -53,6 +54,7 @@ fun ProfileScreen(
     onNavigateToSettings: () -> Unit,
     onNavigateToManageAccounts: () -> Unit,
     onNavigateToMonthlySetup: () -> Unit,
+    onNavigateToFixedExpenses: () -> Unit,
     onNavigateToAutoSavings: () -> Unit,
     onNavigateToContactSupport: () -> Unit,
     onLogout: () -> Unit
@@ -219,7 +221,7 @@ fun ProfileScreen(
                 title = stringResource(R.string.management_section),
                 items = listOf(
                     ManagementItem(Icons.Default.AccountBalance, stringResource(R.string.linked_accounts), stringResource(R.string.banks_connected), SecondaryLight.copy(alpha = 0.2f), SecondaryDark, onNavigateToManageAccounts),
-                    ManagementItem(Icons.Default.EventRepeat, stringResource(R.string.fixed_expenses), stringResource(R.string.rent_utilities_subscriptions), TertiaryDark.copy(alpha = 0.5f), SecondaryDark, onNavigateToMonthlySetup),
+                    ManagementItem(Icons.Default.EventRepeat, stringResource(R.string.fixed_expenses), stringResource(R.string.rent_utilities_subscriptions), TertiaryDark.copy(alpha = 0.5f), SecondaryDark, onNavigateToFixedExpenses),
                     ManagementItem(Icons.Default.Savings, stringResource(R.string.auto_savings_plan), stringResource(R.string.auto_savings_amount), Primary.copy(alpha = 0.2f), PrimaryDarker, onNavigateToAutoSavings)
                 )
             )

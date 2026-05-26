@@ -377,6 +377,12 @@
     <string name="error_store_name_required">Store name is required</string>
     <string name="edit_purchase_title">Edit Purchase</string>
     <string name="update_purchase">Update Purchase</string>
+    <string name="add_fixed_expense">Add Fixed Expense</string>
+    <string name="edit_fixed_expense">Edit Fixed Expense</string>
+    <string name="no_fixed_expenses">No fixed expenses added yet.</string>
+    <string name="total_monthly_fixed">Total Monthly Fixed Expenses</string>
+    <string name="expense_name_label">Expense name</string>
+    <string name="amount_label">Amount</string>
 
     <!-- Category names (stable EN keys stored in DB; localized for display) -->
     <string name="category_groceries">Groceries</string>

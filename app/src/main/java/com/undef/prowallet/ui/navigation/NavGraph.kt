@@ -12,6 +12,7 @@ import androidx.navigation.navArgument
 import com.undef.prowallet.ui.screens.*
 import com.undef.prowallet.viewmodel.AnalyticsViewModel
 import com.undef.prowallet.viewmodel.AutoSavingsViewModel
+import com.undef.prowallet.viewmodel.FixedExpensesViewModel
 import com.undef.prowallet.viewmodel.MonthlySetupViewModel
 import com.undef.prowallet.viewmodel.AuthViewModel
 import com.undef.prowallet.viewmodel.HistoryViewModel
@@ -49,6 +50,7 @@ sealed class Screen(val route: String) {
     object MonthlySetup : Screen("monthly_setup")
     object PersonalInflation : Screen("personal_inflation")
     object AutoSavings : Screen("auto_savings")
+    object FixedExpenses : Screen("fixed_expenses")
     object ForgotPassword : Screen("forgot_password")
     object VerifyCode : Screen("verify_code")
     object UpdatePassword : Screen("update_password")
@@ -274,6 +276,7 @@ fun AppNavGraph(navController: NavHostController) {
                 onNavigateToSettings = { navController.navigate(Screen.Settings.route) },
                 onNavigateToManageAccounts = { navController.navigate(Screen.ManageAccounts.route) },
                 onNavigateToMonthlySetup = { navController.navigate(Screen.MonthlySetup.route) },
+                onNavigateToFixedExpenses = { navController.navigate(Screen.FixedExpenses.route) },
                 onNavigateToAutoSavings = { navController.navigate(Screen.AutoSavings.route) },
                 onNavigateToContactSupport = { navController.navigate(Screen.ContactSupport.route) },
                 onLogout = {
@@ -282,6 +285,14 @@ fun AppNavGraph(navController: NavHostController) {
                         popUpTo(0) { inclusive = true }
                     }
                 }
+            )
+        }
+
+        composable(Screen.FixedExpenses.route) {
+            val fixedExpensesViewModel: FixedExpensesViewModel = viewModel()
+            FixedExpensesScreen(
+                viewModel = fixedExpensesViewModel,
+                onNavigateBack = { navController.popBackStack() }
             )
         }
 

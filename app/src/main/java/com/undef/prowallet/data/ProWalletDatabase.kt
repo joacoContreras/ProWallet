@@ -8,6 +8,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.undef.prowallet.BuildConfig
 import com.undef.prowallet.data.dao.CategoryDao
+import com.undef.prowallet.data.dao.FixedExpenseDao
 import com.undef.prowallet.data.dao.ProductDao
 import com.undef.prowallet.data.dao.PurchaseDao
 import com.undef.prowallet.data.dao.PurchasedItemDao
@@ -19,9 +20,10 @@ import com.undef.prowallet.data.dao.UserDao
         PurchaseEntity::class,
         ProductEntity::class,
         PurchasedItemEntity::class,
-        CategoryEntity::class
+        CategoryEntity::class,
+        FixedExpenseEntity::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 abstract class ProWalletDatabase : RoomDatabase() {
@@ -31,6 +33,7 @@ abstract class ProWalletDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
     abstract fun purchasedItemDao(): PurchasedItemDao
     abstract fun categoryDao(): CategoryDao
+    abstract fun fixedExpenseDao(): FixedExpenseDao
 
     companion object {
         @Volatile
@@ -76,6 +79,21 @@ abstract class ProWalletDatabase : RoomDatabase() {
             }
         }
 
+        // v4→v5: add fixed_expenses table.
+        private val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS fixed_expenses (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        name TEXT NOT NULL,
+                        amount REAL NOT NULL,
+                        category TEXT NOT NULL,
+                        frequency TEXT NOT NULL
+                    )
+                """.trimIndent())
+            }
+        }
+
         fun getInstance(context: Context): ProWalletDatabase =
             INSTANCE ?: synchronized(this) {
                 INSTANCE ?: Room.databaseBuilder(
@@ -83,7 +101,7 @@ abstract class ProWalletDatabase : RoomDatabase() {
                     ProWalletDatabase::class.java,
                     "prowallet.db"
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                     .apply { if (BuildConfig.DEBUG) fallbackToDestructiveMigration(dropAllTables = true) }
                     .build()
                     .also { INSTANCE = it }
