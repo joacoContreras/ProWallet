@@ -262,6 +262,7 @@ fun AppNavGraph(navController: NavHostController) {
 
         composable(Screen.Settings.route) {
             SettingsScreen(
+                authViewModel = authViewModel,
                 onNavigateBack = { navController.popBackStack() }
             )
         }

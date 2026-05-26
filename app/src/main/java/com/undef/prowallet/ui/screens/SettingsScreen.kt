@@ -30,20 +30,28 @@ import com.undef.prowallet.ui.components.SectionCard
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
 import com.undef.prowallet.util.LocaleHelper
+import com.undef.prowallet.viewmodel.AuthViewModel
 
 @Preview(showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
     ProWalletTheme {
-        SettingsScreen(onNavigateBack = {})
+        SettingsScreen(
+            authViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+            onNavigateBack = {}
+        )
     }
 }
 
 @Composable
-fun SettingsScreen(onNavigateBack: () -> Unit) {
+fun SettingsScreen(
+    authViewModel: AuthViewModel,
+    onNavigateBack: () -> Unit
+) {
     val context = LocalContext.current
-    var fullName by remember { mutableStateOf("Alex Rivera") }
-    var email by remember { mutableStateOf("alex.rivera@pro.wallet") }
+    val authState by authViewModel.uiState.collectAsState()
+    var fullName by remember(authState.user) { mutableStateOf(authState.user?.fullName ?: "") }
+    var email by remember(authState.user) { mutableStateOf(authState.user?.email ?: "") }
     var notificationsEnabled by remember { mutableStateOf(true) }
     var biometricEnabled by remember { mutableStateOf(false) }
     var darkModeEnabled by remember { mutableStateOf(false) }
