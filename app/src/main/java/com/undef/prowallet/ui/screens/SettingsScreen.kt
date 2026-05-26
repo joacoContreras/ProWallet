@@ -93,23 +93,23 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                                 .clip(CircleShape)
                                 .background(Secondary)
                         ) {
-                            Icon(Icons.Default.CameraAlt, contentDescription = "Change photo", tint = Color.White, modifier = Modifier.size(16.dp))
+                            Icon(Icons.Default.CameraAlt, contentDescription = stringResource(R.string.settings_change_photo), tint = Color.White, modifier = Modifier.size(16.dp))
                         }
                     }
 
                     CustomTextField(
                         value = fullName,
                         onValueChange = { fullName = it },
-                        placeholder = "Full Name",
+                        placeholder = stringResource(R.string.full_name_label),
                         leadingIcon = Icons.Default.Person,
-                        label = "Full Name"
+                        label = stringResource(R.string.full_name_label)
                     )
                     CustomTextField(
                         value = email,
                         onValueChange = { email = it },
-                        placeholder = "Email",
+                        placeholder = stringResource(R.string.email_label),
                         leadingIcon = Icons.Default.Email,
-                        label = "Email"
+                        label = stringResource(R.string.email_label)
                     )
                     
                     PrimaryButton(
@@ -151,8 +151,8 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                     icon = Icons.Default.Notifications,
                     iconBg = Primary.copy(alpha = 0.15f),
                     iconTint = PrimaryDarker,
-                    title = "Notifications",
-                    subtitle = "Receive spending alerts",
+                    title = stringResource(R.string.settings_notifications_title),
+                    subtitle = stringResource(R.string.settings_notifications_subtitle),
                     checked = notificationsEnabled,
                     onCheckedChange = { notificationsEnabled = it }
                 )
@@ -161,8 +161,8 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                     icon = Icons.Default.Fingerprint,
                     iconBg = ErrorRed.copy(alpha = 0.1f),
                     iconTint = ErrorRed,
-                    title = "Biometrics",
-                    subtitle = "Unlock with fingerprint",
+                    title = stringResource(R.string.settings_biometrics_title),
+                    subtitle = stringResource(R.string.settings_biometrics_subtitle),
                     checked = biometricEnabled,
                     onCheckedChange = { biometricEnabled = it }
                 )
@@ -171,8 +171,8 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                     icon = Icons.Default.DarkMode,
                     iconBg = NeutralDark.copy(alpha = 0.1f),
                     iconTint = NeutralDark,
-                    title = "Dark Mode",
-                    subtitle = "Application dark theme",
+                    title = stringResource(R.string.settings_dark_mode_title),
+                    subtitle = stringResource(R.string.settings_dark_mode_subtitle),
                     checked = darkModeEnabled,
                     onCheckedChange = { darkModeEnabled = it }
                 )
@@ -248,14 +248,14 @@ private fun SettingsLanguageSelector(
                 onDismissRequest = { expanded = false }
             ) {
                 DropdownMenuItem(
-                    text = { Text("English") },
+                    text = { Text(stringResource(R.string.settings_language_english)) },
                     onClick = {
                         onLanguageChange("English")
                         expanded = false
                     }
                 )
                 DropdownMenuItem(
-                    text = { Text("Español") },
+                    text = { Text(stringResource(R.string.settings_language_spanish)) },
                     onClick = {
                         onLanguageChange("Spanish")
                         expanded = false

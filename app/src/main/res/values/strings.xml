@@ -69,6 +69,9 @@
     <string name="summary_subtitle">Here is your summary</string>
 
     <!-- Settings Screen -->
+    <string name="settings_change_photo">Change photo</string>
+    <string name="settings_language_english">English</string>
+    <string name="settings_language_spanish">Español</string>
     <string name="settings_notifications_section">NOTIFICATIONS</string>
     <string name="settings_notifications_title">Notifications</string>
     <string name="settings_notifications_subtitle">Receive spending alerts</string>
