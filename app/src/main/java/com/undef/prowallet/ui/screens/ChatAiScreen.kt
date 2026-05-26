@@ -117,7 +117,7 @@ fun ChatAiScreen(onNavigateBack: () -> Unit) {
                         shape = CircleShape,
                         modifier = Modifier.size(48.dp)
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Send")
+                        Icon(Icons.AutoMirrored.Filled.Send, contentDescription = stringResource(R.string.send_label))
                     }
                 }
             }
