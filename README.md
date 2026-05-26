@@ -7,7 +7,24 @@ Aplicación Android de gestión de gastos personales desarrollada como proyecto 
 | Nombre | GitHub |
 |---|---|
 | Joaquin Contreras | [@joacoContreras](https://github.com/joacoContreras) |
-| Martin Gonzalez | — |
+| Martin Gonzalez | [@mgonzalez309-dev](https://github.com/mgonzalez309-dev) |
+
+---
+
+## Funcionalidades principales
+
+- **Registro e inicio de sesión** con persistencia de sesión entre reinicios (DataStore) y contraseñas hasheadas con PBKDF2
+- **Registro de compras** con tienda, fecha, hora, categoría y lista de productos — guardadas en Room
+- **Historial completo** de compras con total acumulado
+- **Dashboard** con gasto mensual, presupuesto restante y barra de progreso en tiempo real
+- **Comparación de precios** en el detalle de cada compra, consultando precios de referencia desde una API REST (Retrofit)
+- **Estadísticas mensuales**: gasto total, ticket promedio, gráfico de tendencia de 6 meses y productos más comprados
+- **Top tiendas**: ranking de comercios por gasto total
+- **Compartir compra** vía Intent nativo de Android (WhatsApp, Gmail, etc.)
+- **Gestión de categorías** con AlertDialog de CRUD (agregar, editar, eliminar)
+- **Presupuesto mensual** configurable, persistido en DataStore
+- **Recuperación de contraseña** con flujo de verificación de código de 6 dígitos
+- **Soporte multiidioma** — Español e Inglés
 
 ---
 
