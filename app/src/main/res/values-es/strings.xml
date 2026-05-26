@@ -146,6 +146,9 @@
     <!-- Top Stores Screen -->
     <string name="top_stores_title">Tiendas principales</string>
     <string name="monthly_spending_insight">Información de gasto mensual</string>
+    <string name="budget_used_format">%d%% del presupuesto usado</string>
+    <string name="budget_spent_format">$%1$s / $%2$s</string>
+    <string name="remaining_insight_format">Te quedan $%1$s este mes.</string>
     <string name="ranked_by_volume">Clasificado por volumen</string>
     <string name="spending_distribution">Distribución de gastos</string>
     <string name="from_last_month_format">%s desde el mes pasado</string>

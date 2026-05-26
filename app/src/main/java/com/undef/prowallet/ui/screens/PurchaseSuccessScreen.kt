@@ -23,8 +23,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.theme.*
+import com.undef.prowallet.viewmodel.HomeViewModel
 import com.undef.prowallet.viewmodel.PurchaseViewModel
 import java.util.Locale
 
@@ -36,6 +38,12 @@ fun PurchaseSuccessScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val totalAmount = state.products.sumOf { it.price }
+    val homeViewModel: HomeViewModel = viewModel()
+    val homeState by homeViewModel.uiState.collectAsState()
+    val spent = homeState.totalMonthlySpend
+    val budget = homeState.monthlyBudget
+    val budgetPercent = homeState.budgetPercent
+    val remaining = homeState.remaining
 
     Scaffold(
         containerColor = BackgroundLight,
@@ -279,23 +287,27 @@ fun PurchaseSuccessScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "85% of Budget Used",
+                                text = stringResource(R.string.budget_used_format, budgetPercent),
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 12.sp,
                                 color = Neutral
                             )
                             Text(
-                                text = "$425.00 / $500.00",
+                                text = stringResource(
+                                    R.string.budget_spent_format,
+                                    String.format(Locale.getDefault(), "%.2f", spent),
+                                    String.format(Locale.getDefault(), "%.2f", budget)
+                                ),
                                 fontFamily = PlusJakartaSans,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 12.sp,
                                 color = PrimaryDarker
                             )
                         }
-                        
+
                         Spacer(Modifier.height(8.dp))
                         LinearProgressIndicator(
-                            progress = { 0.85f },
+                            progress = { (budgetPercent / 100f).coerceIn(0f, 1f) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(12.dp)
@@ -303,10 +315,13 @@ fun PurchaseSuccessScreen(
                             color = PrimaryDarker,
                             trackColor = Color.White
                         )
-                        
+
                         Spacer(Modifier.height(12.dp))
                         Text(
-                            text = "You have $75.00 remaining for groceries this month. Great job staying on track!",
+                            text = stringResource(
+                                R.string.remaining_insight_format,
+                                String.format(Locale.getDefault(), "%.2f", remaining)
+                            ),
                             fontFamily = PlusJakartaSans,
                             fontSize = 12.sp,
                             color = Neutral,
