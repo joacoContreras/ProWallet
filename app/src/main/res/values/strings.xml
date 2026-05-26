@@ -377,6 +377,11 @@
     <string name="error_store_name_required">Store name is required</string>
     <string name="edit_purchase_title">Edit Purchase</string>
     <string name="update_purchase">Update Purchase</string>
+    <string name="no_accounts_yet">No accounts added yet.</string>
+    <string name="edit_account_title">Edit Account</string>
+    <string name="account_name_label">Account name</string>
+    <string name="last_four_label">Last 4 digits</string>
+    <string name="set_as_primary">Set as primary</string>
     <string name="add_fixed_expense">Add Fixed Expense</string>
     <string name="edit_fixed_expense">Edit Fixed Expense</string>
     <string name="no_fixed_expenses">No fixed expenses added yet.</string>

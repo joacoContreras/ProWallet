@@ -20,8 +20,24 @@ class AppRepository(context: Context) {
     private val purchasedItemDao = db.purchasedItemDao()
     private val categoryDao = db.categoryDao()
     private val fixedExpenseDao = db.fixedExpenseDao()
+    private val accountDao = db.accountDao()
 
     val fixedExpensesFlow: Flow<List<FixedExpenseEntity>> = fixedExpenseDao.getAll()
+    val accountsFlow: Flow<List<AccountEntity>> = accountDao.getAll()
+
+    suspend fun addAccount(name: String, type: String, lastFour: String, isPrimary: Boolean): Boolean {
+        if (name.isBlank()) return false
+        if (isPrimary) accountDao.clearPrimary()
+        return accountDao.insert(AccountEntity(name = name, type = type, lastFour = lastFour, isPrimary = isPrimary)) != -1L
+    }
+
+    suspend fun updateAccount(id: Int, name: String, type: String, lastFour: String, isPrimary: Boolean) {
+        if (name.isBlank()) return
+        if (isPrimary) accountDao.clearPrimary()
+        accountDao.update(AccountEntity(id = id, name = name, type = type, lastFour = lastFour, isPrimary = isPrimary))
+    }
+
+    suspend fun deleteAccount(id: Int) = accountDao.deleteById(id)
 
     suspend fun addFixedExpense(name: String, amount: Double, category: String, frequency: String): Boolean {
         if (name.isBlank() || amount <= 0) return false

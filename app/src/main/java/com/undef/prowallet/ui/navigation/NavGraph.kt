@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.undef.prowallet.ui.screens.*
+import com.undef.prowallet.viewmodel.AccountViewModel
 import com.undef.prowallet.viewmodel.AnalyticsViewModel
 import com.undef.prowallet.viewmodel.AutoSavingsViewModel
 import com.undef.prowallet.viewmodel.FixedExpensesViewModel
@@ -297,7 +298,9 @@ fun AppNavGraph(navController: NavHostController) {
         }
 
         composable(Screen.ManageAccounts.route) {
+            val accountViewModel: AccountViewModel = viewModel()
             ManageAccountsScreen(
+                viewModel = accountViewModel,
                 onNavigateBack = { navController.popBackStack() }
             )
         }
