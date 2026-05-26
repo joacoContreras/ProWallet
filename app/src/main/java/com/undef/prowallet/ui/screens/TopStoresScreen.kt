@@ -4,14 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.TrendingDown
 import androidx.compose.material.icons.automirrored.filled.TrendingFlat
-import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -31,6 +29,7 @@ import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.SectionCard
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
+import com.undef.prowallet.viewmodel.StoreEntry
 import com.undef.prowallet.viewmodel.TopStoresViewModel
 
 @Composable
@@ -139,69 +138,62 @@ fun TopStoresScreen(
                 }
             }
 
-            // Mock stores list based on state and mockup
-            val rankedStores = listOf(
-                Triple("Whole Foods Market", 1240.00, 12),
-                Triple("Shell Energy", 850.20, 5),
-                Triple("Amazon.com", 612.45, 28),
-                Triple("Starbucks Reserve", 185.30, 15),
-                Triple("Equinox Fitness", 150.00, 1)
-            )
-
-            itemsIndexed(rankedStores) { index, (name, amount, txs) ->
-                val icon = when (name) {
-                    "Whole Foods Market" -> Icons.Default.ShoppingBasket
-                    "Shell Energy" -> Icons.Default.LocalGasStation
-                    "Amazon.com" -> Icons.Default.Cloud
-                    "Starbucks Reserve" -> Icons.Default.Coffee
-                    else -> Icons.Default.FitnessCenter
+            if (state.stores.isEmpty()) {
+                item {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 32.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(Icons.Default.Store, contentDescription = null, tint = NeutralLight, modifier = Modifier.size(48.dp))
+                            Spacer(Modifier.height(8.dp))
+                            Text(stringResource(R.string.no_purchases_title), fontFamily = PlusJakartaSans, color = Neutral)
+                        }
+                    }
                 }
-                
-                val trend = when (index) {
-                    0, 3 -> Icons.AutoMirrored.Filled.TrendingUp to ErrorRed
-                    1 -> Icons.AutoMirrored.Filled.TrendingDown to SuccessGreen
-                    else -> Icons.AutoMirrored.Filled.TrendingFlat to PrimaryDarker
-                }
-                
-                val trendValue = when(index) {
-                    0 -> "4%"
-                    1 -> "2%"
-                    3 -> "8%"
-                    else -> "0%"
-                }
-
-                StoreRankItem(
-                    name = name,
-                    transactions = txs,
-                    amount = amount,
-                    icon = icon,
-                    trendIcon = trend.first,
-                    trendColor = trend.second,
-                    trendValue = trendValue,
-                    onClick = { onNavigateToStoreDetail(name) }
-                )
-            }
-
-            item {
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    text = stringResource(R.string.spending_distribution).uppercase(),
-                    fontFamily = PlusJakartaSans,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp,
-                    color = Neutral,
-                    letterSpacing = 1.sp
-                )
-            }
-
-            item {
-                SectionCard {
-                    DistributionItem(label = stringResource(R.string.groceries_label), percentage = 0.45f, color = PrimaryDarker)
-                    Spacer(Modifier.height(16.dp))
-                    DistributionItem(label = stringResource(R.string.tech_digital_label), percentage = 0.30f, color = Secondary)
+            } else {
+                items(state.stores) { store ->
+                    StoreRankItem(
+                        name = store.name,
+                        transactions = store.transactionCount,
+                        amount = store.totalAmount,
+                        icon = Icons.Default.Store,
+                        trendIcon = Icons.AutoMirrored.Filled.TrendingFlat,
+                        trendColor = PrimaryDarker,
+                        trendValue = "",
+                        onClick = { onNavigateToStoreDetail(store.name) }
+                    )
                 }
             }
-            
+
+            if (state.categoryDistribution.isNotEmpty()) {
+                item {
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        text = stringResource(R.string.spending_distribution).uppercase(),
+                        fontFamily = PlusJakartaSans,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 12.sp,
+                        color = Neutral,
+                        letterSpacing = 1.sp
+                    )
+                }
+
+                item {
+                    val colors = listOf(PrimaryDarker, Secondary, Neutral, ErrorRed)
+                    SectionCard {
+                        state.categoryDistribution.forEachIndexed { index, entry ->
+                            if (index > 0) Spacer(Modifier.height(16.dp))
+                            DistributionItem(
+                                label = entry.name,
+                                percentage = entry.percentage,
+                                color = colors[index % colors.size]
+                            )
+                        }
+                    }
+                }
+            }
+
             item { Spacer(Modifier.height(24.dp)) }
         }
     }
