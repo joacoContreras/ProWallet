@@ -426,7 +426,7 @@ fun NewPurchaseScreen(
                     CustomTextField(
                         value = state.currentProductName,
                         onValueChange = viewModel::onProductNameChange,
-                        placeholder = "Product Name",
+                        placeholder = stringResource(R.string.product_name_placeholder),
                         leadingIcon = Icons.Default.ShoppingCart,
                         label = stringResource(R.string.product_name_label)
                     )
@@ -434,9 +434,9 @@ fun NewPurchaseScreen(
                     CustomTextField(
                         value = state.currentProductDescription,
                         onValueChange = viewModel::onProductDescriptionChange,
-                        placeholder = "Description...",
+                        placeholder = stringResource(R.string.description_placeholder),
                         leadingIcon = Icons.Default.Description,
-                        label = "Description"
+                        label = stringResource(R.string.description_label)
                     )
 
                     Button(
@@ -450,7 +450,12 @@ fun NewPurchaseScreen(
                             contentDescription = null
                         )
                         Spacer(Modifier.width(8.dp))
-                        Text(if (state.editingProductId != null) "Update Product" else "Add Product")
+                        Text(
+                            if (state.editingProductId != null)
+                                stringResource(R.string.update_product_button)
+                            else
+                                stringResource(R.string.add_product_button)
+                        )
                     }
                 }
 

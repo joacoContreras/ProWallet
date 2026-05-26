@@ -122,6 +122,11 @@
     <string name="item_desc_placeholder">Item description…</string>
     <string name="no_products_yet">No products added yet.</string>
     <string name="product_name_label">Product Name</string>
+    <string name="product_name_placeholder">Product Name</string>
+    <string name="description_label">Description</string>
+    <string name="description_placeholder">Description...</string>
+    <string name="add_product_button">Add Product</string>
+    <string name="update_product_button">Update Product</string>
 
     <!-- Analytics Screen -->
     <string name="analytics_subtitle">Track your financial wellness journey.</string>
