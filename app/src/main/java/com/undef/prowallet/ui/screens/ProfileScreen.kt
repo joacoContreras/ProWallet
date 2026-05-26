@@ -22,10 +22,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
 import com.undef.prowallet.viewmodel.AuthViewModel
+import com.undef.prowallet.viewmodel.HomeViewModel
 
 @Preview(showBackground = true)
 @Composable
@@ -55,6 +57,16 @@ fun ProfileScreen(
     onNavigateToContactSupport: () -> Unit,
     onLogout: () -> Unit
 ) {
+    val authState by authViewModel.uiState.collectAsState()
+    val homeViewModel: HomeViewModel = viewModel()
+    val homeState by homeViewModel.uiState.collectAsState()
+
+    val displayName = authState.user?.fullName?.takeIf { it.isNotBlank() } ?: ""
+    val displayEmail = authState.user?.email?.takeIf { it.isNotBlank() } ?: ""
+    val budget = homeState.monthlyBudget
+    val spent = homeState.totalMonthlySpend
+    val budgetPercent = homeState.budgetPercent
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -115,14 +127,14 @@ fun ProfileScreen(
                 }
                 Spacer(Modifier.height(16.dp))
                 Text(
-                    text = "Alex Rivera",
+                    text = displayName,
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp,
                     color = TextPrimary
                 )
                 Text(
-                    text = stringResource(R.string.wealth_management_plan),
+                    text = displayEmail,
                     fontFamily = PlusJakartaSans,
                     fontSize = 14.sp,
                     color = Neutral
@@ -167,13 +179,13 @@ fun ProfileScreen(
                             FinancialStatCard(
                                 icon = Icons.Default.Payments,
                                 label = stringResource(R.string.monthly_income),
-                                value = "$8,450",
+                                value = "$${String.format("%.0f", budget)}",
                                 modifier = Modifier.weight(1f)
                             )
                             FinancialStatCard(
                                 icon = Icons.Default.PieChart,
                                 label = stringResource(R.string.budget_usage),
-                                value = "64%",
+                                value = "$budgetPercent%",
                                 modifier = Modifier.weight(1f)
                             )
                         }
@@ -184,10 +196,15 @@ fun ProfileScreen(
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text(stringResource(R.string.spending_limit), fontSize = 12.sp, color = Neutral)
-                                Text("$5,408 / $8,450", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                                Text(
+                                    "$${String.format("%.0f", spent)} / $${String.format("%.0f", budget)}",
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = TextPrimary
+                                )
                             }
                             LinearProgressIndicator(
-                                progress = { 0.64f },
+                                progress = { (budgetPercent / 100f).coerceIn(0f, 1f) },
                                 modifier = Modifier.fillMaxWidth().height(10.dp).clip(CircleShape),
                                 color = PrimaryDarker,
                                 trackColor = BackgroundLight
