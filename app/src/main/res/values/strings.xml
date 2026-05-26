@@ -1,399 +1,394 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ProWallet</string>
-    <string name="login_title">Log In</string>
-    <string name="register_title">Create Account</string>
-    <string name="email_label">Email</string>
-    <string name="password_label">Password</string>
-    <string name="confirm_password_label">Confirm Password</string>
-    <string name="full_name_label">Full Name</string>
-    <string name="login_button">Login</string>
-    <string name="register_button">Sign Up</string>
-    <string name="forgot_password">Forgot password?</string>
-    <string name="dont_have_account">Don\'t have an account?</string>
-    <string name="already_have_account">Already have an account?</string>
-    <string name="success_title">Welcome to ProWallet!</string>
-    <string name="success_subtitle">Your account has been created successfully. You\'re all set to start managing your finances with calm.</string>
-    <string name="begin_button">Get Started</string>
-    <string name="secure_account_verified">Secure Account Verified</string>
-    <string name="home_tab">Home</string>
-    <string name="analytics_tab">Analytics</string>
-    <string name="history_tab">History</string>
-    <string name="profile_tab">Profile</string>
-    <string name="new_purchase_title">New Purchase</string>
-    <string name="total_monthly_spend">Total Monthly Spend</string>
-    <string name="remaining">Remaining</string>
-    <string name="recent_purchases">Recent Purchases</string>
-    <string name="see_all">See All</string>
-    <string name="save_purchase">Save Purchase</string>
-    <string name="store_name_label">Store Name</string>
-    <string name="date_label">Date</string>
-    <string name="total_amount_label">Total Amount</string>
-    <string name="products_label">Products</string>
-    <string name="capture_ticket">Capture or attach ticket</string>
-    <string name="monthly_budget">Monthly Budget</string>
-    <string name="top_stores">Top Stores</string>
-    <string name="monthly_trend">Monthly Trend</string>
-    <string name="transactions_count">%d transactions logged</string>
-    <string name="no_purchases_title">No purchases yet</string>
-    <string name="no_purchases_subtitle">Start by registering your first purchase.</string>
-    <string name="no_recent_purchases">No recent purchases this month.</string>
-    <string name="settings_title">Settings</string>
-    <string name="profile_title">Profile</string>
-    <string name="edit_profile">Edit Profile</string>
-    <string name="logout">Logout</string>
-    <string name="notifications_title">Notifications</string>
-    <string name="mark_all_read">Mark all as read</string>
-    <string name="today_section">Today</string>
-    <string name="earlier_section">Earlier</string>
-    <string name="notification_budget_title">Budget Alert</string>
-    <string name="notification_budget_desc">You have reached 80% of your grocery budget for this month. Take a look at your spending trends.</string>
-    <string name="notification_savings_title">Savings Milestone</string>
-    <string name="notification_savings_desc">Great job! You saved $50 more than last month. You\'re getting closer to your vacation goal!</string>
-    <string name="notification_reminder_title">Reminder</string>
-    <string name="notification_reminder_desc">Don\'t forget to log your lunch expense from earlier today to keep your budget accurate.</string>
-    <string name="notification_system_title">System Update</string>
-    <string name="notification_system_desc">ProWallet just got faster. Check out the new dashboard layout designed for financial calm.</string>
-    <string name="notification_growth_title">Portfolio Growth</string>
-    <string name="notification_growth_desc">Your investment portfolio grew by 1.2% this week despite market fluctuations. Stay the course!</string>
-    <string name="new_feature_badge">New Feature</string>
-    <string name="ai_scanning_title">AI Receipt Scanning</string>
-    <string name="ai_scanning_desc">New: You can now scan tickets and receipts with AI to automatically log your expenses in real-time.</string>
-    <string name="try_it_now">Try it now</string>
+    <string name="login_title">Iniciar Sesión</string>
+    <string name="register_title">Crear Cuenta</string>
+    <string name="email_label">Correo Electrónico</string>
+    <string name="password_label">Contraseña</string>
+    <string name="confirm_password_label">Confirmar Contraseña</string>
+    <string name="full_name_label">Nombre Completo</string>
+    <string name="login_button">Ingresar</string>
+    <string name="register_button">Registrarse</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="dont_have_account">¿No tienes una cuenta?</string>
+    <string name="already_have_account">¿Ya tienes una cuenta?</string>
+    <string name="success_title">¡Bienvenido a ProWallet!</string>
+    <string name="success_subtitle">Tu cuenta ha sido creada con éxito. Ya puedes empezar a gestionar tus finanzas con calma.</string>
+    <string name="begin_button">Empezar</string>
+    <string name="secure_account_verified">Cuenta Segura Verificada</string>
+    <string name="home_tab">Inicio</string>
+    <string name="analytics_tab">Análisis</string>
+    <string name="history_tab">Historial</string>
+    <string name="profile_tab">Perfil</string>
+    <string name="new_purchase_title">Nueva Compra</string>
+    <string name="total_monthly_spend">Gasto Mensual Total</string>
+    <string name="remaining">Restante</string>
+    <string name="recent_purchases">Compras Recientes</string>
+    <string name="see_all">Ver Todo</string>
+    <string name="save_purchase">Guardar Compra</string>
+    <string name="store_name_label">Nombre de la Tienda</string>
+    <string name="date_label">Fecha</string>
+    <string name="total_amount_label">Monto Total</string>
+    <string name="products_label">Productos</string>
+    <string name="capture_ticket">Capturar o adjuntar ticket</string>
+    <string name="monthly_budget">Presupuesto Mensual</string>
+    <string name="top_stores">Tiendas Principales</string>
+    <string name="monthly_trend">Tendencia Mensual</string>
+    <string name="transactions_count">%d transacciones registradas</string>
+    <string name="no_purchases_title">Sin compras aún</string>
+    <string name="no_purchases_subtitle">Empezá registrando tu primera compra.</string>
+    <string name="no_recent_purchases">No hay compras recientes este mes.</string>
+    <string name="settings_title">Ajustes</string>
+    <string name="profile_title">Perfil</string>
+    <string name="edit_profile">Editar Perfil</string>
+    <string name="logout">Cerrar Sesión</string>
+    <string name="notifications_title">Notificaciones</string>
+    <string name="mark_all_read">Marcar todas como leídas</string>
+    <string name="today_section">Hoy</string>
+    <string name="earlier_section">Antes</string>
+    <string name="notification_budget_title">Alerta de Presupuesto</string>
+    <string name="notification_budget_desc">Has alcanzado el 80% de tu presupuesto de comestibles para este mes. Echa un vistazo a tus tendencias de gasto.</string>
+    <string name="notification_savings_title">Hito de Ahorro</string>
+    <string name="notification_savings_desc">¡Buen trabajo! Ahorraste $50 más que el mes pasado. ¡Estás más cerca de tu meta de vacaciones!</string>
+    <string name="notification_reminder_title">Recordatorio</string>
+    <string name="notification_reminder_desc">No olvides registrar tu gasto de almuerzo de hoy para mantener tu presupuesto preciso.</string>
+    <string name="notification_system_title">Actualización del Sistema</string>
+    <string name="notification_system_desc">ProWallet ahora es más rápido. Mira el nuevo diseño del tablero diseñado para la calma financiera.</string>
+    <string name="notification_growth_title">Crecimiento de Cartera</string>
+    <string name="notification_growth_desc">Tu cartera de inversiones creció un 1,2% esta semana a pesar de las fluctuaciones del mercado. ¡Mantén el rumbo!</string>
+    <string name="new_feature_badge">Nueva Función</string>
+    <string name="ai_scanning_title">Escaneo de Tickets con IA</string>
+    <string name="ai_scanning_desc">Nuevo: Ahora puedes escanear tickets y recibos con IA para registrar automáticamente tus gastos en tiempo real.</string>
+    <string name="try_it_now">Pruébalo ahora</string>
 
     <!-- Splash Screen -->
-    <string name="splash_subtitle">Welcome to financial calm</string>
+    <string name="splash_subtitle">Bienvenido a la calma financiera</string>
 
     <!-- Home Screen -->
-    <string name="welcome_user">Hello, %s 👋</string>
-    <string name="summary_subtitle">Here is your summary</string>
+    <string name="welcome_user">Hola, %s 👋</string>
+    <string name="summary_subtitle">Aquí tienes tu resumen</string>
 
     <!-- Settings Screen -->
-    <string name="settings_change_photo">Change photo</string>
-    <string name="settings_language_english">English</string>
-    <string name="settings_language_spanish">Español</string>
-    <string name="settings_notifications_section">NOTIFICATIONS</string>
-    <string name="settings_notifications_title">Notifications</string>
-    <string name="settings_notifications_subtitle">Receive spending alerts</string>
-    <string name="settings_budget_alerts_title">Budget Alerts</string>
-    <string name="settings_budget_alerts_subtitle">When you exceed 80% of the month</string>
-    <string name="settings_weekly_report_title">Weekly Report</string>
-    <string name="settings_weekly_report_subtitle">Spending summary every Monday</string>
-    <string name="settings_security_section">SECURITY</string>
-    <string name="settings_biometrics_title">Biometrics</string>
-    <string name="settings_biometrics_subtitle">Unlock with fingerprint</string>
-    <string name="settings_appearance_section">APPEARANCE</string>
-    <string name="settings_dark_mode_title">Dark Mode</string>
-    <string name="settings_dark_mode_subtitle">Application dark theme</string>
-    <string name="settings_data_section">DATA</string>
-    <string name="settings_sync_title">Synchronization</string>
-    <string name="settings_sync_subtitle">Automatic local currency sync</string>
-    <string name="settings_export_title">Export Data</string>
-    <string name="settings_export_subtitle">Download history in CSV</string>
-    <string name="settings_delete_account_title">Delete Account</string>
-    <string name="settings_delete_account_subtitle">This action is irreversible</string>
-    <string name="developed_for">Developed for Mobile Technologies · UNDEF</string>
+    <string name="settings_change_photo">Cambiar foto</string>
+    <string name="settings_notifications_section">NOTIFICACIONES</string>
+    <string name="settings_notifications_title">Notificaciones</string>
+    <string name="settings_notifications_subtitle">Recibir alertas de gastos</string>
+    <string name="settings_budget_alerts_title">Alertas de Presupuesto</string>
+    <string name="settings_budget_alerts_subtitle">Cuando superas el 80% del mes</string>
+    <string name="settings_weekly_report_title">Informe Semanal</string>
+    <string name="settings_weekly_report_subtitle">Resumen de gastos cada lunes</string>
+    <string name="settings_security_section">SEGURIDAD</string>
+    <string name="settings_biometrics_title">Biometría</string>
+    <string name="settings_biometrics_subtitle">Desbloquear con huella digital</string>
+    <string name="settings_appearance_section">APARIENCIA</string>
+    <string name="settings_dark_mode_title">Modo Oscuro</string>
+    <string name="settings_dark_mode_subtitle">Tema oscuro de la aplicación</string>
+    <string name="settings_data_section">DATOS</string>
+    <string name="settings_sync_title">Sincronización</string>
+    <string name="settings_sync_subtitle">Sincronización automática de moneda local</string>
+    <string name="settings_export_title">Exportar Datos</string>
+    <string name="settings_export_subtitle">Descargar historial en CSV</string>
+    <string name="settings_delete_account_title">Eliminar Cuenta</string>
+    <string name="settings_delete_account_subtitle">Esta acción es irreversible</string>
+    <string name="developed_for">Desarrollado para Tecnologías Móviles · UNDEF</string>
 
     <!-- Profile Screen -->
-    <string name="personal_info_section">PERSONAL INFORMATION</string>
-    <string name="full_name_placeholder">Your full name</string>
-    <string name="email_placeholder">email@example.com</string>
-    <string name="save_changes_button">Save Changes</string>
-    <string name="statistics_section">STATISTICS</string>
-    <string name="stat_purchases">Purchases</string>
-    <string name="stat_this_month">This month</string>
-    <string name="stat_savings">Savings</string>
-    <string name="logout_button">Logout</string>
+    <string name="personal_info_section">INFORMACIÓN PERSONAL</string>
+    <string name="full_name_placeholder">Tu nombre completo</string>
+    <string name="email_placeholder">correo@ejemplo.com</string>
+    <string name="save_changes_button">Guardar Cambios</string>
+    <string name="statistics_section">ESTADÍSTICAS</string>
+    <string name="stat_purchases">Compras</string>
+    <string name="stat_this_month">Este mes</string>
+    <string name="stat_savings">Ahorros</string>
+    <string name="logout_button">Cerrar Sesión</string>
 
     <!-- History Screen -->
-    <string name="total_spent">Total Spent</string>
+    <string name="total_spent">Total Gastado</string>
 
     <!-- Purchase Detail -->
-    <string name="purchase_detail_title">Purchase Detail</string>
-    <string name="purchase_not_found">Purchase not found</string>
+    <string name="purchase_detail_title">Detalle de Compra</string>
+    <string name="purchase_not_found">Compra no encontrada</string>
     <string name="total_label">Total</string>
 
     <!-- New Purchase -->
-    <string name="new_purchase_subtitle">Log your latest expenses to track savings.</string>
-    <string name="ticket_capture_desc">JPEG, PNG up to 5MB</string>
-    <string name="purchase_details_section">PURCHASE DETAILS</string>
-    <string name="store_name_placeholder">e.g. Whole Foods Market</string>
-    <string name="date_placeholder">mm/dd/yy</string>
-    <string name="scan_item">Scan Item</string>
-    <string name="id_code_label">ID/Code</string>
-    <string name="price_label">Price</string>
-    <string name="item_desc_placeholder">Item description…</string>
-    <string name="no_products_yet">No products added yet.</string>
-    <string name="error_product_name_and_price">Product name and a price greater than 0 are required.</string>
-    <string name="product_name_label">Product Name</string>
-    <string name="product_name_placeholder">Product Name</string>
-    <string name="description_label">Description</string>
-    <string name="description_placeholder">Description...</string>
-    <string name="add_product_button">Add Product</string>
-    <string name="update_product_button">Update Product</string>
+    <string name="new_purchase_subtitle">Registra tus últimos gastos para seguir tus ahorros.</string>
+    <string name="ticket_capture_desc">JPEG, PNG hasta 5MB</string>
+    <string name="purchase_details_section">DETALLES DE LA COMPRA</string>
+    <string name="store_name_placeholder">ej. Supermercado Día</string>
+    <string name="date_placeholder">mm/dd/aa</string>
+    <string name="scan_item">Escanear Artículo</string>
+    <string name="id_code_label">ID/Código</string>
+    <string name="price_label">Precio</string>
+    <string name="item_desc_placeholder">Descripción del artículo…</string>
+    <string name="no_products_yet">Aún no se han añadido productos.</string>
+    <string name="error_product_name_and_price">El nombre del producto y un precio mayor a 0 son obligatorios.</string>
+    <string name="product_name_label">Nombre del Producto</string>
+    <string name="product_name_placeholder">Nombre del Producto</string>
+    <string name="description_label">Descripción</string>
+    <string name="description_placeholder">Descripción...</string>
+    <string name="add_product_button">Agregar Producto</string>
+    <string name="update_product_button">Actualizar Producto</string>
 
     <!-- Analytics Screen -->
-    <string name="analytics_subtitle">Track your financial wellness journey.</string>
-    <string name="total_spent_label">TOTAL SPENT (%s)</string>
-    <string name="vs_last_month_format">%s vs last month</string>
-    <string name="highest_spend_label">Highest Spend</string>
-    <string name="average_purchase_label">Average Purchase</string>
-    <string name="across_transactions_format">Across %d transactions</string>
-    <string name="monthly_trend_6mo">6 Months</string>
-    <string name="most_purchased_products">Most Purchased Products</string>
-    <string name="no_data_available">No data available</string>
-    <string name="times_format">%d times</string>
+    <string name="analytics_subtitle">Sigue tu camino hacia el bienestar financiero.</string>
+    <string name="total_spent_label">TOTAL GASTADO (%s)</string>
+    <string name="vs_last_month_format">%s vs mes pasado</string>
+    <string name="highest_spend_label">Mayor Gasto</string>
+    <string name="average_purchase_label">Compra Promedio</string>
+    <string name="across_transactions_format">En %d transacciones</string>
+    <string name="monthly_trend_6mo">6 Meses</string>
+    <string name="most_purchased_products">Productos más comprados</string>
+    <string name="no_data_available">No hay datos disponibles</string>
+    <string name="times_format">%d veces</string>
 
     <!-- Top Stores Screen -->
-    <string name="top_stores_title">Top Stores</string>
-    <string name="monthly_spending_insight">Monthly Spending Insight</string>
-    <string name="budget_used_format">%d%% of Budget Used</string>
+    <string name="top_stores_title">Tiendas principales</string>
+    <string name="monthly_spending_insight">Información de gasto mensual</string>
+    <string name="budget_used_format">%d%% del presupuesto usado</string>
     <string name="budget_spent_format">$%1$s / $%2$s</string>
-    <string name="remaining_insight_format">You have $%1$s remaining this month.</string>
-    <string name="ranked_by_volume">Ranked by Volume</string>
-    <string name="spending_distribution">Spending Distribution</string>
-    <string name="from_last_month_format">%s from last month</string>
-    <string name="transactions_format">%d Transactions</string>
-    <string name="groceries_label">Groceries</string>
-    <string name="tech_digital_label">Tech &amp; Digital</string>
+    <string name="remaining_insight_format">Te quedan $%1$s este mes.</string>
+    <string name="ranked_by_volume">Clasificado por volumen</string>
+    <string name="spending_distribution">Distribución de gastos</string>
+    <string name="from_last_month_format">%s desde el mes pasado</string>
+    <string name="transactions_format">%d Transacciones</string>
+    <string name="groceries_label">Comestibles</string>
+    <string name="tech_digital_label">Tecnología y digital</string>
 
     <!-- Store Detail Screen -->
-    <string name="store_detail_title">Store Detail</string>
-    <string name="time_label">Time</string>
-    <string name="select_date">Select Date</string>
-    <string name="select_time">Select Time</string>
-    <string name="cancel">Cancel</string>
-    <string name="ok">OK</string>
-
-    <!-- New added strings -->
-    <string name="language_title">Language</string>
-    <string name="language_subtitle">Select your preferred language</string>
+    <string name="store_detail_title">Detalle de la Tienda</string>
+    <string name="time_label">Hora</string>
+    <string name="select_date">Seleccionar Fecha</string>
+    <string name="select_time">Seleccionar Hora</string>
+    <string name="cancel">Cancelar</string>
+    <string name="ok">Aceptar</string>
 
     <!-- Home Screen Additional -->
-    <string name="healthy_pace">Healthy pace</string>
-    <string name="of_budget">%s of Budget</string>
-    <string name="less_than_last_mo">Less than last mo.</string>
+    <string name="healthy_pace">Ritmo saludable</string>
+    <string name="of_budget">%s del Presupuesto</string>
+    <string name="less_than_last_mo">Menos que el mes pasado</string>
 
     <!-- Navigation -->
-    <string name="navigate_back">Back</string>
-    <string name="category_label">Category</string>
+    <string name="navigate_back">Atrás</string>
+    <string name="category_label">Categoría</string>
 
     <!-- Bottom Bar -->
-    <string name="nav_home">Home</string>
-    <string name="nav_new">New</string>
-    <string name="nav_analytics">Analytics</string>
+    <string name="nav_home">Inicio</string>
+    <string name="nav_new">Nuevo</string>
+    <string name="nav_analytics">Análisis</string>
 
     <!-- Additional missing strings -->
-    <string name="attach_ticket_image">Attach Ticket Image</string>
-    <string name="spending_limit">Spending Limit</string>
+    <string name="attach_ticket_image">Adjuntar imagen del ticket</string>
+    <string name="spending_limit">Límite de gasto</string>
 
     <!-- Manage Accounts Screen -->
-    <string name="manage_accounts_title">Manage Accounts</string>
-    <string name="manage_accounts_subtitle">Review and organize your connected funds</string>
-    <string name="add_new_account">Add New Account</string>
-    <string name="primary_label">Primary</string>
-    <string name="edit_label">Edit</string>
-    <string name="delete_label">Delete</string>
-    <string name="delete_confirm_title">Delete Purchase</string>
-    <string name="delete_confirm_message">Are you sure you want to delete this purchase? This action cannot be undone.</string>
-    <string name="delete_confirm_button">Delete</string>
-    <string name="cancel_label">Cancel</string>
-    <string name="send_label">Send</string>
-    <string name="share_label">Share</string>
-    <string name="share_purchase_subject">Purchase at %1$s</string>
-    <string name="share_purchase_body">🛒 Purchase at %1$s\n📅 Date: %2$s %3$s\n💰 Total: $%4$s\n\nProducts:\n%5$s\n\nShared from ProWallet</string>
-    <string name="help_label">Help</string>
+    <string name="manage_accounts_title">Gestionar cuentas</string>
+    <string name="manage_accounts_subtitle">Revisa y organiza tus fondos conectados</string>
+    <string name="add_new_account">Añadir nueva cuenta</string>
+    <string name="primary_label">Primaria</string>
+    <string name="edit_label">Editar</string>
+    <string name="delete_label">Eliminar</string>
+    <string name="delete_confirm_title">Eliminar compra</string>
+    <string name="delete_confirm_message">¿Estás seguro de que querés eliminar esta compra? Esta acción no se puede deshacer.</string>
+    <string name="delete_confirm_button">Eliminar</string>
+    <string name="cancel_label">Cancelar</string>
+    <string name="send_label">Enviar</string>
+    <string name="share_label">Compartir</string>
+    <string name="share_purchase_subject">Compra en %1$s</string>
+    <string name="share_purchase_body">🛒 Compra en %1$s\n📅 Fecha: %2$s %3$s\n💰 Total: $%4$s\n\nProductos:\n%5$s\n\nCompartido desde ProWallet</string>
+    <string name="help_label">Ayuda</string>
 
     <!-- Personal Inflation Screen -->
-    <string name="monthly_inflation">Monthly Inflation</string>
-    <string name="quarterly">Quarterly</string>
-    <string name="monthly">Monthly</string>
-    <string name="personal_inflation_rate">Personal Inflation Rate</string>
-    <string name="top_price_hikes_label">TOP PRICE HIKES</string>
-    <string name="price_changes_by_product">Price Changes by Product</string>
-    <string name="view_all_products">View All Products</string>
-    <string name="ai_savings_tip">AI Savings Tip</string>
-    <string name="since_last_month">Since last month</string>
-    <string name="average_trip_increase">Average trip increase</string>
+    <string name="monthly_inflation">Inflación mensual</string>
+    <string name="quarterly">Trimestral</string>
+    <string name="monthly">Mensual</string>
+    <string name="personal_inflation_rate">Tasa de inflación personal</string>
+    <string name="top_price_hikes_label">MAYORES AUMENTOS DE PRECIO</string>
+    <string name="price_changes_by_product">Cambios de precio por producto</string>
+    <string name="view_all_products">Ver todos los productos</string>
+    <string name="ai_savings_tip">Consejo de ahorro de IA</string>
+    <string name="since_last_month">Desde el mes pasado</string>
+    <string name="average_trip_increase">Aumento promedio por viaje</string>
 
     <!-- Contact Support Screen -->
-    <string name="how_can_we_help">How can we help?</string>
-    <string name="search_help_center_desc">Search our help center for quick answers to common questions about your account and savings.</string>
-    <string name="search_help_center_hint">Search for \'Direct Deposit\'...</string>
-    <string name="live_chat">Live Chat</string>
-    <string name="email_support">Email Support</string>
-    <string name="faq_title">Frequently Asked Questions</string>
-    <string name="send_us_a_message">Send us a Message</string>
-    <string name="expect_response_24h">Expect a response within 24 hours.</string>
-    <string name="subject_label">Subject</string>
-    <string name="message_label">Message</string>
-    <string name="message_hint">How can we help you today?</string>
-    <string name="send_message_button">Send Message</string>
-    <string name="team_here_for_you">Our team is here for you.</string>
-    <string name="available_24_7">Available 24/7 for emergency support.</string>
-    <string name="learn_more_settlement">Learn more about settlement times</string>
+    <string name="how_can_we_help">¿Cómo podemos ayudar?</string>
+    <string name="search_help_center_desc">Busca en nuestro centro de ayuda respuestas rápidas a preguntas comunes sobre tu cuenta y ahorros.</string>
+    <string name="search_help_center_hint">Buscar \'Depósito directo\'…</string>
+    <string name="live_chat">Chat en vivo</string>
+    <string name="email_support">Soporte por correo</string>
+    <string name="faq_title">Preguntas frecuentes</string>
+    <string name="send_us_a_message">Envíanos un mensaje</string>
+    <string name="expect_response_24h">Espera una respuesta en 24 horas.</string>
+    <string name="subject_label">Asunto</string>
+    <string name="message_label">Mensaje</string>
+    <string name="message_hint">¿Cómo podemos ayudarte hoy?</string>
+    <string name="send_message_button">Enviar mensaje</string>
+    <string name="team_here_for_you">Nuestro equipo está aquí para vos.</string>
+    <string name="available_24_7">Disponible 24/7 para soporte de emergencia.</string>
+    <string name="learn_more_settlement">Más información sobre tiempos de liquidación</string>
+
     <!-- Auth errors -->
-    <string name="error_empty_fields">Please fill in all fields</string>
-    <string name="error_invalid_email">Invalid email address</string>
-    <string name="error_email_not_found">No account found with that email</string>
-    <string name="error_wrong_password">Incorrect password</string>
-    <string name="error_email_already_exists">An account with that email already exists</string>
-    <string name="error_password_too_short">Password must be at least 8 characters</string>
-    <string name="error_password_mismatch">Passwords do not match</string>
-    <string name="error_enter_email">Please enter your email</string>
-    <string name="error_invalid_code">Please enter a valid 6-digit code</string>
+    <string name="error_empty_fields">Completá todos los campos</string>
+    <string name="error_invalid_email">Email inválido</string>
+    <string name="error_email_not_found">No existe una cuenta con ese email</string>
+    <string name="error_wrong_password">Contraseña incorrecta</string>
+    <string name="error_email_already_exists">Ya existe una cuenta con ese email</string>
+    <string name="error_password_too_short">La contraseña debe tener al menos 8 caracteres</string>
+    <string name="error_password_mismatch">Las contraseñas no coinciden</string>
+    <string name="error_enter_email">Ingresá tu email</string>
+    <string name="error_invalid_code">Ingresá un código válido de 6 dígitos</string>
 
     <!-- Verify Code Screen -->
-    <string name="verify_identity">Verify Identity</string>
-    <string name="verify_code_subtitle">We\'ve sent a 6-digit code to your email. Enter it below to continue.</string>
-    <string name="verify_code_button">Verify Code</string>
-    <string name="resend_code">Didn\'t receive a code? Resend</string>
-    <string name="secured_by_prowallet">Secured by ProWallet Encryption</string>
+    <string name="verify_identity">Verificar Identidad</string>
+    <string name="verify_code_subtitle">Te enviamos un código de 6 dígitos a tu correo. Ingrésalo a continuación para continuar.</string>
+    <string name="verify_code_button">Verificar Código</string>
+    <string name="resend_code">¿No recibiste el código? Reenviar</string>
+    <string name="secured_by_prowallet">Protegido por cifrado ProWallet</string>
 
     <!-- Forgot Password Screen -->
-    <string name="forgot_password_title">Forgot Password?</string>
-    <string name="forgot_password_subtitle">Enter your email address and we\'ll send you a code to reset your password.</string>
-    <string name="email_example_placeholder">name@example.com</string>
-    <string name="email_address_label">Email Address</string>
-    <string name="send_code_button">Send Code</string>
-    <string name="back_to_login">Back to Login</string>
-    <string name="copyright_text">© 2024 ProWallet Financial. All rights reserved.</string>
+    <string name="forgot_password_title">¿Olvidaste tu contraseña?</string>
+    <string name="forgot_password_subtitle">Ingresa tu correo electrónico y te enviaremos un código para restablecer tu contraseña.</string>
+    <string name="email_example_placeholder">nombre@ejemplo.com</string>
+    <string name="email_address_label">Correo Electrónico</string>
+    <string name="send_code_button">Enviar Código</string>
+    <string name="back_to_login">Volver al inicio de sesión</string>
+    <string name="copyright_text">© 2024 ProWallet Financial. Todos los derechos reservados.</string>
 
     <!-- Update Password Screen -->
-    <string name="new_password_title">New Password</string>
-    <string name="new_password_subtitle">Choose a strong password to protect your account.</string>
-    <string name="new_password_label">New Password</string>
-    <string name="password_strength_hint">Strong passwords include at least 8 characters, with a mix of letters, numbers, and symbols to ensure maximum security.</string>
-    <string name="passwords_dont_match">Passwords do not match</string>
-    <string name="update_password_button">Update Password</string>
+    <string name="new_password_title">Nueva Contraseña</string>
+    <string name="new_password_subtitle">Elige una contraseña segura para proteger tu cuenta.</string>
+    <string name="new_password_label">Nueva Contraseña</string>
+    <string name="password_strength_hint">Las contraseñas seguras incluyen al menos 8 caracteres, con una combinación de letras, números y símbolos para garantizar la máxima seguridad.</string>
+    <string name="passwords_dont_match">Las contraseñas no coinciden</string>
+    <string name="update_password_button">Actualizar Contraseña</string>
 
     <!-- Update Password Success Screen -->
-    <string name="password_updated_title">Password Updated!</string>
-    <string name="password_updated_subtitle">Your password has been changed successfully. You will be redirected to the login screen in a moment.</string>
+    <string name="password_updated_title">¡Contraseña Actualizada!</string>
+    <string name="password_updated_subtitle">Tu contraseña ha sido cambiada con éxito. Serás redirigido a la pantalla de inicio de sesión en un momento.</string>
 
     <!-- Purchase Success Screen -->
-    <string name="view_full_receipt">View Full Receipt</string>
-    <string name="back_to_home">Back to Home</string>
-    <string name="purchase_successful">Purchase Successful!</string>
-    <string name="payment_processed">Your payment has been processed securely.</string>
-    <string name="total_amount_paid">TOTAL AMOUNT PAID</string>
-    <string name="items_summary">Items Summary</string>
+    <string name="view_full_receipt">Ver Recibo Completo</string>
+    <string name="back_to_home">Volver al Inicio</string>
+    <string name="purchase_successful">¡Compra Exitosa!</string>
+    <string name="payment_processed">Tu pago fue procesado de forma segura.</string>
+    <string name="total_amount_paid">MONTO TOTAL PAGADO</string>
+    <string name="items_summary">Resumen de Artículos</string>
     <string name="subtotal">Subtotal</string>
-    <string name="sales_tax">Sales Tax (5%%)</string>
-    <string name="updated_real_time">Updated real-time</string>
+    <string name="sales_tax">Impuesto (5%%)</string>
+    <string name="updated_real_time">Actualizado en tiempo real</string>
 
     <!-- Chat AI Screen -->
-    <string name="pro_assistant_title">ProAssistant</string>
-    <string name="ask_proassistant_placeholder">Ask ProAssistant…</string>
-    <string name="proassistant_typing">ProAssistant is typing…</string>
-    <string name="suggestion_analyze_week">Analyze my last week</string>
-    <string name="suggestion_budget_check">Budget check</string>
-    <string name="suggestion_top_categories">Top categories</string>
-    <string name="proassistant_greeting">Hello! I\'m your ProAssistant. How can I help you achieve your financial goals today?</string>
-    <string name="chat_user_example">Can you check my spending on coffee this month?</string>
-    <string name="chat_assistant_example">You\'ve spent $42.50 at coffee shops this month across 8 transactions.</string>
-    <string name="left_label_format">%s left</string>
+    <string name="pro_assistant_title">ProAsistente</string>
+    <string name="ask_proassistant_placeholder">Pregunta al ProAsistente…</string>
+    <string name="proassistant_typing">ProAsistente está escribiendo…</string>
+    <string name="suggestion_analyze_week">Analizar mi última semana</string>
+    <string name="suggestion_budget_check">Verificar presupuesto</string>
+    <string name="suggestion_top_categories">Categorías principales</string>
+    <string name="proassistant_greeting">¡Hola! Soy tu ProAsistente. ¿Cómo puedo ayudarte a alcanzar tus metas financieras hoy?</string>
+    <string name="chat_user_example">¿Podés revisar mi gasto en café este mes?</string>
+    <string name="chat_assistant_example">Has gastado $42.50 en cafeterías este mes en 8 transacciones.</string>
+    <string name="left_label_format">%s restante</string>
 
     <!-- Store Detail Screen -->
-    <string name="merchant_id_format">Merchant ID: %s</string>
-    <string name="unusual_activity_title">Unusual Activity Detected</string>
-    <string name="unusual_activity_desc">Your spending at %s is 24%% higher than your 6-month average.</string>
-    <string name="last_month">Last Month</string>
-    <string name="this_month">This Month</string>
-    <string name="safe_label">Safe</string>
-    <string name="peak_label">Peak</string>
-    <string name="category_distribution">Category Distribution</string>
-    <string name="beverages_coffee">Beverages &amp; Coffee</string>
-    <string name="food_snacks">Food &amp; Snacks</string>
-    <string name="merchandise_label">Merchandise</string>
+    <string name="merchant_id_format">ID de comerciante: %s</string>
+    <string name="unusual_activity_title">Actividad Inusual Detectada</string>
+    <string name="unusual_activity_desc">Tu gasto en %s es un 24%% más alto que tu promedio de 6 meses.</string>
+    <string name="last_month">Mes Anterior</string>
+    <string name="this_month">Este Mes</string>
+    <string name="safe_label">Seguro</string>
+    <string name="peak_label">Pico</string>
+    <string name="category_distribution">Distribución por Categoría</string>
+    <string name="beverages_coffee">Bebidas y Café</string>
+    <string name="food_snacks">Alimentos y Snacks</string>
+    <string name="merchandise_label">Mercancía</string>
 
     <!-- Profile Screen -->
-    <string name="wealth_management_plan">Wealth Management Plan: Pro Plan</string>
-    <string name="financial_profile">Financial Profile</string>
-    <string name="active_label">Active</string>
-    <string name="monthly_income">Monthly Income</string>
-    <string name="budget_usage">Budget Usage</string>
-    <string name="management_section">Management</string>
-    <string name="linked_accounts">Linked Accounts</string>
-    <string name="banks_connected">3 Banks Connected</string>
-    <string name="fixed_expenses">Fixed Expenses</string>
-    <string name="rent_utilities_subscriptions">Rent, Utilities, Subscriptions</string>
-    <string name="auto_savings_amount">$500/mo automated</string>
-    <string name="support_safety">Support &amp; Safety</string>
-    <string name="contact_us">Contact Us</string>
-    <string name="security_privacy">Security &amp; Privacy</string>
-    <string name="security_features">2FA, Biometrics, Permissions</string>
+    <string name="wealth_management_plan">Plan de Gestión: Plan Pro</string>
+    <string name="financial_profile">Perfil Financiero</string>
+    <string name="active_label">Activo</string>
+    <string name="monthly_income">Ingreso Mensual</string>
+    <string name="budget_usage">Uso del Presupuesto</string>
+    <string name="management_section">Administración</string>
+    <string name="linked_accounts">Cuentas Vinculadas</string>
+    <string name="banks_connected">3 Bancos Conectados</string>
+    <string name="fixed_expenses">Gastos Fijos</string>
+    <string name="rent_utilities_subscriptions">Alquiler, Servicios, Suscripciones</string>
+    <string name="auto_savings_amount">$500/mes automatizado</string>
+    <string name="support_safety">Soporte y Seguridad</string>
+    <string name="contact_us">Contáctanos</string>
+    <string name="security_privacy">Seguridad y Privacidad</string>
+    <string name="security_features">2FA, Biometría, Permisos</string>
 
     <!-- Monthly Setup Screen -->
-    <string name="monthly_setup_title">Monthly Setup</string>
-    <string name="finalize_budget">Finalize Budget</string>
-    <string name="settings_adjust_anytime">You can adjust these settings at any time in Preferences.</string>
-    <string name="step_1_of_2">Step 1 of 2</string>
-    <string name="define_your_success">Define Your Success</string>
-    <string name="monthly_income_hint">How much do you plan to bring in this month? Include all revenue sources.</string>
-    <string name="budget_allocation">Budget Allocation</string>
-    <string name="add_custom_category">Add Custom Category</string>
-    <string name="primary_job">Primary Job</string>
-    <string name="add_source">+ Add Source</string>
-    <string name="transport_label">Transport</string>
-    <string name="dining_out_label">Dining Out</string>
+    <string name="monthly_setup_title">Configuración Mensual</string>
+    <string name="finalize_budget">Finalizar Presupuesto</string>
+    <string name="settings_adjust_anytime">Puedes ajustar estas configuraciones en cualquier momento en Preferencias.</string>
+    <string name="step_1_of_2">Paso 1 de 2</string>
+    <string name="define_your_success">Define Tu Éxito</string>
+    <string name="monthly_income_hint">¿Cuánto planeas ganar este mes? Incluye todas las fuentes de ingresos.</string>
+    <string name="budget_allocation">Asignación de Presupuesto</string>
+    <string name="add_custom_category">Agregar Categoría Personalizada</string>
+    <string name="primary_job">Trabajo Principal</string>
+    <string name="add_source">+ Agregar Fuente</string>
+    <string name="transport_label">Transporte</string>
+    <string name="dining_out_label">Comer Fuera</string>
 
     <!-- Settings Screen -->
-    <string name="save_profile_button">Save Profile</string>
-    <string name="app_settings_section">APP SETTINGS</string>
+    <string name="save_profile_button">Guardar Perfil</string>
+    <string name="app_settings_section">AJUSTES DE LA APP</string>
 
     <!-- Purchase Detail Screen -->
-    <string name="items_count_format">%d items</string>
+    <string name="items_count_format">%d artículos</string>
 
     <!-- Auto Savings Screen -->
-    <string name="main_savings">Main Savings</string>
-    <string name="auto_savings_plan">Auto-Savings Plan</string>
-    <string name="auto_savings_footer">Funds will be automatically transferred from your primary account on the scheduled date.</string>
-    <string name="activate_plan">Activate Plan</string>
-    <string name="savings_goal">Savings Goal</string>
-    <string name="savings_yearly_format">You\'ve saved %s this year.</string>
-    <string name="percentage">Percentage</string>
-    <string name="fixed_amount">Fixed Amount</string>
-    <string name="current_income">Current Income</string>
-    <string name="estimated_monthly_savings">Estimated Monthly Savings</string>
-    <string name="frequency">Frequency</string>
-    <string name="bi_weekly">Bi-weekly</string>
-    <string name="weekly">Weekly</string>
-    <string name="destination_fund">Destination Fund</string>
+    <string name="main_savings">Ahorros Principales</string>
+    <string name="auto_savings_plan">Plan de ahorro automático</string>
+    <string name="auto_savings_footer">Los fondos se transferirán automáticamente desde su cuenta principal en la fecha programada.</string>
+    <string name="activate_plan">Activar plan</string>
+    <string name="savings_goal">Meta de ahorro</string>
+    <string name="savings_yearly_format">Has ahorrado %s este año.</string>
+    <string name="percentage">Porcentaje</string>
+    <string name="fixed_amount">Monto fijo</string>
+    <string name="current_income">Ingresos actuales</string>
+    <string name="estimated_monthly_savings">Ahorro mensual estimado</string>
+    <string name="frequency">Frecuencia</string>
+    <string name="bi_weekly">Quincenal</string>
+    <string name="weekly">Semanal</string>
+    <string name="destination_fund">Fondo de destino</string>
 
     <!-- New Purchase Screen errors -->
-    <string name="error_save_purchase">Failed to save purchase. Please try again.</string>
+    <string name="error_save_purchase">Error al guardar la compra. Intente nuevamente.</string>
 
     <!-- Price comparison badges -->
-    <string name="price_good">Good price</string>
-    <string name="price_high">High price</string>
-    <string name="price_fair">Fair price</string>
-    <string name="price_api_reference">API avg: $%.2f</string>
+    <string name="price_good">Buen precio</string>
+    <string name="price_high">Precio alto</string>
+    <string name="price_fair">Precio justo</string>
+    <string name="price_api_reference">Ref. API: $%.2f</string>
 
     <!-- Category CRUD -->
-    <string name="category_add">Add category</string>
-    <string name="category_edit_title">Edit category</string>
-    <string name="category_name_hint">Category name</string>
-    <string name="error_store_name_required">Store name is required</string>
-    <string name="edit_purchase_title">Edit Purchase</string>
-    <string name="update_purchase">Update Purchase</string>
-    <string name="change_ticket_image">Change Ticket Image</string>
-    <string name="no_accounts_yet">No accounts added yet.</string>
-    <string name="edit_account_title">Edit Account</string>
-    <string name="account_name_label">Account name</string>
-    <string name="last_four_label">Last 4 digits</string>
-    <string name="set_as_primary">Set as primary</string>
-    <string name="add_fixed_expense">Add Fixed Expense</string>
-    <string name="edit_fixed_expense">Edit Fixed Expense</string>
-    <string name="no_fixed_expenses">No fixed expenses added yet.</string>
-    <string name="total_monthly_fixed">Total Monthly Fixed Expenses</string>
-    <string name="expense_name_label">Expense name</string>
-    <string name="amount_label">Amount</string>
+    <string name="category_add">Agregar categoría</string>
+    <string name="category_edit_title">Editar categoría</string>
+    <string name="category_name_hint">Nombre de categoría</string>
+    <string name="error_store_name_required">El nombre de la tienda es obligatorio</string>
+    <string name="edit_purchase_title">Editar Compra</string>
+    <string name="update_purchase">Actualizar Compra</string>
+    <string name="change_ticket_image">Cambiar imagen del ticket</string>
+    <string name="no_accounts_yet">Aún no se han añadido cuentas.</string>
+    <string name="edit_account_title">Editar Cuenta</string>
+    <string name="account_name_label">Nombre de la cuenta</string>
+    <string name="last_four_label">Últimos 4 dígitos</string>
+    <string name="set_as_primary">Establecer como primaria</string>
+    <string name="add_fixed_expense">Agregar Gasto Fijo</string>
+    <string name="edit_fixed_expense">Editar Gasto Fijo</string>
+    <string name="no_fixed_expenses">Aún no se han añadido gastos fijos.</string>
+    <string name="total_monthly_fixed">Total de Gastos Fijos Mensuales</string>
+    <string name="expense_name_label">Nombre del gasto</string>
+    <string name="amount_label">Monto</string>
 
-    <!-- Category names (stable EN keys stored in DB; localized for display) -->
-    <string name="category_groceries">Groceries</string>
-    <string name="category_transport">Transport</string>
-    <string name="category_dining">Dining</string>
-    <string name="category_coffee">Coffee</string>
-    <string name="category_other">Other</string>
+    <!-- Category names (stable keys stored in DB; localized for display) -->
+    <string name="category_groceries">Comestibles</string>
+    <string name="category_transport">Transporte</string>
+    <string name="category_dining">Gastronomía</string>
+    <string name="category_coffee">Café</string>
+    <string name="category_other">Otro</string>
 </resources>

@@ -1,7 +1,6 @@
 package com.undef.prowallet.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -17,7 +16,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -29,7 +27,6 @@ import com.undef.prowallet.ui.components.PrimaryButton
 import com.undef.prowallet.ui.components.SectionCard
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
-import com.undef.prowallet.util.LocaleHelper
 import com.undef.prowallet.viewmodel.AuthViewModel
 
 @Preview(showBackground = true)
@@ -48,18 +45,12 @@ fun SettingsScreen(
     authViewModel: AuthViewModel,
     onNavigateBack: () -> Unit
 ) {
-    val context = LocalContext.current
     val authState by authViewModel.uiState.collectAsState()
     var fullName by remember(authState.user) { mutableStateOf(authState.user?.fullName ?: "") }
     var email by remember(authState.user) { mutableStateOf(authState.user?.email ?: "") }
     var notificationsEnabled by remember { mutableStateOf(true) }
     var biometricEnabled by remember { mutableStateOf(false) }
     var darkModeEnabled by remember { mutableStateOf(false) }
-
-    val currentLocale = remember { 
-        try { LocaleHelper.getLocale(context) } catch (e: Throwable) { "en" }
-    }
-    var selectedLanguage by remember { mutableStateOf(if (currentLocale.startsWith("es")) "Spanish" else "English") }
 
     Column(
         modifier = Modifier
@@ -139,22 +130,6 @@ fun SettingsScreen(
             )
 
             SectionCard {
-                SettingsLanguageSelector(
-                    icon = Icons.Default.Language,
-                    iconBg = Secondary.copy(alpha = 0.15f),
-                    iconTint = Secondary,
-                    title = stringResource(R.string.language_title),
-                    subtitle = stringResource(R.string.language_subtitle),
-                    selectedLanguage = selectedLanguage,
-                    onLanguageChange = { lang ->
-                        if (selectedLanguage != lang) {
-                            selectedLanguage = lang
-                            val code = if (lang == "Spanish") "es" else "en"
-                            LocaleHelper.setLocale(context, code)
-                        }
-                    }
-                )
-                HorizontalDivider(color = Color(0xFFF8F8F8))
                 SettingsSwitch(
                     icon = Icons.Default.Notifications,
                     iconBg = Primary.copy(alpha = 0.15f),
@@ -204,70 +179,6 @@ fun SettingsScreen(
                     fontFamily = PlusJakartaSans,
                     fontSize = 11.sp,
                     color = NeutralLight
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun SettingsLanguageSelector(
-    icon: ImageVector,
-    iconBg: Color,
-    iconTint: Color,
-    title: String,
-    subtitle: String,
-    selectedLanguage: String,
-    onLanguageChange: (String) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { expanded = true }
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .background(iconBg),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(icon, contentDescription = null, tint = iconTint, modifier = Modifier.size(22.dp))
-        }
-        Column(modifier = Modifier.weight(1f)) {
-            Text(text = title, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
-            Text(text = subtitle, fontSize = 12.sp, color = Neutral)
-        }
-        
-        Box {
-            Text(
-                text = selectedLanguage,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Secondary
-            )
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.settings_language_english)) },
-                    onClick = {
-                        onLanguageChange("English")
-                        expanded = false
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.settings_language_spanish)) },
-                    onClick = {
-                        onLanguageChange("Spanish")
-                        expanded = false
-                    }
                 )
             }
         }
