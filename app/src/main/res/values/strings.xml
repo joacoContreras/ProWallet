@@ -179,6 +179,9 @@
     <string name="primary_label">Primary</string>
     <string name="edit_label">Edit</string>
     <string name="delete_label">Delete</string>
+    <string name="share_label">Share</string>
+    <string name="share_purchase_subject">Purchase at %1$s</string>
+    <string name="share_purchase_body">🛒 Purchase at %1$s\n📅 Date: %2$s %3$s\n💰 Total: $%4$s\n\nProducts:\n%5$s\n\nShared from ProWallet</string>
     <string name="help_label">Help</string>
 
     <!-- Personal Inflation Screen -->

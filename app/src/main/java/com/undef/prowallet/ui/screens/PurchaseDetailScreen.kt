@@ -1,5 +1,6 @@
 package com.undef.prowallet.ui.screens
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -33,6 +35,7 @@ fun PurchaseDetailScreen(
     onNavigateToEdit: (String) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(purchaseId) {
         viewModel.loadPurchase(purchaseId)
@@ -65,10 +68,31 @@ fun PurchaseDetailScreen(
             .fillMaxSize()
             .background(BackgroundLight)
     ) {
+        val shareSubject = stringResource(R.string.share_purchase_subject, p.storeName)
+        val productLines = p.products.joinToString("\n") { "• ${it.name} — $${String.format("%.2f", it.price)}" }
+        val shareBody = stringResource(
+            R.string.share_purchase_body,
+            p.storeName,
+            p.date,
+            p.time,
+            String.format("%.2f", p.totalAmount),
+            productLines
+        )
+
         TopBar(
             title = stringResource(R.string.purchase_detail_title),
             onNavigateBack = onNavigateBack,
             actions = {
+                IconButton(onClick = {
+                    val intent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_SUBJECT, shareSubject)
+                        putExtra(Intent.EXTRA_TEXT, shareBody)
+                    }
+                    context.startActivity(Intent.createChooser(intent, shareSubject))
+                }) {
+                    Icon(Icons.Default.Share, contentDescription = stringResource(R.string.share_label), tint = PrimaryDarker)
+                }
                 IconButton(onClick = { onNavigateToEdit(purchaseId) }) {
                     Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.edit_label), tint = PrimaryDarker)
                 }
