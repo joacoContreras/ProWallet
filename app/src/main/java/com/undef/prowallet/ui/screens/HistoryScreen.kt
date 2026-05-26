@@ -4,7 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ReceiptLong
+import androidx.compose.material.icons.automirrored.filled.ReceiptLong
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -59,7 +59,7 @@ fun HistoryScreen(
                     modifier = Modifier.padding(horizontal = 40.dp)
                 ) {
                     Icon(
-                        Icons.Default.ReceiptLong,
+                        Icons.AutoMirrored.Filled.ReceiptLong,
                         contentDescription = null,
                         modifier = Modifier.size(64.dp),
                         tint = Neutral.copy(alpha = 0.4f)
