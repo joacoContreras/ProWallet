@@ -78,7 +78,7 @@ fun ProfileScreen(
             onNavigateBack = onNavigateBack,
             actions = {
                 IconButton(onClick = onNavigateToSettings) {
-                    Icon(Icons.Default.Settings, contentDescription = "Settings", tint = PrimaryDarker)
+                    Icon(Icons.Default.Settings, contentDescription = stringResource(R.string.settings_title), tint = PrimaryDarker)
                 }
             }
         )

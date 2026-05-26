@@ -99,7 +99,7 @@ fun HomeScreen(
                         ) {
                             Icon(
                                 Icons.Default.Person,
-                                contentDescription = "Profile",
+                                contentDescription = stringResource(R.string.profile_tab),
                                 tint = Color.White,
                                 modifier = Modifier.size(24.dp)
                             )
@@ -124,7 +124,7 @@ fun HomeScreen(
                         ) {
                             Icon(
                                 Icons.Default.Notifications,
-                                contentDescription = "Notifications",
+                                contentDescription = stringResource(R.string.notifications_title),
                                 tint = PrimaryDarker
                             )
                         }
