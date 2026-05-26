@@ -179,6 +179,10 @@
     <string name="primary_label">Primary</string>
     <string name="edit_label">Edit</string>
     <string name="delete_label">Delete</string>
+    <string name="delete_confirm_title">Delete Purchase</string>
+    <string name="delete_confirm_message">Are you sure you want to delete this purchase? This action cannot be undone.</string>
+    <string name="delete_confirm_button">Delete</string>
+    <string name="cancel_label">Cancel</string>
     <string name="share_label">Share</string>
     <string name="share_purchase_subject">Purchase at %1$s</string>
     <string name="share_purchase_body">🛒 Purchase at %1$s\n📅 Date: %2$s %3$s\n💰 Total: $%4$s\n\nProducts:\n%5$s\n\nShared from ProWallet</string>

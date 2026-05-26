@@ -36,6 +36,7 @@ fun PurchaseDetailScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(purchaseId) {
         viewModel.loadPurchase(purchaseId)
@@ -61,6 +62,27 @@ fun PurchaseDetailScreen(
         "Dining" -> Icons.Default.Restaurant
         "Coffee" -> Icons.Default.LocalCafe
         else -> Icons.Default.Receipt
+    }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text(stringResource(R.string.delete_confirm_title), fontFamily = PlusJakartaSans, fontWeight = FontWeight.Bold) },
+            text = { Text(stringResource(R.string.delete_confirm_message), fontFamily = PlusJakartaSans) },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDeleteDialog = false
+                    viewModel.deletePurchase(purchaseId, onDone = onNavigateBack)
+                }) {
+                    Text(stringResource(R.string.delete_confirm_button), color = ErrorRed, fontFamily = PlusJakartaSans, fontWeight = FontWeight.SemiBold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text(stringResource(R.string.cancel_label), fontFamily = PlusJakartaSans)
+                }
+            }
+        )
     }
 
     Column(
@@ -96,9 +118,7 @@ fun PurchaseDetailScreen(
                 IconButton(onClick = { onNavigateToEdit(purchaseId) }) {
                     Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.edit_label), tint = PrimaryDarker)
                 }
-                IconButton(onClick = {
-                    viewModel.deletePurchase(purchaseId, onDone = onNavigateBack)
-                }) {
+                IconButton(onClick = { showDeleteDialog = true }) {
                     Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete_label), tint = ErrorRed)
                 }
             }
