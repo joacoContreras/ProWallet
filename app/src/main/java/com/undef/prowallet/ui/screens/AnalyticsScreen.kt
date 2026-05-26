@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.util.Calendar
 import java.util.Locale
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.BottomNavBar
@@ -36,6 +37,10 @@ fun AnalyticsScreen(
     onNavigateToPersonalInflation: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
+    val currentMonth = remember {
+        java.text.SimpleDateFormat("MMM", Locale.getDefault())
+            .format(Calendar.getInstance().time).uppercase(Locale.getDefault())
+    }
 
     Scaffold(
         bottomBar = {
@@ -104,7 +109,7 @@ fun AnalyticsScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = stringResource(R.string.total_spent_label, "OCT"),
+                                text = stringResource(R.string.total_spent_label, currentMonth),
                                 fontFamily = PlusJakartaSans,
                                 fontWeight = FontWeight.Medium,
                                 fontSize = 11.sp,
