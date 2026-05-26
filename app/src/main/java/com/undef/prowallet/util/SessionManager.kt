@@ -23,6 +23,8 @@ class SessionManager(private val context: Context) {
         private val SAVINGS_PERCENTAGE = androidx.datastore.preferences.core.floatPreferencesKey("savings_percentage")
         private val SAVINGS_METHOD = stringPreferencesKey("savings_method")
         private val SAVINGS_FREQUENCY = stringPreferencesKey("savings_frequency")
+        private val DARK_MODE = booleanPreferencesKey("dark_mode")
+        private val BIOMETRIC_ENABLED = booleanPreferencesKey("biometric_enabled")
     }
 
     val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { preferences ->
@@ -51,6 +53,26 @@ class SessionManager(private val context: Context) {
 
     val savingsFrequency: Flow<String> = context.dataStore.data.map { preferences ->
         preferences[SAVINGS_FREQUENCY] ?: "Monthly"
+    }
+
+    val darkMode: Flow<Boolean> = context.dataStore.data.map { preferences ->
+        preferences[DARK_MODE] ?: false
+    }
+
+    val biometricEnabled: Flow<Boolean> = context.dataStore.data.map { preferences ->
+        preferences[BIOMETRIC_ENABLED] ?: false
+    }
+
+    suspend fun saveDarkMode(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[DARK_MODE] = enabled
+        }
+    }
+
+    suspend fun saveBiometricEnabled(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[BIOMETRIC_ENABLED] = enabled
+        }
     }
 
     suspend fun saveBudget(amount: Double) {

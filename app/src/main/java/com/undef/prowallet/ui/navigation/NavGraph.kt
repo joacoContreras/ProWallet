@@ -20,6 +20,7 @@ import com.undef.prowallet.viewmodel.HistoryViewModel
 import com.undef.prowallet.viewmodel.HomeViewModel
 import com.undef.prowallet.viewmodel.PurchaseDetailViewModel
 import com.undef.prowallet.viewmodel.PurchaseViewModel
+import com.undef.prowallet.viewmodel.SettingsViewModel
 import com.undef.prowallet.viewmodel.StoreDetailViewModel
 import com.undef.prowallet.viewmodel.TopStoresViewModel
 
@@ -63,6 +64,7 @@ sealed class Screen(val route: String) {
 fun AppNavGraph(navController: NavHostController) {
     val authViewModel: AuthViewModel = viewModel()
     val purchaseViewModel: PurchaseViewModel = viewModel()
+    val settingsViewModel: SettingsViewModel = viewModel()
 
     NavHost(
         navController = navController,
@@ -316,6 +318,7 @@ fun AppNavGraph(navController: NavHostController) {
         composable(Screen.Settings.route) {
             SettingsScreen(
                 authViewModel = authViewModel,
+                settingsViewModel = settingsViewModel,
                 onNavigateBack = { navController.popBackStack() }
             )
         }

@@ -11,7 +11,9 @@ import androidx.compose.material.icons.filled.SmartToy
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,13 +24,16 @@ import com.undef.prowallet.ui.navigation.AppNavGraph
 import com.undef.prowallet.ui.navigation.Screen
 import com.undef.prowallet.ui.theme.PrimaryDarker
 import com.undef.prowallet.ui.theme.ProWalletTheme
+import com.undef.prowallet.viewmodel.SettingsViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ProWalletTheme {
+            val settingsViewModel: SettingsViewModel = viewModel()
+            val darkMode by settingsViewModel.darkMode.collectAsState()
+            ProWalletTheme(darkTheme = darkMode) {
                 ProWalletAppWrapper()
             }
         }

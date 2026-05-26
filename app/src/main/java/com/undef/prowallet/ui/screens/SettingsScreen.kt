@@ -28,6 +28,7 @@ import com.undef.prowallet.ui.components.SectionCard
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
 import com.undef.prowallet.viewmodel.AuthViewModel
+import com.undef.prowallet.viewmodel.SettingsViewModel
 
 @Preview(showBackground = true)
 @Composable
@@ -35,6 +36,7 @@ fun SettingsScreenPreview() {
     ProWalletTheme {
         SettingsScreen(
             authViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+            settingsViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
             onNavigateBack = {}
         )
     }
@@ -43,14 +45,15 @@ fun SettingsScreenPreview() {
 @Composable
 fun SettingsScreen(
     authViewModel: AuthViewModel,
+    settingsViewModel: SettingsViewModel,
     onNavigateBack: () -> Unit
 ) {
     val authState by authViewModel.uiState.collectAsState()
     var fullName by remember(authState.user) { mutableStateOf(authState.user?.fullName ?: "") }
     var email by remember(authState.user) { mutableStateOf(authState.user?.email ?: "") }
     var notificationsEnabled by remember { mutableStateOf(true) }
-    var biometricEnabled by remember { mutableStateOf(false) }
-    var darkModeEnabled by remember { mutableStateOf(false) }
+    val biometricEnabled by settingsViewModel.biometricEnabled.collectAsState()
+    val darkModeEnabled by settingsViewModel.darkMode.collectAsState()
 
     Column(
         modifier = Modifier
@@ -147,7 +150,7 @@ fun SettingsScreen(
                     title = stringResource(R.string.settings_biometrics_title),
                     subtitle = stringResource(R.string.settings_biometrics_subtitle),
                     checked = biometricEnabled,
-                    onCheckedChange = { biometricEnabled = it }
+                    onCheckedChange = { settingsViewModel.setBiometricEnabled(it) }
                 )
                 HorizontalDivider(color = Color(0xFFF8F8F8))
                 SettingsSwitch(
@@ -157,7 +160,7 @@ fun SettingsScreen(
                     title = stringResource(R.string.settings_dark_mode_title),
                     subtitle = stringResource(R.string.settings_dark_mode_subtitle),
                     checked = darkModeEnabled,
-                    onCheckedChange = { darkModeEnabled = it }
+                    onCheckedChange = { settingsViewModel.setDarkMode(it) }
                 )
             }
 
