@@ -1,7 +1,11 @@
 package com.undef.prowallet.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.layout.*
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -48,12 +53,40 @@ fun SettingsScreen(
     settingsViewModel: SettingsViewModel,
     onNavigateBack: () -> Unit
 ) {
+    val context = LocalContext.current
     val authState by authViewModel.uiState.collectAsState()
     var fullName by remember(authState.user) { mutableStateOf(authState.user?.fullName ?: "") }
     var email by remember(authState.user) { mutableStateOf(authState.user?.email ?: "") }
     var notificationsEnabled by remember { mutableStateOf(true) }
     val biometricEnabled by settingsViewModel.biometricEnabled.collectAsState()
     val darkModeEnabled by settingsViewModel.darkMode.collectAsState()
+
+    val onBiometricToggle: (Boolean) -> Unit = { enable ->
+        if (!enable) {
+            settingsViewModel.setBiometricEnabled(false)
+        } else {
+            val biometricManager = BiometricManager.from(context)
+            val canAuth = biometricManager.canAuthenticate(
+                BiometricManager.Authenticators.BIOMETRIC_WEAK
+            )
+            if (canAuth == BiometricManager.BIOMETRIC_SUCCESS) {
+                val activity = context as FragmentActivity
+                val executor = ContextCompat.getMainExecutor(context)
+                val prompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
+                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                        settingsViewModel.setBiometricEnabled(true)
+                    }
+                })
+                val promptInfo = BiometricPrompt.PromptInfo.Builder()
+                    .setTitle("Verificar identidad")
+                    .setSubtitle("Confirma tu huella para habilitar la biometría")
+                    .setNegativeButtonText("Cancelar")
+                    .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
+                    .build()
+                prompt.authenticate(promptInfo)
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -150,7 +183,7 @@ fun SettingsScreen(
                     title = stringResource(R.string.settings_biometrics_title),
                     subtitle = stringResource(R.string.settings_biometrics_subtitle),
                     checked = biometricEnabled,
-                    onCheckedChange = { settingsViewModel.setBiometricEnabled(it) }
+                    onCheckedChange = onBiometricToggle
                 )
                 HorizontalDivider(color = Color(0xFFF8F8F8))
                 SettingsSwitch(
