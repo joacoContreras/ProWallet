@@ -457,6 +457,16 @@ fun NewPurchaseScreen(
                                 stringResource(R.string.add_product_button)
                         )
                     }
+
+                    if (state.productError) {
+                        Text(
+                            text = stringResource(R.string.error_product_name_and_price),
+                            color = ErrorRed,
+                            fontFamily = PlusJakartaSans,
+                            fontSize = 12.sp,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
 
                 if (state.products.isEmpty()) {

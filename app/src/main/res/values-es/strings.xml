@@ -124,6 +124,7 @@
     <string name="price_label">Precio</string>
     <string name="item_desc_placeholder">Descripción del artículo…</string>
     <string name="no_products_yet">Aún no se han añadido productos.</string>
+    <string name="error_product_name_and_price">El nombre del producto y un precio mayor a 0 son obligatorios.</string>
     <string name="product_name_label">Nombre del Producto</string>
     <string name="product_name_placeholder">Nombre del Producto</string>
     <string name="description_label">Descripción</string>

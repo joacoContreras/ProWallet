@@ -31,7 +31,8 @@ data class PurchaseUiState(
     val isSaving: Boolean = false,
     val savedSuccess: Boolean = false,
     val saveError: Boolean = false,
-    val validationError: Boolean = false
+    val validationError: Boolean = false,
+    val productError: Boolean = false
 )
 
 class PurchaseViewModel(application: Application) : AndroidViewModel(application) {
@@ -60,7 +61,12 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
 
     fun addOrUpdateProduct() {
         val state = _uiState.value
-        if (state.currentProductName.isBlank()) return
+        val price = state.currentProductPrice.toDoubleOrNull() ?: 0.0
+        if (state.currentProductName.isBlank() || price <= 0.0) {
+            _uiState.value = state.copy(productError = true)
+            return
+        }
+        _uiState.value = state.copy(productError = false)
 
         val resolvedCode = state.currentProductCode.trim().ifBlank { UUID.randomUUID().toString() }
 
@@ -89,7 +95,8 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
             currentProductName = "",
             currentProductDescription = "",
             currentProductPrice = "",
-            editingProductId = null
+            editingProductId = null,
+            productError = false
         )
     }
 
