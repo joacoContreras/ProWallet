@@ -3,7 +3,7 @@ package com.undef.prowallet.viewmodel
 import androidx.annotation.StringRes
 import com.undef.prowallet.R
 
-sealed class AuthError(@StringRes val messageRes: Int) {
+sealed class AuthError(@param:StringRes val messageRes: Int) {
     object EmptyFields        : AuthError(R.string.error_empty_fields)
     object InvalidEmail       : AuthError(R.string.error_invalid_email)
     object EmailNotFound      : AuthError(R.string.error_email_not_found)
