@@ -9,6 +9,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -16,23 +19,33 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.util.Locale
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
+import com.undef.prowallet.viewmodel.StoreDetailViewModel
 
 @Composable
 fun StoreDetailScreen(
     storeName: String,
+    viewModel: StoreDetailViewModel,
     onNavigateBack: () -> Unit
 ) {
-    // Mock data for the specific store based on the design
-    val totalMonthlySpend = 412.50
-    val lastMonthSpend = 315.20
-    val merchantId = "#88219-SBX"
+    val state by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(storeName) {
+        viewModel.loadStore(storeName)
+    }
+
+    val totalMonthlySpend = state.totalThisMonth
+    val lastMonthSpend = state.totalLastMonth
+    val grandTotal = totalMonthlySpend.takeIf { it > 0.0 } ?: 1.0
+    val thisMonthTag = if (totalMonthlySpend > lastMonthSpend && lastMonthSpend > 0)
+        stringResource(R.string.peak_label) to ErrorRed
+    else
+        stringResource(R.string.safe_label) to SuccessGreen
 
     Scaffold(
         topBar = {
@@ -68,39 +81,23 @@ fun StoreDetailScreen(
                         modifier = Modifier.padding(24.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Box(contentAlignment = Alignment.BottomEnd) {
-                            Box(
-                                modifier = Modifier
-                                    .size(96.dp)
-                                    .clip(CircleShape)
-                                    .background(Primary.copy(alpha = 0.2f)),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Store,
-                                    contentDescription = null,
-                                    tint = PrimaryDarker,
-                                    modifier = Modifier.size(48.dp)
-                                )
-                            }
-                            Box(
-                                modifier = Modifier
-                                    .size(28.dp)
-                                    .clip(CircleShape)
-                                    .background(Primary),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Verified,
-                                    contentDescription = null,
-                                    tint = Color.White,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                            }
+                        Box(
+                            modifier = Modifier
+                                .size(96.dp)
+                                .clip(CircleShape)
+                                .background(Primary.copy(alpha = 0.2f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Store,
+                                contentDescription = null,
+                                tint = PrimaryDarker,
+                                modifier = Modifier.size(48.dp)
+                            )
                         }
-                        
+
                         Spacer(Modifier.height(16.dp))
-                        
+
                         Text(
                             text = storeName,
                             fontFamily = PlusJakartaSans,
@@ -108,17 +105,11 @@ fun StoreDetailScreen(
                             fontSize = 24.sp,
                             color = TextPrimary
                         )
-                        Text(
-                            text = stringResource(R.string.merchant_id_format, merchantId),
-                            fontFamily = PlusJakartaSans,
-                            fontSize = 13.sp,
-                            color = Neutral
-                        )
-                        
+
                         Spacer(Modifier.height(20.dp))
                         HorizontalDivider(color = Color(0xFFF0F0F0))
                         Spacer(Modifier.height(16.dp))
-                        
+
                         Text(
                             text = stringResource(R.string.total_monthly_spend).uppercase(),
                             fontFamily = PlusJakartaSans,
@@ -138,43 +129,6 @@ fun StoreDetailScreen(
                 }
             }
 
-            // Unusual Activity Alert
-            item {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    color = ErrorRed.copy(alpha = 0.1f)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        Icon(
-                            Icons.Default.Warning,
-                            contentDescription = null,
-                            tint = ErrorRed,
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Text(
-                                text = stringResource(R.string.unusual_activity_title),
-                                fontFamily = PlusJakartaSans,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 14.sp,
-                                color = ErrorRed
-                            )
-                            Text(
-                                text = stringResource(R.string.unusual_activity_desc, storeName),
-                                fontFamily = PlusJakartaSans,
-                                fontSize = 13.sp,
-                                color = ErrorRed.copy(alpha = 0.8f),
-                                lineHeight = 18.sp
-                            )
-                        }
-                    }
-                }
-            }
-
             // Historical Comparison
             item {
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -188,37 +142,45 @@ fun StoreDetailScreen(
                     ComparisonCard(
                         label = stringResource(R.string.this_month),
                         amount = totalMonthlySpend,
-                        tagText = stringResource(R.string.peak_label),
-                        tagColor = ErrorRed,
+                        tagText = thisMonthTag.first,
+                        tagColor = thisMonthTag.second,
                         modifier = Modifier.weight(1f)
                     )
                 }
             }
 
             // Category Distribution
-            item {
-                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    Text(
-                        text = stringResource(R.string.category_distribution),
-                        fontFamily = PlusJakartaSans,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        color = TextPrimary
-                    )
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(20.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.White)
-                    ) {
-                        Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                            DistributionRow(label = stringResource(R.string.beverages_coffee), amount = 320.00, percentage = 0.78f, color = PrimaryDarker)
-                            DistributionRow(label = stringResource(R.string.food_snacks), amount = 72.50, percentage = 0.18f, color = Secondary)
-                            DistributionRow(label = stringResource(R.string.merchandise_label), amount = 20.00, percentage = 0.04f, color = Neutral)
+            if (state.categoryDistribution.isNotEmpty()) {
+                item {
+                    val colors = listOf(PrimaryDarker, Secondary, Neutral, ErrorRed)
+                    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                        Text(
+                            text = stringResource(R.string.category_distribution),
+                            fontFamily = PlusJakartaSans,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            color = TextPrimary
+                        )
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(20.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White)
+                        ) {
+                            Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                                state.categoryDistribution.forEachIndexed { index, (cat, amt) ->
+                                    DistributionRow(
+                                        label = cat,
+                                        amount = amt,
+                                        percentage = (amt / grandTotal).toFloat(),
+                                        color = colors[index % colors.size]
+                                    )
+                                }
+                            }
                         }
                     }
                 }
             }
-            
+
             item { Spacer(Modifier.height(16.dp)) }
         }
     }

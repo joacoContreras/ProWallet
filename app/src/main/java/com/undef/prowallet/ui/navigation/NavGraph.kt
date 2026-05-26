@@ -16,6 +16,7 @@ import com.undef.prowallet.viewmodel.HistoryViewModel
 import com.undef.prowallet.viewmodel.HomeViewModel
 import com.undef.prowallet.viewmodel.PurchaseDetailViewModel
 import com.undef.prowallet.viewmodel.PurchaseViewModel
+import com.undef.prowallet.viewmodel.StoreDetailViewModel
 import com.undef.prowallet.viewmodel.TopStoresViewModel
 
 sealed class Screen(val route: String) {
@@ -256,8 +257,10 @@ fun AppNavGraph(navController: NavHostController) {
             arguments = listOf(navArgument("storeName") { type = NavType.StringType })
         ) { backStackEntry ->
             val storeName = backStackEntry.arguments?.getString("storeName") ?: ""
+            val storeDetailViewModel: StoreDetailViewModel = viewModel()
             StoreDetailScreen(
                 storeName = storeName,
+                viewModel = storeDetailViewModel,
                 onNavigateBack = { navController.popBackStack() }
             )
         }
