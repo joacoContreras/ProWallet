@@ -41,7 +41,8 @@ fun HomeScreenPreview() {
             onNavigateToPurchaseDetail = {},
             onNavigateToHistory = {},
             onNavigateToProfile = {},
-            onNavigateToNotifications = {}
+            onNavigateToNotifications = {},
+            onNavigateToMonthlySetup = {}
         )
     }
 }
@@ -54,7 +55,8 @@ fun HomeScreen(
     onNavigateToPurchaseDetail: (String) -> Unit,
     onNavigateToHistory: () -> Unit,
     onNavigateToProfile: () -> Unit,
-    onNavigateToNotifications: () -> Unit
+    onNavigateToNotifications: () -> Unit,
+    onNavigateToMonthlySetup: () -> Unit
 ) {
     val state by homeViewModel.uiState.collectAsState()
 
@@ -190,6 +192,42 @@ fun HomeScreen(
                             color = PrimaryDarker,
                             trackColor = Color.White.copy(alpha = 0.5f)
                         )
+                        Spacer(Modifier.height(10.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column {
+                                Text(
+                                    text = stringResource(R.string.monthly_income),
+                                    fontFamily = PlusJakartaSans,
+                                    fontSize = 11.sp,
+                                    color = SecondaryDark.copy(alpha = 0.7f)
+                                )
+                                Text(
+                                    text = if (state.monthlyIncome > 0)
+                                        "$${String.format(Locale.getDefault(), "%.2f", state.monthlyIncome)}"
+                                    else
+                                        stringResource(R.string.budget_not_set),
+                                    fontFamily = PlusJakartaSans,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 14.sp,
+                                    color = SecondaryDark
+                                )
+                            }
+                            TextButton(
+                                onClick = onNavigateToMonthlySetup,
+                                colors = ButtonDefaults.textButtonColors(contentColor = PrimaryDarker)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.configure_label),
+                                    fontFamily = PlusJakartaSans,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 12.sp
+                                )
+                            }
+                        }
                     }
                 }
             }

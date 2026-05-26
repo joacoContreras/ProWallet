@@ -18,6 +18,7 @@ data class HomeUiState(
     val userName: String = "",
     val totalMonthlySpend: Double = 0.0,
     val monthlyBudget: Double = 0.0,
+    val monthlyIncome: Double = 0.0,
     val remaining: Double = 0.0,
     val percentageVsLastMonth: Int = 0,
     val recentPurchases: List<Purchase> = emptyList(),
@@ -53,6 +54,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     budgetProgress = safeProgress(spent, budget),
                     budgetPercent = safePercent(spent, budget)
                 )
+            }
+        }
+        viewModelScope.launch {
+            sessionManager.monthlyIncome.collect { income ->
+                _uiState.value = _uiState.value.copy(monthlyIncome = income)
             }
         }
         viewModelScope.launch {

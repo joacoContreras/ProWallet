@@ -385,6 +385,11 @@
     <string name="expense_name_label">Nombre del gasto</string>
     <string name="amount_label">Monto</string>
 
+    <!-- Home Screen -->
+    <string name="configure_label">Configurar</string>
+    <string name="income_label">Ingreso: $%s</string>
+    <string name="budget_not_set">Presupuesto no configurado</string>
+
     <!-- Category names (stable keys stored in DB; localized for display) -->
     <string name="category_groceries">Comestibles</string>
     <string name="category_transport">Transporte</string>

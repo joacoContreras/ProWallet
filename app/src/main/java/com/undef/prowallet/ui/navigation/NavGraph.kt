@@ -130,7 +130,8 @@ fun AppNavGraph(navController: NavHostController) {
                 },
                 onNavigateToHistory = { navController.navigate(Screen.History.route) },
                 onNavigateToProfile = { navController.navigate(Screen.Profile.route) },
-                onNavigateToNotifications = { navController.navigate(Screen.Notifications.route) }
+                onNavigateToNotifications = { navController.navigate(Screen.Notifications.route) },
+                onNavigateToMonthlySetup = { navController.navigate(Screen.MonthlySetup.route) }
             )
         }
 
