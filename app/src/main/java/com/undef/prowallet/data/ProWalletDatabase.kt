@@ -84,7 +84,7 @@ abstract class ProWalletDatabase : RoomDatabase() {
                     "prowallet.db"
                 )
                     .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
-                    .apply { if (BuildConfig.DEBUG) fallbackToDestructiveMigration() }
+                    .apply { if (BuildConfig.DEBUG) fallbackToDestructiveMigration(dropAllTables = true) }
                     .build()
                     .also { INSTANCE = it }
             }
