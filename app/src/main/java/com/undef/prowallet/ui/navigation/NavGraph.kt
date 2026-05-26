@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.undef.prowallet.ui.screens.*
 import com.undef.prowallet.viewmodel.AnalyticsViewModel
+import com.undef.prowallet.viewmodel.AutoSavingsViewModel
 import com.undef.prowallet.viewmodel.AuthViewModel
 import com.undef.prowallet.viewmodel.HistoryViewModel
 import com.undef.prowallet.viewmodel.HomeViewModel
@@ -309,7 +310,9 @@ fun AppNavGraph(navController: NavHostController) {
         }
 
         composable(Screen.AutoSavings.route) {
+            val autoSavingsViewModel: AutoSavingsViewModel = viewModel()
             AutoSavingsScreen(
+                viewModel = autoSavingsViewModel,
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToNotifications = { navController.navigate(Screen.Notifications.route) }
             )

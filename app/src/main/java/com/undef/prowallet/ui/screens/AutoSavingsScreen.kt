@@ -24,16 +24,27 @@ import androidx.compose.ui.unit.sp
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
+import com.undef.prowallet.viewmodel.AutoSavingsViewModel
 import java.util.Locale
 
 @Composable
 fun AutoSavingsScreen(
+    viewModel: AutoSavingsViewModel,
     onNavigateBack: () -> Unit,
     onNavigateToNotifications: () -> Unit
 ) {
-    var savingsPercentage by remember { mutableFloatStateOf(10f) }
-    var selectedMethod by remember { mutableStateOf("Percentage") }
-    var selectedFrequency by remember { mutableStateOf("Monthly") }
+    val state by viewModel.uiState.collectAsState()
+    val savingsPercentage = state.savingsPercentage
+    val selectedMethod = state.selectedMethod
+    val selectedFrequency = state.selectedFrequency
+    val currentIncome = state.monthlyIncome
+
+    LaunchedEffect(state.isSaved) {
+        if (state.isSaved) {
+            viewModel.clearSaved()
+            onNavigateBack()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -73,7 +84,7 @@ fun AutoSavingsScreen(
                         lineHeight = 18.sp
                     )
                     Button(
-                        onClick = { onNavigateBack() },
+                        onClick = { viewModel.saveSettings() },
                         modifier = Modifier.fillMaxWidth().height(56.dp),
                         shape = RoundedCornerShape(28.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = PrimaryDarker)
@@ -130,8 +141,8 @@ fun AutoSavingsScreen(
                     shape = RoundedCornerShape(percent = 50)
                 ) {
                     Row(modifier = Modifier.padding(4.dp)) {
-                        MethodTab(stringResource(R.string.percentage), selectedMethod == "Percentage", modifier = Modifier.weight(1f)) { selectedMethod = "Percentage" }
-                        MethodTab(stringResource(R.string.fixed_amount), selectedMethod == "Fixed Amount", modifier = Modifier.weight(1f)) { selectedMethod = "Fixed Amount" }
+                        MethodTab(stringResource(R.string.percentage), selectedMethod == "Percentage", modifier = Modifier.weight(1f)) { viewModel.onMethodChange("Percentage") }
+                        MethodTab(stringResource(R.string.fixed_amount), selectedMethod == "Fixed Amount", modifier = Modifier.weight(1f)) { viewModel.onMethodChange("Fixed Amount") }
                     }
                 }
             }
@@ -147,14 +158,19 @@ fun AutoSavingsScreen(
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
                             Column {
                                 Text(text = stringResource(R.string.current_income), fontSize = 12.sp, color = Neutral)
-                                Text(text = "$8,450.00", fontSize = 24.sp, fontWeight = FontWeight.ExtraBold, color = TextPrimary)
+                                Text(
+                                    text = if (currentIncome > 0) "$${String.format(Locale.getDefault(), "%.2f", currentIncome)}" else "—",
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = TextPrimary
+                                )
                             }
                             Text(text = "${savingsPercentage.toInt()}%", fontSize = 30.sp, fontWeight = FontWeight.Bold, color = PrimaryDarker)
                         }
                         
                         Slider(
                             value = savingsPercentage,
-                            onValueChange = { savingsPercentage = it },
+                            onValueChange = { viewModel.onPercentageChange(it) },
                             valueRange = 0f..30f,
                             colors = SliderDefaults.colors(
                                 thumbColor = PrimaryDarker,
@@ -170,7 +186,12 @@ fun AutoSavingsScreen(
                         ) {
                             Row(modifier = Modifier.padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                                 Text(text = stringResource(R.string.estimated_monthly_savings), fontSize = 14.sp, color = Neutral)
-                                Text(text = "$${String.format(Locale.getDefault(), "%.2f", 8450 * (savingsPercentage / 100))}", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = PrimaryDarker)
+                                Text(
+                                    text = "$${String.format(Locale.getDefault(), "%.2f", currentIncome * (savingsPercentage / 100))}",
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = PrimaryDarker
+                                )
                             }
                         }
                     }
@@ -187,11 +208,11 @@ fun AutoSavingsScreen(
                         colors = CardDefaults.cardColors(containerColor = Color.White)
                     ) {
                         Column(modifier = Modifier.padding(8.dp)) {
-                            FrequencyRow(stringResource(R.string.monthly), selectedFrequency == "Monthly") { selectedFrequency = "Monthly" }
+                            FrequencyRow(stringResource(R.string.monthly), selectedFrequency == "Monthly") { viewModel.onFrequencyChange("Monthly") }
                             HorizontalDivider(color = Color(0xFFF8F8F8))
-                            FrequencyRow(stringResource(R.string.bi_weekly), selectedFrequency == "Bi-weekly") { selectedFrequency = "Bi-weekly" }
+                            FrequencyRow(stringResource(R.string.bi_weekly), selectedFrequency == "Bi-weekly") { viewModel.onFrequencyChange("Bi-weekly") }
                             HorizontalDivider(color = Color(0xFFF8F8F8))
-                            FrequencyRow(stringResource(R.string.weekly), selectedFrequency == "Weekly") { selectedFrequency = "Weekly" }
+                            FrequencyRow(stringResource(R.string.weekly), selectedFrequency == "Weekly") { viewModel.onFrequencyChange("Weekly") }
                         }
                     }
                 }

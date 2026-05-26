@@ -19,6 +19,10 @@ class SessionManager(private val context: Context) {
         private val IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
         private val EMAIL = stringPreferencesKey("email")
         private val MONTHLY_BUDGET = doublePreferencesKey("monthly_budget")
+        private val MONTHLY_INCOME = doublePreferencesKey("monthly_income")
+        private val SAVINGS_PERCENTAGE = androidx.datastore.preferences.core.floatPreferencesKey("savings_percentage")
+        private val SAVINGS_METHOD = stringPreferencesKey("savings_method")
+        private val SAVINGS_FREQUENCY = stringPreferencesKey("savings_frequency")
     }
 
     val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { preferences ->
@@ -33,9 +37,39 @@ class SessionManager(private val context: Context) {
         preferences[MONTHLY_BUDGET] ?: 0.0
     }
 
+    val monthlyIncome: Flow<Double> = context.dataStore.data.map { preferences ->
+        preferences[MONTHLY_INCOME] ?: 0.0
+    }
+
+    val savingsPercentage: Flow<Float> = context.dataStore.data.map { preferences ->
+        preferences[SAVINGS_PERCENTAGE] ?: 10f
+    }
+
+    val savingsMethod: Flow<String> = context.dataStore.data.map { preferences ->
+        preferences[SAVINGS_METHOD] ?: "Percentage"
+    }
+
+    val savingsFrequency: Flow<String> = context.dataStore.data.map { preferences ->
+        preferences[SAVINGS_FREQUENCY] ?: "Monthly"
+    }
+
     suspend fun saveBudget(amount: Double) {
         context.dataStore.edit { preferences ->
             preferences[MONTHLY_BUDGET] = amount
+        }
+    }
+
+    suspend fun saveIncome(amount: Double) {
+        context.dataStore.edit { preferences ->
+            preferences[MONTHLY_INCOME] = amount
+        }
+    }
+
+    suspend fun saveSavingsSettings(percentage: Float, method: String, frequency: String) {
+        context.dataStore.edit { preferences ->
+            preferences[SAVINGS_PERCENTAGE] = percentage
+            preferences[SAVINGS_METHOD] = method
+            preferences[SAVINGS_FREQUENCY] = frequency
         }
     }
 
