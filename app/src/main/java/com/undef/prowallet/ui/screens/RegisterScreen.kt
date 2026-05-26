@@ -46,6 +46,7 @@ fun RegisterScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    val emailInvalid = email.isNotBlank() && !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
     LaunchedEffect(state.registrationSuccess) {
         if (state.registrationSuccess) {
@@ -121,6 +122,15 @@ fun RegisterScreen(
                         leadingIcon = Icons.Default.Email,
                         label = stringResource(R.string.email_label)
                     )
+                    if (emailInvalid) {
+                        Text(
+                            text = stringResource(R.string.error_invalid_email),
+                            color = ErrorRed,
+                            fontFamily = PlusJakartaSans,
+                            fontSize = 12.sp,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                     CustomTextField(
                         value = password,
                         onValueChange = { password = it },
