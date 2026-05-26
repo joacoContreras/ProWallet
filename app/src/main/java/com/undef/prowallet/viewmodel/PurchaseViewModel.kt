@@ -34,7 +34,8 @@ data class PurchaseUiState(
     val saveError: Boolean = false,
     val validationError: Boolean = false,
     val productError: Boolean = false,
-    val editingPurchaseId: String? = null
+    val editingPurchaseId: String? = null,
+    val ticketImageUri: String? = null
 )
 
 class PurchaseViewModel(application: Application) : AndroidViewModel(application) {
@@ -52,6 +53,7 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    fun onTicketImageSelected(uri: String?) { _uiState.value = _uiState.value.copy(ticketImageUri = uri) }
     fun onStoreNameChange(value: String) { _uiState.value = _uiState.value.copy(storeName = value) }
     fun onDateChange(value: String) { _uiState.value = _uiState.value.copy(date = value) }
     fun onTimeChange(value: String) { _uiState.value = _uiState.value.copy(time = value) }
@@ -148,7 +150,8 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
             time = state.time,
             totalAmount = totalAmount,
             category = state.category,
-            products = state.products
+            products = state.products,
+            ticketImageUri = state.ticketImageUri
         )
 
         _uiState.value = state.copy(isSaving = true, saveError = false)
@@ -240,6 +243,7 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
             editingProductId = null,
             editingPurchaseId = null,
             savedPurchaseId = null,
+            ticketImageUri = null,
             isSaving = false,
             savedSuccess = false,
             saveError = false,

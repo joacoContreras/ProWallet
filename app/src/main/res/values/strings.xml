@@ -377,6 +377,7 @@
     <string name="error_store_name_required">Store name is required</string>
     <string name="edit_purchase_title">Edit Purchase</string>
     <string name="update_purchase">Update Purchase</string>
+    <string name="change_ticket_image">Change Ticket Image</string>
     <string name="no_accounts_yet">No accounts added yet.</string>
     <string name="edit_account_title">Edit Account</string>
     <string name="account_name_label">Account name</string>

@@ -1,5 +1,8 @@
 package com.undef.prowallet.ui.screens
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,11 +22,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.undef.prowallet.R
 import com.undef.prowallet.data.CategoryEntity
 import com.undef.prowallet.ui.components.*
@@ -44,6 +51,13 @@ fun NewPurchaseScreen(
 ) {
     val isEditMode = purchaseId != null
     val state by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        viewModel.onTicketImageSelected(uri?.toString())
+    }
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
     var showCategoryMenu by remember { mutableStateOf(false) }
@@ -256,19 +270,42 @@ fun NewPurchaseScreen(
                         leadingIcon = Icons.Default.Store,
                         label = stringResource(R.string.store_name_label)
                     )
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
+                    Column(modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp)) {
+                        if (state.ticketImageUri != null) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(160.dp)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(Color(0xFFF0F0F0))
+                            ) {
+                                AsyncImage(
+                                    model = ImageRequest.Builder(context)
+                                        .data(state.ticketImageUri)
+                                        .crossfade(true)
+                                        .build(),
+                                    contentDescription = stringResource(R.string.attach_ticket_image),
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                                IconButton(
+                                    onClick = { viewModel.onTicketImageSelected(null) },
+                                    modifier = Modifier.align(Alignment.TopEnd).padding(4.dp)
+                                ) {
+                                    Icon(Icons.Default.Cancel, contentDescription = stringResource(R.string.delete_label), tint = ErrorRed)
+                                }
+                            }
+                            Spacer(Modifier.height(8.dp))
+                        }
                         Button(
-                            onClick = { /* Launcher for camera/gallery */ },
+                            onClick = { galleryLauncher.launch("image/*") },
                             modifier = Modifier.fillMaxWidth().height(48.dp),
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Primary.copy(alpha = 0.1f), contentColor = PrimaryDarker)
                         ) {
                             Icon(Icons.Default.AddPhotoAlternate, contentDescription = null)
                             Spacer(Modifier.width(8.dp))
-                            Text(stringResource(R.string.attach_ticket_image))
+                            Text(if (state.ticketImageUri != null) stringResource(R.string.change_ticket_image) else stringResource(R.string.attach_ticket_image))
                         }
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
