@@ -24,10 +24,22 @@ import androidx.compose.ui.unit.sp
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
+import com.undef.prowallet.viewmodel.MonthlySetupViewModel
 
 @Composable
-fun MonthlySetupScreen(onNavigateBack: () -> Unit) {
-    var monthlyIncome by remember { mutableStateOf("5250.00") }
+fun MonthlySetupScreen(
+    viewModel: MonthlySetupViewModel,
+    onNavigateBack: () -> Unit
+) {
+    val state by viewModel.uiState.collectAsState()
+    val monthlyIncome = state.monthlyIncome
+
+    LaunchedEffect(state.isSaved) {
+        if (state.isSaved) {
+            viewModel.clearSaved()
+            onNavigateBack()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -41,7 +53,7 @@ fun MonthlySetupScreen(onNavigateBack: () -> Unit) {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Button(
-                    onClick = { onNavigateBack() },
+                    onClick = { viewModel.save() },
                     modifier = Modifier.fillMaxWidth().height(56.dp).shadow(8.dp, RoundedCornerShape(28.dp)),
                     shape = RoundedCornerShape(28.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = PrimaryDarker)
@@ -101,7 +113,7 @@ fun MonthlySetupScreen(onNavigateBack: () -> Unit) {
                             Text(text = stringResource(R.string.monthly_income_hint), fontSize = 14.sp, color = Neutral)
                             OutlinedTextField(
                                 value = monthlyIncome,
-                                onValueChange = { monthlyIncome = it },
+                                onValueChange = { viewModel.onIncomeChange(it) },
                                 modifier = Modifier.fillMaxWidth(),
                                 prefix = { Text("$", color = PrimaryDarker, fontWeight = FontWeight.Bold, fontSize = 20.sp) },
                                 shape = RoundedCornerShape(12.dp),
