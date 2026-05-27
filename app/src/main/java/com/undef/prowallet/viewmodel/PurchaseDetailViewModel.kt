@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 data class PurchaseDetailUiState(
     val isLoading: Boolean = true,
@@ -36,7 +37,7 @@ class PurchaseDetailViewModel(application: Application) : AndroidViewModel(appli
         viewModelScope.launch {
             val apiMap = try {
                 repository.getApiProducts()
-                    .associateBy { it.nombre.trim().lowercase() }
+                    .associateBy { it.nombre.trim().lowercase(Locale.ROOT) }
                     .mapValues { it.value.precioPromedio }
             } catch (e: Exception) { emptyMap() }
             _uiState.value = _uiState.value.copy(apiPriceMap = apiMap)

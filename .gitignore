@@ -63,6 +63,7 @@ captures/
 .idea/dbnavigator.xml
 .idea/gradle.xml
 .idea/jarRepositories.xml
+.idea/deploymentTargetSelector.xml
 
 # Keystore files
 *.jks

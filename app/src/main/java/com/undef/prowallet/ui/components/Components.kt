@@ -257,7 +257,7 @@ fun ProductItem(
             )
             if (showCode) {
                 Text(
-                    text = "ID: ${product.code}",
+                    text = stringResource(R.string.product_code_format, product.code),
                     style = MaterialTheme.typography.labelSmall,
                     color = TextSecondary
                 )

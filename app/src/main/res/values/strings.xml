@@ -291,6 +291,7 @@
 
     <!-- Store Detail Screen -->
     <string name="merchant_id_format">ID de comerciante: %s</string>
+    <string name="product_code_format">ID: %1$s</string>
     <string name="unusual_activity_title">Actividad Inusual Detectada</string>
     <string name="unusual_activity_desc">Tu gasto en %s es un 24%% más alto que tu promedio de 6 meses.</string>
     <string name="last_month">Mes Anterior</string>

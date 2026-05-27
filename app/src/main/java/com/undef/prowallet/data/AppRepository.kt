@@ -1,6 +1,7 @@
 package com.undef.prowallet.data
 
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import com.undef.prowallet.data.remote.ProductDto
 import com.undef.prowallet.data.remote.RetrofitClient
 import com.undef.prowallet.domain.Product
@@ -65,7 +66,12 @@ class AppRepository(context: Context) {
 
     suspend fun updateCategory(id: Int, newName: String) {
         val trimmed = newName.trim()
-        if (trimmed.isNotBlank()) categoryDao.updateName(id, trimmed)
+        if (trimmed.isNotBlank()) {
+            try {
+                categoryDao.updateName(id, trimmed)
+            } catch (_: SQLiteConstraintException) {
+            }
+        }
     }
 
     val purchasesFlow: Flow<List<Purchase>> = purchaseDao.getAllPurchasesWithItems()

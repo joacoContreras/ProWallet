@@ -20,6 +20,7 @@ import kotlinx.coroutines.withContext
 import java.security.MessageDigest
 import java.security.SecureRandom
 import java.util.Base64
+import java.util.Locale
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
 
@@ -59,7 +60,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun login(email: String, password: String) {
-        val trimmedEmail = email.trim().lowercase()
+        val trimmedEmail = email.trim().lowercase(Locale.ROOT)
         if (email.isBlank() || password.isBlank()) {
             _uiState.value = _uiState.value.copy(error = AuthError.EmptyFields)
             return
@@ -84,7 +85,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun register(fullName: String, email: String, password: String, confirmPassword: String) {
-        val trimmedEmail = email.trim().lowercase()
+        val trimmedEmail = email.trim().lowercase(Locale.ROOT)
         val trimmedName = fullName.trim()
         when {
             trimmedName.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank() -> {
@@ -131,7 +132,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun sendResetCode(email: String) {
-        val trimmedEmail = email.trim().lowercase()
+        val trimmedEmail = email.trim().lowercase(Locale.ROOT)
         if (trimmedEmail.isBlank()) {
             _uiState.value = _uiState.value.copy(error = AuthError.EnterEmail)
             return

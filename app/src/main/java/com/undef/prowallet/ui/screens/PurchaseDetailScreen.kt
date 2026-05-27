@@ -26,6 +26,7 @@ import com.undef.prowallet.ui.components.SectionCard
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
 import com.undef.prowallet.viewmodel.PurchaseDetailViewModel
+import java.util.Locale
 
 @Composable
 fun PurchaseDetailScreen(
@@ -230,7 +231,7 @@ fun PurchaseDetailScreen(
                     SectionCard {
                         p.products.forEachIndexed { idx, product ->
                             ProductItem(product = product)
-                            val apiPrice = state.apiPriceMap[product.name.trim().lowercase()]
+                            val apiPrice = state.apiPriceMap[product.name.trim().lowercase(Locale.ROOT)]
                             if (apiPrice != null && apiPrice > 0.0) {
                                 PriceComparisonBadge(paidPrice = product.price, apiPrice = apiPrice)
                             }
