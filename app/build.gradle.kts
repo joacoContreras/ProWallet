@@ -69,4 +69,5 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
     implementation(libs.androidx.biometric)
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 }

@@ -24,5 +24,7 @@ data class Purchase(
     val category: String,
     val products: List<Product> = emptyList(),
     val ticketImageUri: String? = null,
-    val timestampMs: Long = 0L
+    val timestampMs: Long = 0L,
+    val latitude: Double? = null,
+    val longitude: Double? = null
 )

@@ -2,11 +2,13 @@ package com.undef.prowallet.data
 
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
+import androidx.room.withTransaction
+import com.undef.prowallet.data.remote.PreciosClarosClient
+import com.undef.prowallet.data.remote.PreciosClarosProductDto
 import com.undef.prowallet.data.remote.ProductDto
 import com.undef.prowallet.data.remote.RetrofitClient
 import com.undef.prowallet.domain.Product
 import com.undef.prowallet.domain.Purchase
-import androidx.room.withTransaction
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.text.SimpleDateFormat
@@ -97,7 +99,9 @@ class AppRepository(context: Context) {
                     storeName = purchase.storeName,
                     description = "",
                     timestamp = parseTimestamp(purchase.date, purchase.time),
-                    ticketImagePath = purchase.ticketImageUri
+                    ticketImagePath = purchase.ticketImageUri,
+                    latitude = purchase.latitude,
+                    longitude = purchase.longitude
                 )
             ).toInt()
 
@@ -144,7 +148,9 @@ class AppRepository(context: Context) {
                     storeName = purchase.storeName,
                     description = "",
                     timestamp = parseTimestamp(purchase.date, purchase.time),
-                    ticketImagePath = purchase.ticketImageUri
+                    ticketImagePath = purchase.ticketImageUri,
+                    latitude = purchase.latitude,
+                    longitude = purchase.longitude
                 )
             )
 
@@ -189,6 +195,17 @@ class AppRepository(context: Context) {
     suspend fun getApiProducts(): List<ProductDto> =
         RetrofitClient.productApiService.getProducts().productos
 
+    suspend fun getProductByCode(code: String): ProductEntity? {
+        return productDao.getProductByCode(code)
+    }
+
+    suspend fun searchProductPrices(lat: Double, lng: Double, query: String): List<PreciosClarosProductDto> =
+        try {
+            PreciosClarosClient.service.getProductos(query = query, lat = lat, lng = lng, limit = 10).productos
+        } catch (e: Exception) {
+            emptyList()
+        }
+
     suspend fun seedDefaultCategories() {
         listOf("Groceries", "Transport", "Dining", "Coffee", "Other").forEach { name ->
             if (categoryDao.getCategoryByName(name) == null) {
@@ -232,7 +249,9 @@ class AppRepository(context: Context) {
             category = categoryName,
             products = products,
             ticketImageUri = purchase.ticketImagePath,
-            timestampMs = purchase.timestamp
+            timestampMs = purchase.timestamp,
+            latitude = purchase.latitude,
+            longitude = purchase.longitude
         )
     }
 }

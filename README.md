@@ -17,9 +17,10 @@ Aplicación Android de gestión de gastos personales desarrollada como proyecto 
 - **Registro de compras** con tienda, fecha, hora, categoría y lista de productos — guardadas en Room
 - **Historial completo** de compras con total acumulado
 - **Dashboard** con gasto mensual, presupuesto restante y barra de progreso en tiempo real
-- **Comparación de precios** en el detalle de cada compra, consultando precios de referencia desde una API REST (Retrofit)
+- **Comparación de precios** en el detalle de cada compra, consultando precios de referencia desde **Precios Claros** (API oficial del gobierno argentino) según la ubicación GPS del dispositivo — muestra rango mínimo–máximo por producto e indica si el precio pagado fue bueno, justo o alto
 - **Estadísticas mensuales**: gasto total, ticket promedio, gráfico de tendencia de 6 meses y productos más comprados
 - **Top tiendas**: ranking de comercios por gasto total
+- **Ubicación de compra** guardada automáticamente al registrar una compra (GPS vía FusedLocationProviderClient)
 - **Compartir compra** vía Intent nativo de Android (WhatsApp, Gmail, etc.)
 - **Gestión de categorías** con AlertDialog de CRUD (agregar, editar, eliminar)
 - **Presupuesto mensual** configurable, persistido en DataStore
@@ -68,7 +69,8 @@ Aplicación Android de gestión de gastos personales desarrollada como proyecto 
 - **Room** — base de datos local (usuarios, compras, productos, categorías)
 - **DataStore Preferences** — persistencia de sesión entre reinicios
 - **Coroutines** + **Flow** — operaciones asíncronas con `viewModelScope`
-- **Retrofit** + **Gson** — consumo de API REST (precios de referencia de productos)
+- **Retrofit** + **Gson** — dos clientes independientes: npoint.io (catálogo) y Precios Claros / CloudFront (precios de referencia por ubicación)
+- **FusedLocationProviderClient** — ubicación GPS con puente `suspendCancellableCoroutine` para coroutines
 - **compileSdk 35 / minSdk 26** (Android 8.0+)
 
 ---
@@ -80,9 +82,11 @@ com.undef.prowallet
 ├── data/
 │   ├── dao/                        ← UserDao, PurchaseDao, ProductDao, PurchasedItemDao, CategoryDao
 │   ├── remote/
-│   │   ├── ProductDto.kt           ← DTOs de la API
-│   │   ├── ProductApiService.kt    ← interfaz Retrofit
-│   │   └── RetrofitClient.kt       ← cliente Retrofit (singleton)
+│   │   ├── ProductDto.kt               ← DTOs: npoint.io + PreciosClarosProductDto / PreciosClarosResponse
+│   │   ├── ProductApiService.kt        ← interfaz Retrofit (npoint.io)
+│   │   ├── RetrofitClient.kt           ← cliente npoint.io (singleton)
+│   │   ├── PreciosClarosApiService.kt  ← interfaz Retrofit (Precios Claros)
+│   │   └── PreciosClarosClient.kt      ← cliente Precios Claros (singleton, base URL CloudFront)
 │   ├── AppRepository.kt            ← fuente de verdad: Room + Retrofit
 │   ├── ProWalletDatabase.kt        ← Room database singleton
 │   ├── UserEntity.kt / PurchaseEntity.kt / ProductEntity.kt
@@ -97,13 +101,14 @@ com.undef.prowallet
 │   └── theme/                      ← Color.kt · Type.kt · Theme.kt
 ├── util/
 │   ├── LocaleHelper.kt             ← i18n (ES / EN)
+│   ├── LocationHelper.kt           ← FusedLocationProviderClient → suspendCancellableCoroutine → Pair<Double,Double>?
 │   ├── SessionManager.kt          ← DataStore: sesión persistida entre reinicios
 │   └── DateUtils.kt               ← extensiones de Purchase: isCurrentMonth(), isInMonth()
 └── viewmodel/
     ├── AuthViewModel.kt            ← Room + SHA-256 + DataStore
     ├── HomeViewModel.kt            ← AppRepository + presupuesto mensual (DataStore)
     ├── PurchaseViewModel.kt        ← formulario de compra + persistencia Room
-    ├── PurchaseDetailViewModel.kt  ← detalle + comparación de precios (Retrofit)
+    ├── PurchaseDetailViewModel.kt  ← detalle + comparación de precios Precios Claros (ubicación + async/awaitAll)
     ├── AnalyticsViewModel.kt
     ├── HistoryViewModel.kt
     └── TopStoresViewModel.kt

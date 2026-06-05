@@ -25,7 +25,7 @@ import com.undef.prowallet.data.dao.UserDao
         FixedExpenseEntity::class,
         AccountEntity::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 abstract class ProWalletDatabase : RoomDatabase() {
@@ -112,6 +112,14 @@ abstract class ProWalletDatabase : RoomDatabase() {
             }
         }
 
+        // v6→v7: add latitude and longitude columns to purchases.
+        private val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE purchases ADD COLUMN latitude REAL")
+                db.execSQL("ALTER TABLE purchases ADD COLUMN longitude REAL")
+            }
+        }
+
         fun getInstance(context: Context): ProWalletDatabase =
             INSTANCE ?: synchronized(this) {
                 INSTANCE ?: Room.databaseBuilder(
@@ -119,7 +127,7 @@ abstract class ProWalletDatabase : RoomDatabase() {
                     ProWalletDatabase::class.java,
                     "prowallet.db"
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
                     .apply { if (BuildConfig.DEBUG) fallbackToDestructiveMigration(dropAllTables = true) }
                     .build()
                     .also { INSTANCE = it }

@@ -26,5 +26,7 @@ data class PurchaseEntity(
     @ColumnInfo(name = "store_name") val storeName: String,
     @ColumnInfo(name = "description") val description: String,
     @ColumnInfo(name = "timestamp") val timestamp: Long,
-    @ColumnInfo(name = "ticket_image_path") val ticketImagePath: String? = null // Nueva columna para la ruta de la imagen
+    @ColumnInfo(name = "ticket_image_path") val ticketImagePath: String? = null,
+    @ColumnInfo(name = "latitude") val latitude: Double? = null,
+    @ColumnInfo(name = "longitude") val longitude: Double? = null
 )

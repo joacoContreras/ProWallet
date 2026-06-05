@@ -1,7 +1,11 @@
 package com.undef.prowallet.ui.screens
 
 import android.content.Intent
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.core.content.ContextCompat
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,6 +29,7 @@ import com.undef.prowallet.ui.components.ProductItem
 import com.undef.prowallet.ui.components.SectionCard
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
+import com.undef.prowallet.viewmodel.ApiPriceResult
 import com.undef.prowallet.viewmodel.PurchaseDetailViewModel
 import java.util.Locale
 
@@ -39,8 +44,21 @@ fun PurchaseDetailScreen(
     val context = LocalContext.current
     var showDeleteDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(purchaseId) {
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { _ ->
         viewModel.loadPurchase(purchaseId)
+    }
+
+    LaunchedEffect(purchaseId) {
+        val granted = ContextCompat.checkSelfPermission(
+            context, android.Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        if (granted) {
+            viewModel.loadPurchase(purchaseId)
+        } else {
+            locationPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        }
     }
 
     if (state.isLoading) {
@@ -231,9 +249,9 @@ fun PurchaseDetailScreen(
                     SectionCard {
                         p.products.forEachIndexed { idx, product ->
                             ProductItem(product = product)
-                            val apiPrice = state.apiPriceMap[product.name.trim().lowercase(Locale.ROOT)]
-                            if (apiPrice != null && apiPrice > 0.0) {
-                                PriceComparisonBadge(paidPrice = product.price, apiPrice = apiPrice)
+                            val apiResult = state.apiPriceMap[product.name.trim().lowercase(Locale.ROOT)]
+                            if (apiResult != null) {
+                                PriceComparisonBadge(paidPrice = product.price, apiResult = apiResult)
                             }
                             if (idx < p.products.lastIndex) {
                                 HorizontalDivider(color = Color(0xFFF0F0F0), thickness = 0.5.dp)
@@ -270,14 +288,16 @@ fun PurchaseDetailScreen(
 }
 
 @Composable
-private fun PriceComparisonBadge(paidPrice: Double, apiPrice: Double) {
-    if (apiPrice <= 0.0) return
-    val ratio = paidPrice / apiPrice
+private fun PriceComparisonBadge(paidPrice: Double, apiResult: ApiPriceResult) {
+    if (apiResult.precioMin <= 0.0) return
+    val ratio = paidPrice / apiResult.precioMin
     val (icon, label, color) = when {
         ratio < 0.90 -> Triple(Icons.Default.CheckCircle, stringResource(R.string.price_good), Color(0xFF2E7D32))
         ratio > 1.10 -> Triple(Icons.Default.Warning, stringResource(R.string.price_high), MaterialTheme.colorScheme.error)
         else         -> Triple(Icons.Default.Info, stringResource(R.string.price_fair), TextSecondary)
     }
+    val rangeText = "Ref: \$${String.format(Locale.getDefault(), "%.0f", apiResult.precioMin)}" +
+                    " – \$${String.format(Locale.getDefault(), "%.0f", apiResult.precioMax)}"
     Row(
         modifier = Modifier.padding(start = 4.dp, bottom = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -285,10 +305,6 @@ private fun PriceComparisonBadge(paidPrice: Double, apiPrice: Double) {
     ) {
         Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(14.dp))
         Text(label, style = MaterialTheme.typography.labelSmall, color = color)
-        Text(
-            stringResource(R.string.price_api_reference, apiPrice),
-            style = MaterialTheme.typography.labelSmall,
-            color = TextSecondary
-        )
+        Text(rangeText, style = MaterialTheme.typography.labelSmall, color = TextSecondary)
     }
 }

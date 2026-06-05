@@ -7,6 +7,7 @@ import com.undef.prowallet.data.AppRepository
 import com.undef.prowallet.data.CategoryEntity
 import com.undef.prowallet.domain.Product
 import com.undef.prowallet.domain.Purchase
+import com.undef.prowallet.util.LocationHelper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,7 +36,10 @@ data class PurchaseUiState(
     val validationError: Boolean = false,
     val productError: Boolean = false,
     val editingPurchaseId: String? = null,
-    val ticketImageUri: String? = null
+    val ticketImageUri: String? = null,
+    val latitude: Double? = null,
+    val longitude: Double? = null,
+    val isFetchingLocation: Boolean = false
 )
 
 class PurchaseViewModel(application: Application) : AndroidViewModel(application) {
@@ -50,6 +54,19 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
             repository.categoriesFlow.collect { cats ->
                 _uiState.value = _uiState.value.copy(categories = cats)
             }
+        }
+    }
+
+    fun fetchLocation() {
+        if (_uiState.value.isFetchingLocation) return
+        _uiState.value = _uiState.value.copy(isFetchingLocation = true)
+        viewModelScope.launch {
+            val coords = LocationHelper(getApplication()).getLocation()
+            _uiState.value = _uiState.value.copy(
+                latitude = coords?.first,
+                longitude = coords?.second,
+                isFetchingLocation = false
+            )
         }
     }
 
@@ -151,7 +168,9 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
             totalAmount = totalAmount,
             category = state.category,
             products = state.products,
-            ticketImageUri = state.ticketImageUri
+            ticketImageUri = state.ticketImageUri,
+            latitude = state.latitude,
+            longitude = state.longitude
         )
 
         _uiState.value = state.copy(isSaving = true, saveError = false)
@@ -181,6 +200,8 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
                 time = purchase.time,
                 category = purchase.category,
                 products = purchase.products,
+                latitude = purchase.latitude,
+                longitude = purchase.longitude,
                 currentProductCode = "",
                 currentProductName = "",
                 currentProductDescription = "",
@@ -213,7 +234,9 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
             time = state.time,
             totalAmount = totalAmount,
             category = state.category,
-            products = state.products
+            products = state.products,
+            latitude = state.latitude,
+            longitude = state.longitude
         )
 
         _uiState.value = state.copy(isSaving = true, saveError = false)
@@ -244,6 +267,9 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
             editingPurchaseId = null,
             savedPurchaseId = null,
             ticketImageUri = null,
+            latitude = null,
+            longitude = null,
+            isFetchingLocation = false,
             isSaving = false,
             savedSuccess = false,
             saveError = false,

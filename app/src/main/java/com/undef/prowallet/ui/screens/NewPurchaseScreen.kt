@@ -1,8 +1,10 @@
 package com.undef.prowallet.ui.screens
 
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -58,6 +60,14 @@ fun NewPurchaseScreen(
     ) { uri: Uri? ->
         viewModel.onTicketImageSelected(uri?.toString())
     }
+
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val granted = permissions[android.Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                      permissions[android.Manifest.permission.ACCESS_COARSE_LOCATION] == true
+        if (granted) viewModel.fetchLocation()
+    }
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
     var showCategoryMenu by remember { mutableStateOf(false) }
@@ -81,7 +91,27 @@ fun NewPurchaseScreen(
     val validationErrorMsg = stringResource(R.string.error_store_name_required)
 
     LaunchedEffect(Unit) {
-        if (isEditMode) viewModel.loadForEdit(purchaseId!!) else viewModel.resetForm()
+        if (isEditMode) {
+            viewModel.loadForEdit(purchaseId!!)
+        } else {
+            viewModel.resetForm()
+            val fineGranted = ContextCompat.checkSelfPermission(
+                context, android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+            val coarseGranted = ContextCompat.checkSelfPermission(
+                context, android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+            if (fineGranted || coarseGranted) {
+                viewModel.fetchLocation()
+            } else {
+                locationPermissionLauncher.launch(
+                    arrayOf(
+                        android.Manifest.permission.ACCESS_FINE_LOCATION,
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
+                )
+            }
+        }
     }
 
     LaunchedEffect(state.savedSuccess) {
@@ -330,6 +360,35 @@ fun NewPurchaseScreen(
                             modifier = Modifier.weight(1f)
                         )
                     }
+                    // Location status
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = null,
+                            tint = if (state.latitude != null) Primary else NeutralLight,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(Modifier.width(6.dp))
+                        Text(
+                            text = when {
+                                state.isFetchingLocation -> "Fetching location…"
+                                state.latitude != null -> String.format(
+                                    Locale.getDefault(),
+                                    "%.4f, %.4f",
+                                    state.latitude,
+                                    state.longitude
+                                )
+                                else -> "Location unavailable"
+                            },
+                            fontFamily = PlusJakartaSans,
+                            fontSize = 12.sp,
+                            color = if (state.latitude != null) Primary else NeutralLight
+                        )
+                    }
+
                     // Category selector
                     Column {
                         Text(
