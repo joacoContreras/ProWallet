@@ -17,7 +17,7 @@ Aplicación Android de gestión de gastos personales desarrollada como proyecto 
 - **Registro de compras** con tienda, fecha, hora, categoría y lista de productos — guardadas en Room
 - **Historial completo** de compras con total acumulado
 - **Dashboard** con gasto mensual, presupuesto restante y barra de progreso en tiempo real
-- **Comparación de precios** en el detalle de cada compra, consultando precios de referencia desde **Precios Claros** (API oficial del gobierno argentino) según la ubicación GPS del dispositivo — muestra rango mínimo–máximo por producto e indica si el precio pagado fue bueno, justo o alto
+- **Comparación de precios** en el detalle de cada compra, consultando precios de referencia desde **Precios Claros** (API oficial del gobierno argentino) según la ubicación GPS del dispositivo — aplica un sistema de scoring por relevancia textual y popularidad de sucursales para seleccionar el producto más representativo, y muestra rango mínimo–máximo indicando si el precio pagado fue bueno, justo o alto
 - **Estadísticas mensuales**: gasto total, ticket promedio, gráfico de tendencia de 6 meses y productos más comprados
 - **Top tiendas**: ranking de comercios por gasto total
 - **Ubicación de compra** guardada automáticamente al registrar una compra (GPS vía FusedLocationProviderClient)
@@ -105,10 +105,10 @@ com.undef.prowallet
 │   ├── SessionManager.kt          ← DataStore: sesión persistida entre reinicios
 │   └── DateUtils.kt               ← extensiones de Purchase: isCurrentMonth(), isInMonth()
 └── viewmodel/
-    ├── AuthViewModel.kt            ← Room + SHA-256 + DataStore
+    ├── AuthViewModel.kt            ← Room + PBKDF2WithHmacSHA256 + DataStore
     ├── HomeViewModel.kt            ← AppRepository + presupuesto mensual (DataStore)
     ├── PurchaseViewModel.kt        ← formulario de compra + persistencia Room
-    ├── PurchaseDetailViewModel.kt  ← detalle + comparación de precios Precios Claros (ubicación + async/awaitAll)
+    ├── PurchaseDetailViewModel.kt  ← detalle + comparación de precios Precios Claros (ubicación + async/awaitAll + scoring por matchRatio y sucursales)
     ├── AnalyticsViewModel.kt
     ├── HistoryViewModel.kt
     └── TopStoresViewModel.kt
@@ -171,3 +171,11 @@ com.undef.prowallet
 ## Internacionalización
 
 La app está actualmente en **Español**. Todos los textos visibles están en `res/values/strings.xml`.
+
+---
+
+## Documentación técnica
+
+| Documento | Descripción |
+|---|---|
+| [`docs/networking-price-comparison.md`](docs/networking-price-comparison.md) | Flujo completo de comparación de precios via Precios Claros: clientes Retrofit, sistema de scoring, paralelismo con coroutines y lógica de badges |

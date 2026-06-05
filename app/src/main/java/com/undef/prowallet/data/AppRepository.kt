@@ -201,7 +201,7 @@ class AppRepository(context: Context) {
 
     suspend fun searchProductPrices(lat: Double, lng: Double, query: String): List<PreciosClarosProductDto> =
         try {
-            PreciosClarosClient.service.getProductos(query = query, lat = lat, lng = lng, limit = 10).productos
+            PreciosClarosClient.service.getProductos(query = query, lat = lat, lng = lng, limit = 30).productos
         } catch (e: Exception) {
             emptyList()
         }
