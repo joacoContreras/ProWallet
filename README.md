@@ -25,7 +25,7 @@ Aplicación Android de gestión de gastos personales desarrollada como proyecto 
 - **Gestión de categorías** con AlertDialog de CRUD (agregar, editar, eliminar)
 - **Presupuesto mensual** configurable, persistido en DataStore
 - **Recuperación de contraseña** con flujo de verificación de código de 6 dígitos
-- **Soporte multiidioma** — Español e Inglés
+- **Interfaz en Español**
 
 ---
 
@@ -100,7 +100,7 @@ com.undef.prowallet
 │   ├── screens/                    ← una pantalla por archivo (25 pantallas)
 │   └── theme/                      ← Color.kt · Type.kt · Theme.kt
 ├── util/
-│   ├── LocaleHelper.kt             ← i18n (ES / EN)
+│   ├── LocaleHelper.kt             ← utilidad de idioma (API 33+ LocaleManager / AppCompatDelegate)
 │   ├── LocationHelper.kt           ← FusedLocationProviderClient → suspendCancellableCoroutine → Pair<Double,Double>?
 │   ├── SessionManager.kt          ← DataStore: sesión persistida entre reinicios
 │   └── DateUtils.kt               ← extensiones de Purchase: isCurrentMonth(), isInMonth()
@@ -170,4 +170,4 @@ com.undef.prowallet
 
 ## Internacionalización
 
-La app soporta **Español** e **Inglés**. El idioma se puede cambiar desde Configuración → Idioma. Todos los textos visibles están en `res/values/strings.xml` y `res/values-es/strings.xml`.
+La app está actualmente en **Español**. Todos los textos visibles están en `res/values/strings.xml`.

@@ -70,20 +70,22 @@ fun SettingsScreen(
                 BiometricManager.Authenticators.BIOMETRIC_WEAK
             )
             if (canAuth == BiometricManager.BIOMETRIC_SUCCESS) {
-                val activity = context as FragmentActivity
-                val executor = ContextCompat.getMainExecutor(context)
-                val prompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
-                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                        settingsViewModel.setBiometricEnabled(true)
-                    }
-                })
-                val promptInfo = BiometricPrompt.PromptInfo.Builder()
-                    .setTitle("Verificar identidad")
-                    .setSubtitle("Confirma tu huella para habilitar la biometría")
-                    .setNegativeButtonText("Cancelar")
-                    .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
-                    .build()
-                prompt.authenticate(promptInfo)
+                val activity = context as? FragmentActivity
+                if (activity != null) {
+                    val executor = ContextCompat.getMainExecutor(context)
+                    val prompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
+                        override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                            settingsViewModel.setBiometricEnabled(true)
+                        }
+                    })
+                    val promptInfo = BiometricPrompt.PromptInfo.Builder()
+                        .setTitle(context.getString(R.string.settings_biometric_prompt_title))
+                        .setSubtitle(context.getString(R.string.settings_biometric_prompt_subtitle))
+                        .setNegativeButtonText(context.getString(R.string.cancel))
+                        .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
+                        .build()
+                    prompt.authenticate(promptInfo)
+                }
             }
         }
     }

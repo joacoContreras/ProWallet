@@ -65,6 +65,7 @@ fun ProfileScreen(
 
     val displayName = authState.user?.fullName?.takeIf { it.isNotBlank() } ?: ""
     val displayEmail = authState.user?.email?.takeIf { it.isNotBlank() } ?: ""
+    val income = homeState.monthlyIncome
     val budget = homeState.monthlyBudget
     val spent = homeState.totalMonthlySpend
     val budgetPercent = homeState.budgetPercent
@@ -181,7 +182,7 @@ fun ProfileScreen(
                             FinancialStatCard(
                                 icon = Icons.Default.Payments,
                                 label = stringResource(R.string.monthly_income),
-                                value = "$${String.format("%.0f", budget)}",
+                                value = "$${String.format("%.0f", income)}",
                                 modifier = Modifier.weight(1f)
                             )
                             FinancialStatCard(

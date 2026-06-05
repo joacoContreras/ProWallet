@@ -23,6 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -53,6 +55,9 @@ fun ProWalletAppWrapper() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val density = LocalDensity.current
+    val fabSizePx = with(density) { 56.dp.toPx() }
+    val fabMarginPx = with(density) { 16.dp.toPx() }
 
     // Screens where the AI FAB should NOT be visible
     val excludedScreens = listOf(
@@ -76,9 +81,8 @@ fun ProWalletAppWrapper() {
                 parentWidth = coords.size.width.toFloat()
                 parentHeight = coords.size.height.toFloat()
                 if (initialized == 0f && parentWidth > 0f) {
-                    // Start at bottom-end with safe insets margin
-                    fabOffsetX = parentWidth - 200f
-                    fabOffsetY = parentHeight - 300f
+                    fabOffsetX = parentWidth - fabSizePx - fabMarginPx
+                    fabOffsetY = parentHeight - fabSizePx - fabMarginPx
                     initialized = 1f
                 }
             }
@@ -94,9 +98,9 @@ fun ProWalletAppWrapper() {
                         detectDragGestures { change, dragAmount ->
                             change.consume()
                             val newX = (fabOffsetX + dragAmount.x)
-                                .coerceIn(0f, parentWidth - 160f)
+                                .coerceIn(0f, parentWidth - fabSizePx)
                             val newY = (fabOffsetY + dragAmount.y)
-                                .coerceIn(0f, parentHeight - 160f)
+                                .coerceIn(0f, parentHeight - fabSizePx)
                             fabOffsetX = newX
                             fabOffsetY = newY
                         }
@@ -107,7 +111,7 @@ fun ProWalletAppWrapper() {
             ) {
                 Icon(
                     imageVector = Icons.Default.SmartToy,
-                    contentDescription = "Chat con IA",
+                    contentDescription = stringResource(R.string.chat_ai_fab_label),
                     modifier = Modifier.size(28.dp)
                 )
             }

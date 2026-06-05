@@ -200,6 +200,7 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
                 time = purchase.time,
                 category = purchase.category,
                 products = purchase.products,
+                ticketImageUri = purchase.ticketImageUri,
                 latitude = purchase.latitude,
                 longitude = purchase.longitude,
                 currentProductCode = "",
@@ -235,6 +236,7 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
             totalAmount = totalAmount,
             category = state.category,
             products = state.products,
+            ticketImageUri = state.ticketImageUri,
             latitude = state.latitude,
             longitude = state.longitude
         )
@@ -273,7 +275,8 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
             isSaving = false,
             savedSuccess = false,
             saveError = false,
-            validationError = false
+            validationError = false,
+            productError = false
         )
     }
 }

@@ -277,6 +277,13 @@
     <string name="sales_tax">Impuesto (5%%)</string>
     <string name="updated_real_time">Actualizado en tiempo real</string>
 
+    <!-- Floating Action Button -->
+    <string name="chat_ai_fab_label">Chat con IA</string>
+
+    <!-- Biometric Prompt -->
+    <string name="settings_biometric_prompt_title">Verificar identidad</string>
+    <string name="settings_biometric_prompt_subtitle">Confirma tu huella para habilitar la biometría</string>
+
     <!-- Chat AI Screen -->
     <string name="pro_assistant_title">ProAsistente</string>
     <string name="ask_proassistant_placeholder">Pregunta al ProAsistente…</string>
