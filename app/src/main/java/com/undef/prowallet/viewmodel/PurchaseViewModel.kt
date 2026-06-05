@@ -200,6 +200,7 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
                 time = purchase.time,
                 category = purchase.category,
                 products = purchase.products,
+                ticketImageUri = purchase.ticketImageUri,
                 latitude = purchase.latitude,
                 longitude = purchase.longitude,
                 currentProductCode = "",
