@@ -343,6 +343,7 @@
 
     <!-- Settings Screen -->
     <string name="save_profile_button">Guardar Perfil</string>
+    <string name="profile_saved_msg">Perfil actualizado correctamente</string>
     <string name="app_settings_section">AJUSTES DE LA APP</string>
 
     <!-- Purchase Detail Screen -->

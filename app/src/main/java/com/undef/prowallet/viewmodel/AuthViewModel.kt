@@ -32,7 +32,8 @@ data class AuthUiState(
     val registrationSuccess: Boolean = false,
     val resetEmailSent: Boolean = false,
     val codeVerified: Boolean = false,
-    val passwordUpdated: Boolean = false
+    val passwordUpdated: Boolean = false,
+    val profileUpdated: Boolean = false
 )
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
@@ -52,11 +53,45 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             val loggedIn = sessionManager.isLoggedIn.first()
             if (loggedIn) {
                 val email = sessionManager.email.first()
-                if (email == null || userDao.getUserByEmail(email) == null) {
+                val user = email?.let { userDao.getUserByEmail(it) }
+                if (user == null) {
                     sessionManager.clearSession()
+                } else {
+                    _uiState.value = _uiState.value.copy(isLoggedIn = true, user = user.toDomain())
                 }
             }
         }
+    }
+
+    fun updateProfileName(fullName: String) {
+        val trimmed = fullName.trim()
+        if (trimmed.isBlank()) {
+            _uiState.value = _uiState.value.copy(error = AuthError.EmptyFields)
+            return
+        }
+        val current = _uiState.value.user ?: return
+        _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+        viewModelScope.launch {
+            val entity = userDao.getUserByEmail(current.email) ?: run {
+                _uiState.value = _uiState.value.copy(isLoading = false, error = AuthError.EmailNotFound)
+                return@launch
+            }
+            val parts = trimmed.split(" ", limit = 2)
+            val updated = entity.copy(
+                name = parts[0],
+                lastname = parts.getOrElse(1) { "" }
+            )
+            userDao.update(updated)
+            _uiState.value = _uiState.value.copy(
+                isLoading = false,
+                user = updated.toDomain(),
+                profileUpdated = true
+            )
+        }
+    }
+
+    fun clearProfileUpdated() {
+        _uiState.value = _uiState.value.copy(profileUpdated = false)
     }
 
     fun login(email: String, password: String) {

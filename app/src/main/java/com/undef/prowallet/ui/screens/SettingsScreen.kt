@@ -56,10 +56,19 @@ fun SettingsScreen(
     val context = LocalContext.current
     val authState by authViewModel.uiState.collectAsState()
     var fullName by remember(authState.user) { mutableStateOf(authState.user?.fullName ?: "") }
-    var email by remember(authState.user) { mutableStateOf(authState.user?.email ?: "") }
+    val email = authState.user?.email ?: ""
     var notificationsEnabled by remember { mutableStateOf(true) }
     val biometricEnabled by settingsViewModel.biometricEnabled.collectAsState()
     val darkModeEnabled by settingsViewModel.darkMode.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val profileSavedMsg = stringResource(R.string.profile_saved_msg)
+
+    LaunchedEffect(authState.profileUpdated) {
+        if (authState.profileUpdated) {
+            snackbarHostState.showSnackbar(profileSavedMsg)
+            authViewModel.clearProfileUpdated()
+        }
+    }
 
     val onBiometricToggle: (Boolean) -> Unit = { enable ->
         if (!enable) {
@@ -90,9 +99,14 @@ fun SettingsScreen(
         }
     }
 
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        containerColor = BackgroundLight
+    ) { padding ->
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(padding)
             .background(BackgroundLight)
             .verticalScroll(rememberScrollState())
     ) {
@@ -143,15 +157,17 @@ fun SettingsScreen(
                     )
                     CustomTextField(
                         value = email,
-                        onValueChange = { email = it },
+                        onValueChange = { },
                         placeholder = stringResource(R.string.email_label),
                         leadingIcon = Icons.Default.Email,
-                        label = stringResource(R.string.email_label)
+                        label = stringResource(R.string.email_label),
+                        readOnly = true
                     )
-                    
+
                     PrimaryButton(
                         text = stringResource(R.string.save_profile_button),
-                        onClick = { },
+                        onClick = { authViewModel.updateProfileName(fullName) },
+                        enabled = !authState.isLoading && fullName.isNotBlank() && fullName != (authState.user?.fullName ?: ""),
                         modifier = Modifier.padding(top = 8.dp)
                     )
                 }
@@ -220,6 +236,7 @@ fun SettingsScreen(
                 )
             }
         }
+    }
     }
 }
 
