@@ -63,6 +63,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
         viewModelScope.launch {
             repository.seedDefaultCategories()
+            repository.refreshApiProductsIfEmpty()
             repository.purchasesFlow.collect { purchases ->
                 val spent = purchases
                     .filter { it.isCurrentMonth() }

@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteConstraintException
 import androidx.room.withTransaction
 import com.undef.prowallet.data.remote.PreciosClarosClient
 import com.undef.prowallet.data.remote.PreciosClarosProductDto
-import com.undef.prowallet.data.remote.ProductDto
 import com.undef.prowallet.data.remote.RetrofitClient
 import com.undef.prowallet.domain.Product
 import com.undef.prowallet.domain.Purchase
@@ -16,6 +15,11 @@ import java.util.Date
 import java.util.Locale
 
 class AppRepository(context: Context) {
+
+    companion object {
+        const val CATEGORY_FALLBACK = "Other"
+        val DEFAULT_CATEGORIES = listOf("Groceries", "Transport", "Dining", "Coffee", "Other")
+    }
 
     private val db = ProWalletDatabase.getInstance(context)
     private val purchaseDao = db.purchaseDao()
@@ -192,8 +196,27 @@ class AppRepository(context: Context) {
         return pwi.toDomain(categoryMap, productMap)
     }
 
-    suspend fun getApiProducts(): List<ProductDto> =
-        RetrofitClient.productApiService.getProducts().productos
+    // Flow reactivo: Room es la fuente de verdad. La UI observa este Flow.
+    val apiProductsFlow: Flow<List<ProductEntity>> = productDao.getAllProducts()
+
+    // Cache-first: consulta Room primero. Si está vacío, llama a Retrofit y persiste en Room.
+    // El Flow apiProductsFlow emite automáticamente cuando Room se actualiza.
+    suspend fun refreshApiProductsIfEmpty() {
+        if (productDao.getProductCount() > 0) return
+        try {
+            val dtos = RetrofitClient.productApiService.getProducts().productos
+            val entities = dtos.map { dto ->
+                ProductEntity(
+                    name = dto.nombre,
+                    description = dto.descripcion,
+                    code = dto.nombre.trim().lowercase(Locale.ROOT).replace(" ", "_")
+                )
+            }
+            productDao.insertAll(entities)
+        } catch (_: Exception) {
+            // Sin red: tabla queda vacía, apiProductsFlow emite lista vacía sin crashear
+        }
+    }
 
     suspend fun getProductByCode(code: String): ProductEntity? {
         return productDao.getProductByCode(code)
@@ -207,7 +230,7 @@ class AppRepository(context: Context) {
         }
 
     suspend fun seedDefaultCategories() {
-        listOf("Groceries", "Transport", "Dining", "Coffee", "Other").forEach { name ->
+        DEFAULT_CATEGORIES.forEach { name ->
             if (categoryDao.getCategoryByName(name) == null) {
                 categoryDao.insert(CategoryEntity(name = name))
             }
@@ -228,7 +251,7 @@ class AppRepository(context: Context) {
         productMap: Map<Int, ProductEntity>
     ): Purchase {
         val date = Date(purchase.timestamp)
-        val categoryName = purchase.categoryId?.let { categoryMap[it]?.name } ?: "Other"
+        val categoryName = purchase.categoryId?.let { categoryMap[it]?.name } ?: CATEGORY_FALLBACK
         val products = items.mapNotNull { item ->
             productMap[item.productId]?.let { p ->
                 Product(

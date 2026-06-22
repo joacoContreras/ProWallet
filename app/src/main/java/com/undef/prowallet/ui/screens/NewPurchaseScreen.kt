@@ -374,14 +374,14 @@ fun NewPurchaseScreen(
                         Spacer(Modifier.width(6.dp))
                         Text(
                             text = when {
-                                state.isFetchingLocation -> "Fetching location…"
+                                state.isFetchingLocation -> stringResource(R.string.fetching_location)
                                 state.latitude != null -> String.format(
                                     Locale.getDefault(),
                                     "%.4f, %.4f",
                                     state.latitude,
                                     state.longitude
                                 )
-                                else -> "Location unavailable"
+                                else -> stringResource(R.string.location_unavailable)
                             },
                             fontFamily = PlusJakartaSans,
                             fontSize = 12.sp,

@@ -108,6 +108,7 @@
 
     <!-- Purchase Detail -->
     <string name="purchase_detail_title">Detalle de Compra</string>
+    <string name="loading_prices">Consultando precios de referencia…</string>
     <string name="purchase_not_found">Compra no encontrada</string>
     <string name="total_label">Total</string>
 
@@ -367,6 +368,8 @@
 
     <!-- New Purchase Screen errors -->
     <string name="error_save_purchase">Error al guardar la compra. Intente nuevamente.</string>
+    <string name="fetching_location">Obteniendo ubicación…</string>
+    <string name="location_unavailable">Ubicación no disponible</string>
 
     <!-- Price comparison badges -->
     <string name="price_good">Buen precio</string>
