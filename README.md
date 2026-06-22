@@ -39,25 +39,20 @@ Aplicación Android de gestión de gastos personales desarrollada como proyecto 
 
 ## Capturas de pantalla
 
-> **Nota:** Las capturas se agregarán antes de la entrega final. A continuación se muestra la estructura de cada flujo principal.
-
 ### Flujo de autenticación
-<!-- Reemplazar con capturas reales: Splash → Login → Registro → Home -->
 | Splash | Login | Registro | Home |
 |---|---|---|---|
-| _próximamente_ | _próximamente_ | _próximamente_ | _próximamente_ |
+| <img src="docs/screenshots/splash.png" width="180"/> | <img src="docs/screenshots/login.png" width="180"/> | <img src="docs/screenshots/register.png" width="180"/> | <img src="docs/screenshots/home.png" width="180"/> |
 
-### Dashboard y compras
-<!-- Reemplazar con capturas reales: Home → Nueva Compra → Detalle → Historial -->
-| Dashboard | Nueva Compra | Detalle | Historial |
+### Registro y detalle de compras
+| Nueva Compra | Compra guardada | Detalle | Historial |
 |---|---|---|---|
-| _próximamente_ | _próximamente_ | _próximamente_ | _próximamente_ |
+| <img src="docs/screenshots/new_purchase.png" width="180"/> | <img src="docs/screenshots/purchase_success.png" width="180"/> | <img src="docs/screenshots/purchase_detail.png" width="180"/> | <img src="docs/screenshots/history.png" width="180"/> |
 
 ### Estadísticas y perfil
-<!-- Reemplazar con capturas reales: Analíticas → Top Tiendas → Perfil → Configuración -->
 | Analíticas | Top Tiendas | Perfil | Configuración |
 |---|---|---|---|
-| _próximamente_ | _próximamente_ | _próximamente_ | _próximamente_ |
+| <img src="docs/screenshots/analytics.png" width="180"/> | <img src="docs/screenshots/top_stores.png" width="180"/> | <img src="docs/screenshots/profile.png" width="180"/> | <img src="docs/screenshots/settings.png" width="180"/> |
 
 ---
 
@@ -66,16 +61,80 @@ Aplicación Android de gestión de gastos personales desarrollada como proyecto 
 - **Kotlin** + **Jetpack Compose** (Material 3)
 - **Navigation Compose** — navegación declarativa entre 25 pantallas
 - **ViewModel** + **StateFlow** — arquitectura MVVM, un ViewModel por pantalla
-- **Room** — base de datos local (usuarios, compras, productos, categorías)
-- **DataStore Preferences** — persistencia de sesión entre reinicios
-- **Coroutines** + **Flow** — operaciones asíncronas con `viewModelScope`
-- **Retrofit** + **Gson** — dos clientes independientes: npoint.io (catálogo) y Precios Claros / CloudFront (precios de referencia por ubicación)
+- **Room** — base de datos local (usuarios, compras, productos, categorías, cuentas, gastos fijos)
+- **DataStore Preferences** — persistencia de sesión, presupuesto mensual y preferencias entre reinicios
+- **Coroutines** + **Flow** — operaciones asíncronas con `viewModelScope`, patrón Single Source of Truth
+- **Retrofit** + **Gson** — dos clientes independientes: npoint.io (catálogo de productos) y Precios Claros via CloudFront (precios de referencia por ubicación GPS)
 - **FusedLocationProviderClient** — ubicación GPS con puente `suspendCancellableCoroutine` para coroutines
+- **PBKDF2WithHmacSHA256** — hash seguro de contraseñas con salt aleatorio (65.536 iteraciones)
 - **compileSdk 35 / minSdk 26** (Android 8.0+)
 
 ---
 
 ## Arquitectura
+
+### Capas y flujo de datos
+
+```
+UI (Jetpack Compose)
+  └── collectAsStateWithLifecycle()
+        └── ViewModel (StateFlow / UiState)
+              └── viewModelScope.launch { }
+                    └── Repository (fuente de verdad única)
+                          ├── Room DAO  ←  Single Source of Truth
+                          │     └── Flow<List<T>>  →  emite automáticamente al cambiar
+                          └── Retrofit  ←  solo cuando Room está vacío (cache-first)
+                                └── insertAll() en Room → Flow emite → UI actualizada
+```
+
+### Patrón Single Source of Truth (Room + Retrofit)
+
+La UI nunca consume Retrofit directamente. El flujo es:
+
+1. `HomeViewModel.init` llama `repository.refreshApiProductsIfEmpty()`
+2. `AppRepository` consulta `productDao.getProductCount()`
+3. Si Room **tiene datos** → retorna inmediatamente, sin red
+4. Si Room **está vacío** → Retrofit descarga el catálogo → `productDao.insertAll()` → Room persiste
+5. `apiProductsFlow` (Flow de Room) emite la lista actualizada → UI reacciona automáticamente
+
+Este patrón garantiza que la app funciona **sin conexión** después del primer arranque.
+
+### Transacciones atómicas
+
+Las operaciones de guardado usan `@Transaction` para garantizar atomicidad:
+
+```kotlin
+db.withTransaction {
+    purchaseDao.insert(...)       // 1 insert en purchases
+    purchase.products.forEach {
+        productDao.insert(...)    // upsert por código UNIQUE
+        purchasedItemDao.insert(...)  // N inserts en purchase_items
+    }
+    // Si falla cualquiera → rollback total
+}
+```
+
+### ViewModel por pantalla
+
+Cada pantalla tiene su propio ViewModel con un `UiState` sellado:
+
+| ViewModel | Responsabilidad |
+|---|---|
+| `AuthViewModel` | Login, registro, recuperación de contraseña, PBKDF2 hashing |
+| `HomeViewModel` | Gasto mensual, presupuesto, compras recientes, seed de Room |
+| `PurchaseViewModel` | Formulario de compra, CRUD de categorías, guardado con transacción |
+| `PurchaseDetailViewModel` | Detalle de compra + comparación de precios vía PreciosClaros (async/awaitAll) |
+| `AnalyticsViewModel` | Tendencia 6 meses, top stores, distribución de categorías |
+| `HistoryViewModel` | Listado completo de compras |
+| `TopStoresViewModel` | Ranking de tiendas por mes actual |
+| `StoreDetailViewModel` | Detalle de tienda mes actual vs mes anterior |
+| `SettingsViewModel` | Dark mode, biométrico (DataStore) |
+| `MonthlySetupViewModel` | Presupuesto e ingreso mensual (DataStore) |
+| `AutoSavingsViewModel` | Porcentaje y frecuencia de ahorro (DataStore + Flow combine) |
+| `AccountViewModel` | CRUD de cuentas bancarias |
+| `FixedExpensesViewModel` | CRUD de gastos fijos recurrentes |
+
+### Estructura de paquetes
 
 ```
 com.undef.prowallet
