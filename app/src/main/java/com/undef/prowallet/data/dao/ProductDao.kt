@@ -30,4 +30,7 @@ interface ProductDao {
 
     @Query("SELECT * FROM products")
     suspend fun getAllProductsOnce(): List<ProductEntity>
+
+    @Query("SELECT COUNT(*) FROM products")
+    suspend fun getProductCount(): Int
 }

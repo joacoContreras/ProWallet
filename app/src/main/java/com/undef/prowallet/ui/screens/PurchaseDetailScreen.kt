@@ -245,6 +245,27 @@ fun PurchaseDetailScreen(
                     )
                 }
 
+                if (state.isLoadingPrices) {
+                    item {
+                        Row(
+                            modifier = Modifier.padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(14.dp),
+                                strokeWidth = 2.dp,
+                                color = Secondary
+                            )
+                            Text(
+                                text = stringResource(R.string.loading_prices),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Neutral
+                            )
+                        }
+                    }
+                }
+
                 item {
                     SectionCard {
                         p.products.forEachIndexed { idx, product ->

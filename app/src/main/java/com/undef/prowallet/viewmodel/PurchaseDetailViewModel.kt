@@ -49,7 +49,8 @@ private fun scoreDto(
 data class PurchaseDetailUiState(
     val isLoading: Boolean = true,
     val purchase: Purchase? = null,
-    val apiPriceMap: Map<String, ApiPriceResult> = emptyMap()
+    val apiPriceMap: Map<String, ApiPriceResult> = emptyMap(),
+    val isLoadingPrices: Boolean = false
 )
 
 class PurchaseDetailViewModel(application: Application) : AndroidViewModel(application) {
@@ -73,6 +74,8 @@ class PurchaseDetailViewModel(application: Application) : AndroidViewModel(appli
 
             val coords = LocationHelper(getApplication()).getLocation()
             if (coords == null) return@launch
+
+            _uiState.value = _uiState.value.copy(isLoadingPrices = true)
 
             val (lat, lng) = coords
 
@@ -100,7 +103,7 @@ class PurchaseDetailViewModel(application: Application) : AndroidViewModel(appli
                 }
                 .toMap()
 
-            _uiState.value = _uiState.value.copy(apiPriceMap = apiPriceMap)
+            _uiState.value = _uiState.value.copy(apiPriceMap = apiPriceMap, isLoadingPrices = false)
         }
     }
 

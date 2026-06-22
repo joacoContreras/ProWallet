@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.undef.prowallet.R
+import com.undef.prowallet.data.AppRepository
 import com.undef.prowallet.data.FixedExpenseEntity
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
@@ -183,7 +184,7 @@ private fun FixedExpenseDialog(
 ) {
     var name by remember { mutableStateOf(initial?.name ?: "") }
     var amount by remember { mutableStateOf(initial?.amount?.toString() ?: "") }
-    var category by remember { mutableStateOf(initial?.category ?: "Other") }
+    var category by remember { mutableStateOf(initial?.category ?: AppRepository.CATEGORY_FALLBACK) }
     var frequency by remember { mutableStateOf(initial?.frequency ?: "monthly") }
 
     AlertDialog(
@@ -235,7 +236,7 @@ private fun FixedExpenseDialog(
             TextButton(onClick = {
                 val parsedAmount = amount.toDoubleOrNull() ?: 0.0
                 if (name.isNotBlank() && parsedAmount > 0) {
-                    onSave(name.trim(), parsedAmount, category.trim().ifBlank { "Other" }, frequency)
+                    onSave(name.trim(), parsedAmount, category.trim().ifBlank { AppRepository.CATEGORY_FALLBACK }, frequency)
                 }
             }) { Text(stringResource(R.string.ok)) }
         },
