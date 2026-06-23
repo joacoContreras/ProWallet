@@ -9,7 +9,6 @@ import com.undef.prowallet.data.UserEntity
 import com.undef.prowallet.data.dao.UserDao
 import com.undef.prowallet.domain.User
 import com.undef.prowallet.util.SessionManager
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,7 +32,9 @@ data class AuthUiState(
     val resetEmailSent: Boolean = false,
     val codeVerified: Boolean = false,
     val passwordUpdated: Boolean = false,
-    val profileUpdated: Boolean = false
+    val profileUpdated: Boolean = false,
+    val simulatedCode: String? = null,
+    val sessionValidated: Boolean = false
 )
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
@@ -44,9 +45,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
-    val isLoggedIn: Flow<Boolean> = sessionManager.isLoggedIn
-
     private var pendingEmail: String? = null
+    private var pendingCode: String? = null
 
     init {
         viewModelScope.launch {
@@ -56,9 +56,12 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 val user = email?.let { userDao.getUserByEmail(it) }
                 if (user == null) {
                     sessionManager.clearSession()
+                    _uiState.value = _uiState.value.copy(isLoggedIn = false, sessionValidated = true)
                 } else {
-                    _uiState.value = _uiState.value.copy(isLoggedIn = true, user = user.toDomain())
+                    _uiState.value = _uiState.value.copy(isLoggedIn = true, user = user.toDomain(), sessionValidated = true)
                 }
+            } else {
+                _uiState.value = _uiState.value.copy(sessionValidated = true)
             }
         }
     }
@@ -92,6 +95,16 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     fun clearProfileUpdated() {
         _uiState.value = _uiState.value.copy(profileUpdated = false)
+    }
+
+    fun updateAvatar(uri: String) {
+        val current = _uiState.value.user ?: return
+        viewModelScope.launch {
+            val entity = userDao.getUserByEmail(current.email) ?: return@launch
+            val updated = entity.copy(avatarUrl = uri)
+            userDao.update(updated)
+            _uiState.value = _uiState.value.copy(user = updated.toDomain())
+        }
     }
 
     fun login(email: String, password: String) {
@@ -183,7 +196,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 return@launch
             }
             pendingEmail = trimmedEmail
-            _uiState.value = _uiState.value.copy(isLoading = false, resetEmailSent = true)
+            val code = (100000..999999).random().toString()
+            pendingCode = code
+            _uiState.value = _uiState.value.copy(isLoading = false, resetEmailSent = true, simulatedCode = code)
         }
     }
 
@@ -227,7 +242,11 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             _uiState.value = _uiState.value.copy(error = AuthError.InvalidCode)
             return
         }
-        _uiState.value = _uiState.value.copy(codeVerified = true)
+        if (code != pendingCode) {
+            _uiState.value = _uiState.value.copy(error = AuthError.WrongCode)
+            return
+        }
+        _uiState.value = _uiState.value.copy(codeVerified = true, error = null)
     }
 
     fun resendCode() {
@@ -237,10 +256,13 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun resetFlow() {
+        pendingCode = null
+        pendingEmail = null
         _uiState.value = _uiState.value.copy(
             resetEmailSent = false,
             codeVerified = false,
             passwordUpdated = false,
+            simulatedCode = null,
             error = null
         )
     }
