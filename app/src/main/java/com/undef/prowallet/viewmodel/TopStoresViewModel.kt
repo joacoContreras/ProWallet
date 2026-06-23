@@ -5,15 +5,18 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.undef.prowallet.data.AppRepository
 import com.undef.prowallet.util.isCurrentMonth
+import com.undef.prowallet.util.isInMonth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 data class StoreEntry(
     val name: String,
     val totalAmount: Double,
-    val transactionCount: Int
+    val transactionCount: Int,
+    val percentageVsLastMonth: Int? = null
 )
 
 data class CategoryDistEntry(
@@ -23,6 +26,7 @@ data class CategoryDistEntry(
 
 data class TopStoresUiState(
     val totalSpentMonth: Double = 0.0,
+    val percentageVsLastMonth: Int = 0,
     val stores: List<StoreEntry> = emptyList(),
     val categoryDistribution: List<CategoryDistEntry> = emptyList()
 )
@@ -40,13 +44,30 @@ class TopStoresViewModel(application: Application) : AndroidViewModel(applicatio
                 val current = purchases.filter { it.isCurrentMonth() }
                 val totalSpent = current.sumOf { it.totalAmount }
 
+                val now = Calendar.getInstance()
+                val thisMonth = now.get(Calendar.MONTH)
+                val thisYear = now.get(Calendar.YEAR)
+                val lastMonth = if (thisMonth == 0) 11 else thisMonth - 1
+                val lastMonthYear = if (thisMonth == 0) thisYear - 1 else thisYear
+                val lastMonthPurchases = purchases.filter { it.isInMonth(lastMonthYear, lastMonth) }
+                val totalLastMonth = lastMonthPurchases.sumOf { it.totalAmount }
+                val percentageVsLastMonth = if (totalLastMonth > 0)
+                    (((totalSpent - totalLastMonth) / totalLastMonth) * 100).toInt() else 0
+                val lastMonthByStore = lastMonthPurchases
+                    .groupBy { it.storeName }
+                    .mapValues { (_, list) -> list.sumOf { it.totalAmount } }
+
                 val stores = current
                     .groupBy { it.storeName }
                     .map { (name, list) ->
+                        val previous = lastMonthByStore[name]
+                        val storeTotal = list.sumOf { it.totalAmount }
                         StoreEntry(
                             name = name,
-                            totalAmount = list.sumOf { it.totalAmount },
-                            transactionCount = list.size
+                            totalAmount = storeTotal,
+                            transactionCount = list.size,
+                            percentageVsLastMonth = if (previous != null && previous > 0)
+                                (((storeTotal - previous) / previous) * 100).toInt() else null
                         )
                     }
                     .sortedByDescending { it.totalAmount }
@@ -61,6 +82,7 @@ class TopStoresViewModel(application: Application) : AndroidViewModel(applicatio
 
                 _uiState.value = TopStoresUiState(
                     totalSpentMonth = totalSpent,
+                    percentageVsLastMonth = percentageVsLastMonth,
                     stores = stores,
                     categoryDistribution = categoryDist
                 )

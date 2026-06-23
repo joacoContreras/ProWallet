@@ -9,12 +9,17 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingDown
 import androidx.compose.material.icons.automirrored.filled.TrendingFlat
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,6 +44,11 @@ fun TopStoresScreen(
     onNavigateToStoreDetail: (String) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
+    var showSearch by remember { mutableStateOf(false) }
+    var searchQuery by remember { mutableStateOf("") }
+    val filteredStores = if (searchQuery.isBlank()) state.stores else state.stores.filter {
+        it.name.contains(searchQuery, ignoreCase = true)
+    }
 
     Column(
         modifier = Modifier
@@ -49,11 +59,23 @@ fun TopStoresScreen(
             title = stringResource(R.string.top_stores_title),
             onNavigateBack = onNavigateBack,
             actions = {
-                IconButton(onClick = { }) {
+                IconButton(onClick = { showSearch = !showSearch; if (!showSearch) searchQuery = "" }) {
                     Icon(Icons.Default.Search, contentDescription = stringResource(R.string.see_all), tint = PrimaryDarker)
                 }
             }
         )
+
+        if (showSearch) {
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 8.dp),
+                placeholder = { Text(stringResource(R.string.search_store_placeholder)) },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                singleLine = true,
+                shape = RoundedCornerShape(12.dp)
+            )
+        }
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -90,8 +112,9 @@ fun TopStoresScreen(
                                 color = PrimaryDarker,
                                 shape = RoundedCornerShape(percent = 50)
                             ) {
+                                val vsLastMonthSign = if (state.percentageVsLastMonth >= 0) "+" else ""
                                 Text(
-                                    text = stringResource(R.string.from_last_month_format, "+12%"),
+                                    text = stringResource(R.string.from_last_month_format, "$vsLastMonthSign${state.percentageVsLastMonth}%"),
                                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                                     fontFamily = PlusJakartaSans,
                                     fontSize = 11.sp,
@@ -138,7 +161,7 @@ fun TopStoresScreen(
                 }
             }
 
-            if (state.stores.isEmpty()) {
+            if (filteredStores.isEmpty()) {
                 item {
                     Box(
                         modifier = Modifier.fillMaxWidth().padding(vertical = 32.dp),
@@ -147,20 +170,22 @@ fun TopStoresScreen(
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Icon(Icons.Default.Store, contentDescription = null, tint = NeutralLight, modifier = Modifier.size(48.dp))
                             Spacer(Modifier.height(8.dp))
-                            Text(stringResource(R.string.no_purchases_title), fontFamily = PlusJakartaSans, color = Neutral)
+                            Text(
+                                text = if (state.stores.isEmpty()) stringResource(R.string.no_purchases_title) else stringResource(R.string.no_store_matches),
+                                fontFamily = PlusJakartaSans,
+                                color = Neutral
+                            )
                         }
                     }
                 }
             } else {
-                items(state.stores) { store ->
+                items(filteredStores) { store ->
                     StoreRankItem(
                         name = store.name,
                         transactions = store.transactionCount,
                         amount = store.totalAmount,
                         icon = Icons.Default.Store,
-                        trendIcon = Icons.AutoMirrored.Filled.TrendingFlat,
-                        trendColor = PrimaryDarker,
-                        trendValue = "",
+                        percentageVsLastMonth = store.percentageVsLastMonth,
                         onClick = { onNavigateToStoreDetail(store.name) }
                     )
                 }
@@ -205,9 +230,7 @@ fun StoreRankItem(
     transactions: Int,
     amount: Double,
     icon: ImageVector,
-    trendIcon: ImageVector,
-    trendColor: Color,
-    trendValue: String,
+    percentageVsLastMonth: Int?,
     onClick: () -> Unit
 ) {
     Card(
@@ -257,15 +280,28 @@ fun StoreRankItem(
                     fontSize = 14.sp,
                     color = PrimaryDarker
                 )
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(trendIcon, contentDescription = null, tint = trendColor, modifier = Modifier.size(14.dp))
-                    Text(
-                        text = trendValue,
-                        fontFamily = PlusJakartaSans,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = trendColor
-                    )
+                if (percentageVsLastMonth != null) {
+                    val trendIcon = when {
+                        percentageVsLastMonth > 0 -> Icons.AutoMirrored.Filled.TrendingUp
+                        percentageVsLastMonth < 0 -> Icons.AutoMirrored.Filled.TrendingDown
+                        else -> Icons.AutoMirrored.Filled.TrendingFlat
+                    }
+                    val trendColor = when {
+                        percentageVsLastMonth > 0 -> ErrorRed
+                        percentageVsLastMonth < 0 -> SuccessGreen
+                        else -> Neutral
+                    }
+                    val sign = if (percentageVsLastMonth > 0) "+" else ""
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(trendIcon, contentDescription = null, tint = trendColor, modifier = Modifier.size(14.dp))
+                        Text(
+                            text = "$sign$percentageVsLastMonth%",
+                            fontFamily = PlusJakartaSans,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = trendColor
+                        )
+                    }
                 }
             }
         }
