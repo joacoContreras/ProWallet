@@ -1,5 +1,8 @@
 package com.undef.prowallet.ui.screens
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
@@ -20,8 +23,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,11 +63,16 @@ fun SettingsScreen(
     val authState by authViewModel.uiState.collectAsState()
     var fullName by remember(authState.user) { mutableStateOf(authState.user?.fullName ?: "") }
     val email = authState.user?.email ?: ""
-    var notificationsEnabled by remember { mutableStateOf(true) }
+    val notificationsEnabled by settingsViewModel.notificationsEnabled.collectAsState()
     val biometricEnabled by settingsViewModel.biometricEnabled.collectAsState()
     val darkModeEnabled by settingsViewModel.darkMode.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val profileSavedMsg = stringResource(R.string.profile_saved_msg)
+    val photoLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let { authViewModel.updateAvatar(it.toString()) }
+    }
 
     LaunchedEffect(authState.profileUpdated) {
         if (authState.profileUpdated) {
@@ -135,10 +146,20 @@ fun SettingsScreen(
                                 .background(Primary.copy(alpha = 0.1f)),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(Icons.Default.Person, contentDescription = null, modifier = Modifier.size(40.dp), tint = PrimaryDarker)
+                            val avatarUrl = authState.user?.avatarUrl
+                            if (!avatarUrl.isNullOrBlank()) {
+                                AsyncImage(
+                                    model = ImageRequest.Builder(context).data(avatarUrl).crossfade(true).build(),
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.fillMaxSize().clip(CircleShape)
+                                )
+                            } else {
+                                Icon(Icons.Default.Person, contentDescription = null, modifier = Modifier.size(40.dp), tint = PrimaryDarker)
+                            }
                         }
                         IconButton(
-                            onClick = { },
+                            onClick = { photoLauncher.launch("image/*") },
                             modifier = Modifier
                                 .size(28.dp)
                                 .clip(CircleShape)
@@ -191,7 +212,7 @@ fun SettingsScreen(
                     title = stringResource(R.string.settings_notifications_title),
                     subtitle = stringResource(R.string.settings_notifications_subtitle),
                     checked = notificationsEnabled,
-                    onCheckedChange = { notificationsEnabled = it }
+                    onCheckedChange = { settingsViewModel.setNotificationsEnabled(it) }
                 )
                 HorizontalDivider(color = Color(0xFFF8F8F8))
                 SettingsSwitch(
