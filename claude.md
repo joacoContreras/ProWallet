@@ -5,7 +5,7 @@ Aplicación Android de gestión de gastos personales, desarrollada como proyecto
 ## Estado actual: rama `2nd_delivery`
 
 La **1ra entrega** está completa: UI, navegación y datos mockeados.  
-La **2da entrega** está prácticamente completa — Room + DataStore + Retrofit operativos, CRUD de categorías, comparación de precios API, filtrado mensual centralizado, hashing PBKDF2.
+La **2da entrega** está completa — Room + DataStore + Retrofit operativos, CRUD de categorías, comparación de precios API, filtrado mensual centralizado, hashing PBKDF2, Intents reales (compartir compra, contacto por email).
 
 ## Uso de git
 No hacer commits propios. Dejar que el usuario haga los commits.
@@ -17,7 +17,7 @@ No hacer commits propios. Dejar que el usuario haga los commits.
 - ✅ Networking (Retrofit + Gson)
 - ✅ Menús y diálogos (AlertDialogs de CRUD de categorías, time picker, date picker)
 - ✅ Carga real de datos
-- ⬜ Al menos una funcionalidad con Intents (ej: compartir compra)
+- ✅ Al menos una funcionalidad con Intents (compartir compra en `PurchaseDetailScreen` con `ACTION_SEND`, contacto por email en `ContactSupportScreen` con `ACTION_SENDTO`)
 
 ## Stack tecnológico
 
