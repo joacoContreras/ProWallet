@@ -23,8 +23,10 @@ class SessionManager(private val context: Context) {
         private val SAVINGS_PERCENTAGE = androidx.datastore.preferences.core.floatPreferencesKey("savings_percentage")
         private val SAVINGS_METHOD = stringPreferencesKey("savings_method")
         private val SAVINGS_FREQUENCY = stringPreferencesKey("savings_frequency")
+        private val SAVINGS_FIXED_AMOUNT = doublePreferencesKey("savings_fixed_amount")
         private val DARK_MODE = booleanPreferencesKey("dark_mode")
         private val BIOMETRIC_ENABLED = booleanPreferencesKey("biometric_enabled")
+        private val NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
     }
 
     val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { preferences ->
@@ -55,12 +57,20 @@ class SessionManager(private val context: Context) {
         preferences[SAVINGS_FREQUENCY] ?: "Monthly"
     }
 
+    val savingsFixedAmount: Flow<Double> = context.dataStore.data.map { preferences ->
+        preferences[SAVINGS_FIXED_AMOUNT] ?: 0.0
+    }
+
     val darkMode: Flow<Boolean> = context.dataStore.data.map { preferences ->
         preferences[DARK_MODE] ?: false
     }
 
     val biometricEnabled: Flow<Boolean> = context.dataStore.data.map { preferences ->
         preferences[BIOMETRIC_ENABLED] ?: false
+    }
+
+    val notificationsEnabled: Flow<Boolean> = context.dataStore.data.map { preferences ->
+        preferences[NOTIFICATIONS_ENABLED] ?: true
     }
 
     suspend fun saveDarkMode(enabled: Boolean) {
@@ -72,6 +82,12 @@ class SessionManager(private val context: Context) {
     suspend fun saveBiometricEnabled(enabled: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[BIOMETRIC_ENABLED] = enabled
+        }
+    }
+
+    suspend fun saveNotificationsEnabled(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[NOTIFICATIONS_ENABLED] = enabled
         }
     }
 
@@ -87,11 +103,12 @@ class SessionManager(private val context: Context) {
         }
     }
 
-    suspend fun saveSavingsSettings(percentage: Float, method: String, frequency: String) {
+    suspend fun saveSavingsSettings(percentage: Float, method: String, frequency: String, fixedAmount: Double) {
         context.dataStore.edit { preferences ->
             preferences[SAVINGS_PERCENTAGE] = percentage
             preferences[SAVINGS_METHOD] = method
             preferences[SAVINGS_FREQUENCY] = frequency
+            preferences[SAVINGS_FIXED_AMOUNT] = fixedAmount
         }
     }
 
