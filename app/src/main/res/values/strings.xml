@@ -189,6 +189,20 @@
     <string name="share_label">Compartir</string>
     <string name="share_purchase_subject">Compra en %1$s</string>
     <string name="share_purchase_body">🛒 Compra en %1$s\n📅 Fecha: %2$s %3$s\n💰 Total: $%4$s\n\nProductos:\n%5$s\n\nCompartido desde ProWallet</string>
+    <string name="export_history_label">Exportar historial</string>
+    <string name="export_history_subject">Historial de compras - ProWallet</string>
+    <string name="filter_label">Filtros</string>
+    <string name="filter_title">Filtrar historial</string>
+    <string name="filter_store_placeholder">Comercio…</string>
+    <string name="filter_category_all">Todas las categorías</string>
+    <string name="filter_date_from">Desde</string>
+    <string name="filter_date_to">Hasta</string>
+    <string name="filter_min_amount">Monto mínimo</string>
+    <string name="filter_max_amount">Monto máximo</string>
+    <string name="filter_clear">Limpiar filtros</string>
+    <string name="filter_apply">Aplicar</string>
+    <string name="filter_active_summary">%d filtro(s) activo(s)</string>
+    <string name="no_purchases_match_filter">Ninguna compra coincide con los filtros.</string>
 
     <!-- Personal Inflation Screen -->
     <string name="monthly_inflation">Inflación mensual</string>
