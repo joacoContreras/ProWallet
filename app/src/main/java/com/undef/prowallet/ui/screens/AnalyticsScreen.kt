@@ -125,8 +125,16 @@ fun AnalyticsScreen(
                             fontSize = 36.sp,
                             color = SecondaryDark
                         )
+                        val vsLastMonthArrow = when {
+                            state.percentageVsLastMonth > 0 -> "▲"
+                            state.percentageVsLastMonth < 0 -> "▼"
+                            else -> "■"
+                        }
                         Text(
-                            text = stringResource(R.string.vs_last_month_format, "▲ 12%"),
+                            text = stringResource(
+                                R.string.vs_last_month_format,
+                                "$vsLastMonthArrow ${kotlin.math.abs(state.percentageVsLastMonth)}%"
+                            ),
                             fontFamily = PlusJakartaSans,
                             fontSize = 12.sp,
                             color = SecondaryDark.copy(alpha = 0.8f)
