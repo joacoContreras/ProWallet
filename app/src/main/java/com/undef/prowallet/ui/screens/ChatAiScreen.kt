@@ -14,37 +14,25 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
-
-data class ChatMessage(
-    val text: String,
-    val isUser: Boolean,
-    val hasInsight: Boolean = false
-)
+import com.undef.prowallet.viewmodel.ChatAiViewModel
+import com.undef.prowallet.viewmodel.ChatMessage
 
 @Composable
 fun ChatAiScreen(onNavigateBack: () -> Unit) {
+    val viewModel: ChatAiViewModel = viewModel()
+    val state by viewModel.uiState.collectAsState()
     var messageText by remember { mutableStateOf("") }
-    val greeting = stringResource(R.string.proassistant_greeting)
-    val userEx = stringResource(R.string.chat_user_example)
-    val assistantEx = stringResource(R.string.chat_assistant_example)
-    
-    val messages = remember {
-        mutableStateListOf(
-            ChatMessage(greeting, false),
-            ChatMessage(userEx, true),
-            ChatMessage(assistantEx, false, true)
-        )
-    }
+    val messages = state.messages
 
     val suggestions = listOf(
         stringResource(R.string.suggestion_analyze_week),
@@ -71,7 +59,7 @@ fun ChatAiScreen(onNavigateBack: () -> Unit) {
                 ) {
                     items(suggestions) { suggestion ->
                         Surface(
-                            onClick = { messages.add(ChatMessage(suggestion, true)) },
+                            onClick = { viewModel.sendMessage(suggestion) },
                             shape = RoundedCornerShape(20.dp),
                             color = Neutral.copy(alpha = 0.1f)
                         ) {
@@ -108,7 +96,7 @@ fun ChatAiScreen(onNavigateBack: () -> Unit) {
                     FloatingActionButton(
                         onClick = {
                             if (messageText.isNotBlank()) {
-                                messages.add(ChatMessage(messageText, true))
+                                viewModel.sendMessage(messageText)
                                 messageText = ""
                             }
                         },
@@ -149,27 +137,6 @@ fun ChatAiScreen(onNavigateBack: () -> Unit) {
             items(messages) { message ->
                 ChatBubble(message)
             }
-
-            item {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.alpha(0.6f)
-                ) {
-                    Icon(
-                        Icons.Default.SmartToy,
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp),
-                        tint = Neutral
-                    )
-                    Text(
-                        text = stringResource(R.string.proassistant_typing),
-                        fontSize = 12.sp,
-                        fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
-                        color = Neutral
-                    )
-                }
-            }
         }
     }
 }
@@ -202,6 +169,8 @@ fun ChatBubble(message: ChatMessage) {
                 }
             }
 
+            val text = message.rawText ?: stringResource(message.textRes!!, *message.textArgs.toTypedArray())
+
             Surface(
                 color = bgColor,
                 shape = shape,
@@ -210,14 +179,14 @@ fun ChatBubble(message: ChatMessage) {
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     Text(
-                        text = message.text,
+                        text = text,
                         fontSize = 14.sp,
                         fontFamily = PlusJakartaSans,
                         color = textColor,
                         lineHeight = 20.sp
                     )
-                    
-                    if (message.hasInsight) {
+
+                    message.insightPercent?.let { percent ->
                         Spacer(Modifier.height(12.dp))
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Row(
@@ -225,10 +194,15 @@ fun ChatBubble(message: ChatMessage) {
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text(stringResource(R.string.monthly_budget), fontSize = 11.sp, color = Neutral)
-                                Text(stringResource(R.string.left_label_format, "85%"), fontSize = 11.sp, color = SuccessGreen, fontWeight = FontWeight.Bold)
+                                Text(
+                                    stringResource(R.string.left_label_format, "$percent%"),
+                                    fontSize = 11.sp,
+                                    color = if (percent > 100) ErrorRed else SuccessGreen,
+                                    fontWeight = FontWeight.Bold
+                                )
                             }
                             LinearProgressIndicator(
-                                progress = { 0.15f },
+                                progress = { (percent / 100f).coerceIn(0f, 1f) },
                                 modifier = Modifier.fillMaxWidth().height(6.dp).clip(CircleShape),
                                 color = PrimaryDarker,
                                 trackColor = Primary.copy(alpha = 0.2f)
