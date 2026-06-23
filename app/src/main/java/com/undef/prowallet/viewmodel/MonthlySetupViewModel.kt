@@ -3,7 +3,9 @@ package com.undef.prowallet.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.undef.prowallet.data.AppRepository
 import com.undef.prowallet.util.SessionManager
+import com.undef.prowallet.util.isCurrentMonth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,12 +14,15 @@ import kotlinx.coroutines.launch
 data class MonthlySetupUiState(
     val monthlyIncome: String = "",
     val monthlyBudget: String = "",
-    val isSaved: Boolean = false
+    val isSaved: Boolean = false,
+    val categorySpend: List<Pair<String, Double>> = emptyList(),
+    val totalSpentThisMonth: Double = 0.0
 )
 
 class MonthlySetupViewModel(application: Application) : AndroidViewModel(application) {
 
     private val sessionManager = SessionManager(application)
+    private val repository = AppRepository(application)
 
     private val _uiState = MutableStateFlow(MonthlySetupUiState())
     val uiState: StateFlow<MonthlySetupUiState> = _uiState.asStateFlow()
@@ -34,6 +39,20 @@ class MonthlySetupViewModel(application: Application) : AndroidViewModel(applica
             sessionManager.monthlyBudget.collect { budget ->
                 _uiState.value = _uiState.value.copy(
                     monthlyBudget = if (budget > 0) String.format("%.2f", budget) else ""
+                )
+            }
+        }
+        viewModelScope.launch {
+            repository.purchasesFlow.collect { purchases ->
+                val current = purchases.filter { it.isCurrentMonth() }
+                val byCategory = current
+                    .groupBy { it.category }
+                    .mapValues { (_, list) -> list.sumOf { it.totalAmount } }
+                    .toList()
+                    .sortedByDescending { it.second }
+                _uiState.value = _uiState.value.copy(
+                    categorySpend = byCategory,
+                    totalSpentThisMonth = current.sumOf { it.totalAmount }
                 )
             }
         }
