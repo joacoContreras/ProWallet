@@ -1,14 +1,15 @@
 package com.undef.prowallet.ui.screens
 
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,6 +21,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -32,10 +34,30 @@ import com.undef.prowallet.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ContactSupportScreen(onNavigateBack: () -> Unit) {
+fun ContactSupportScreen(
+    onNavigateBack: () -> Unit,
+    onNavigateToChatAi: () -> Unit,
+    onNavigateToNotifications: () -> Unit
+) {
+    val context = LocalContext.current
     var searchQuery by remember { mutableStateOf("") }
     var selectedSubject by remember { mutableStateOf("Billing Inquiry") }
     var message by remember { mutableStateOf("") }
+    val missingEmailClientMsg = stringResource(R.string.support_email_missing_client)
+    val supportEmail = stringResource(R.string.support_email)
+
+    fun openSupportEmail() {
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:$supportEmail")
+            putExtra(Intent.EXTRA_SUBJECT, selectedSubject)
+            putExtra(Intent.EXTRA_TEXT, message)
+        }
+        if (intent.resolveActivity(context.packageManager) != null) {
+            context.startActivity(intent)
+        } else {
+            Toast.makeText(context, missingEmailClientMsg, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -43,7 +65,7 @@ fun ContactSupportScreen(onNavigateBack: () -> Unit) {
                 title = stringResource(R.string.app_name),
                 onNavigateBack = onNavigateBack,
                 actions = {
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = onNavigateToNotifications) {
                         Icon(Icons.Default.Notifications, contentDescription = null, tint = PrimaryDarker)
                     }
                 }
@@ -108,14 +130,16 @@ fun ContactSupportScreen(onNavigateBack: () -> Unit) {
                         label = stringResource(R.string.live_chat),
                         containerColor = SecondaryLight.copy(alpha = 0.2f),
                         contentColor = SecondaryDark,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        onClick = onNavigateToChatAi
                     )
                     SupportQuickAction(
                         icon = Icons.Default.Mail,
                         label = stringResource(R.string.email_support),
                         containerColor = TertiaryDark.copy(alpha = 0.4f),
                         contentColor = PrimaryDarker,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        onClick = { openSupportEmail() }
                     )
                 }
             }
@@ -129,7 +153,6 @@ fun ContactSupportScreen(onNavigateBack: () -> Unit) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(text = stringResource(R.string.faq_title), fontWeight = FontWeight.Bold, fontSize = 18.sp, color = TextPrimary)
-                        Text(text = stringResource(R.string.see_all), color = PrimaryDarker, fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.clickable { })
                     }
                     
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -208,10 +231,11 @@ fun ContactSupportScreen(onNavigateBack: () -> Unit) {
                         }
 
                         Button(
-                            onClick = { },
+                            onClick = { openSupportEmail() },
                             modifier = Modifier.fillMaxWidth().height(56.dp),
                             shape = RoundedCornerShape(28.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = PrimaryDarker)
+                            colors = ButtonDefaults.buttonColors(containerColor = PrimaryDarker),
+                            enabled = message.isNotBlank()
                         ) {
                             Text(text = stringResource(R.string.send_message_button), fontWeight = FontWeight.Bold, fontSize = 16.sp)
                         }
@@ -248,12 +272,12 @@ fun ContactSupportScreen(onNavigateBack: () -> Unit) {
 }
 
 @Composable
-fun SupportQuickAction(icon: ImageVector, label: String, containerColor: Color, contentColor: Color, modifier: Modifier) {
+fun SupportQuickAction(icon: ImageVector, label: String, containerColor: Color, contentColor: Color, modifier: Modifier, onClick: () -> Unit) {
     Surface(
         modifier = modifier.height(80.dp).shadow(2.dp, RoundedCornerShape(16.dp)),
         color = containerColor,
         shape = RoundedCornerShape(16.dp),
-        onClick = { }
+        onClick = onClick
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -317,11 +341,6 @@ fun FaqExpandedItem(icon: ImageVector, title: String, description: String) {
             Column(modifier = Modifier.padding(horizontal = 16.dp).padding(bottom = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 HorizontalDivider(color = BackgroundLight)
                 Text(text = description, fontSize = 13.sp, color = Neutral, lineHeight = 18.sp)
-                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable { }) {
-                    Text(text = stringResource(R.string.learn_more_settlement), color = PrimaryDarker, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                    Spacer(Modifier.width(4.dp))
-                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, tint = PrimaryDarker, modifier = Modifier.size(14.dp))
-                }
             }
         }
     }
