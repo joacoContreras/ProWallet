@@ -1,5 +1,7 @@
 package com.undef.prowallet.ui.screens
 
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,18 +15,30 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.theme.*
+import com.undef.prowallet.viewmodel.AuthViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 
 @Composable
-fun SplashScreen(onNavigateToLogin: () -> Unit) {
+fun SplashScreen(
+    authViewModel: AuthViewModel,
+    biometricEnabled: Boolean,
+    onNavigateToHome: () -> Unit,
+    onNavigateToLogin: () -> Unit
+) {
     val scale = remember { Animatable(0f) }
+    val context = LocalContext.current
+    var statusText by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(Unit) {
         scale.animateTo(
@@ -35,7 +49,54 @@ fun SplashScreen(onNavigateToLogin: () -> Unit) {
             )
         )
         delay(1500)
-        onNavigateToLogin()
+
+        // Espera la validación real contra Room (AuthViewModel.init), no el flag crudo de
+        // DataStore: si el usuario fue borrado de Room mientras la app estaba cerrada,
+        // sessionValidated solo se vuelve true después de limpiar la sesión.
+        val validatedState = authViewModel.uiState.first { it.sessionValidated }
+
+        if (!validatedState.isLoggedIn) {
+            onNavigateToLogin()
+            return@LaunchedEffect
+        }
+
+        if (!biometricEnabled) {
+            onNavigateToHome()
+            return@LaunchedEffect
+        }
+
+        val biometricManager = BiometricManager.from(context)
+        val canAuth = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)
+        val activity = context as? FragmentActivity
+
+        if (canAuth != BiometricManager.BIOMETRIC_SUCCESS || activity == null) {
+            // No hay hardware/huellas enroladas: no podemos exigir biometría sin bloquear al usuario.
+            onNavigateToHome()
+            return@LaunchedEffect
+        }
+
+        statusText = context.getString(R.string.splash_verifying_identity)
+        val executor = ContextCompat.getMainExecutor(context)
+        val prompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                onNavigateToHome()
+            }
+
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                onNavigateToLogin()
+            }
+
+            override fun onAuthenticationFailed() {
+                statusText = context.getString(R.string.splash_biometric_failed)
+            }
+        })
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle(context.getString(R.string.settings_biometric_prompt_title))
+            .setSubtitle(context.getString(R.string.splash_biometric_prompt_subtitle))
+            .setNegativeButtonText(context.getString(R.string.cancel))
+            .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
+            .build()
+        prompt.authenticate(promptInfo)
     }
 
     Box(
@@ -88,6 +149,16 @@ fun SplashScreen(onNavigateToLogin: () -> Unit) {
                 color = Neutral,
                 modifier = Modifier.scale(scale.value)
             )
+
+            statusText?.let {
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = it,
+                    fontFamily = PlusJakartaSans,
+                    fontSize = 12.sp,
+                    color = SecondaryDark
+                )
+            }
         }
     }
 }
