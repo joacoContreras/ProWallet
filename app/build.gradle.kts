@@ -39,6 +39,13 @@ android {
         compose = true
         buildConfig = true
     }
+
+    lint {
+        // El detector de Compose lint ComposableStateFlowValueDetector crashea con esta
+        // combinación de Kotlin/AGP (incompatibilidad de versión de kotlinx-metadata-jvm,
+        // no un problema del código de la app). Se deshabilita solo ese check puntual.
+        disable += "StateFlowValueCalledInComposition"
+    }
 }
 
 dependencies {
