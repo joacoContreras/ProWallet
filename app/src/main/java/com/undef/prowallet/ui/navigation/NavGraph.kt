@@ -71,13 +71,21 @@ fun AppNavGraph(navController: NavHostController) {
         startDestination = Screen.Splash.route
     ) {
         composable(Screen.Splash.route) {
-            val isLoggedIn by authViewModel.isLoggedIn.collectAsState(initial = false)
-            SplashScreen(onNavigateToLogin = {
-                val destination = if (isLoggedIn) Screen.Home.route else Screen.Login.route
-                navController.navigate(destination) {
-                    popUpTo(Screen.Splash.route) { inclusive = true }
+            val biometricEnabled by settingsViewModel.biometricEnabled.collectAsState()
+            SplashScreen(
+                authViewModel = authViewModel,
+                biometricEnabled = biometricEnabled,
+                onNavigateToHome = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Splash.route) { inclusive = true }
+                    }
+                },
+                onNavigateToLogin = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Splash.route) { inclusive = true }
+                    }
                 }
-            })
+            )
         }
 
         composable(Screen.Login.route) {
@@ -269,7 +277,8 @@ fun AppNavGraph(navController: NavHostController) {
             StoreDetailScreen(
                 storeName = storeName,
                 viewModel = storeDetailViewModel,
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToNotifications = { navController.navigate(Screen.Notifications.route) }
             )
         }
 
@@ -378,7 +387,9 @@ fun AppNavGraph(navController: NavHostController) {
 
         composable(Screen.ContactSupport.route) {
             ContactSupportScreen(
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToChatAi = { navController.navigate(Screen.ChatAi.route) },
+                onNavigateToNotifications = { navController.navigate(Screen.Notifications.route) }
             )
         }
     }

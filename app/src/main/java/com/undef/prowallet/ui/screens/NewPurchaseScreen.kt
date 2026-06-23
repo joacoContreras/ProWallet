@@ -486,29 +486,13 @@ fun NewPurchaseScreen(
 
             // Products section
             SectionCard(modifier = Modifier.padding(horizontal = 20.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(R.string.products_label),
-                        fontFamily = PlusJakartaSans,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
-                        color = TextPrimary
-                    )
-                    TextButton(onClick = {}) {
-                        Icon(Icons.Default.QrCodeScanner, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Spacer(Modifier.width(4.dp))
-                        Text(
-                            text = stringResource(R.string.scan_item),
-                            fontFamily = PlusJakartaSans,
-                            fontSize = 12.sp,
-                            color = Secondary
-                        )
-                    }
-                }
+                Text(
+                    text = stringResource(R.string.products_label),
+                    fontFamily = PlusJakartaSans,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = TextPrimary
+                )
 
                 Spacer(Modifier.height(12.dp))
 

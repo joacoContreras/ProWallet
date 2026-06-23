@@ -36,6 +36,8 @@
     <string name="monthly_trend">Tendencia Mensual</string>
     <string name="transactions_count">%d transacciones registradas</string>
     <string name="no_purchases_title">Sin compras aún</string>
+    <string name="no_store_matches">No encontramos tiendas con ese nombre.</string>
+    <string name="search_store_placeholder">Buscar tienda…</string>
     <string name="no_purchases_subtitle">Empezá registrando tu primera compra.</string>
     <string name="no_recent_purchases">No hay compras recientes este mes.</string>
     <string name="settings_title">Ajustes</string>
@@ -43,23 +45,13 @@
     <string name="edit_profile">Editar Perfil</string>
     <string name="logout">Cerrar Sesión</string>
     <string name="notifications_title">Notificaciones</string>
-    <string name="mark_all_read">Marcar todas como leídas</string>
     <string name="today_section">Hoy</string>
-    <string name="earlier_section">Antes</string>
-    <string name="notification_budget_title">Alerta de Presupuesto</string>
-    <string name="notification_budget_desc">Has alcanzado el 80% de tu presupuesto de comestibles para este mes. Echa un vistazo a tus tendencias de gasto.</string>
-    <string name="notification_savings_title">Hito de Ahorro</string>
-    <string name="notification_savings_desc">¡Buen trabajo! Ahorraste $50 más que el mes pasado. ¡Estás más cerca de tu meta de vacaciones!</string>
-    <string name="notification_reminder_title">Recordatorio</string>
-    <string name="notification_reminder_desc">No olvides registrar tu gasto de almuerzo de hoy para mantener tu presupuesto preciso.</string>
-    <string name="notification_system_title">Actualización del Sistema</string>
-    <string name="notification_system_desc">ProWallet ahora es más rápido. Mira el nuevo diseño del tablero diseñado para la calma financiera.</string>
-    <string name="notification_growth_title">Crecimiento de Cartera</string>
-    <string name="notification_growth_desc">Tu cartera de inversiones creció un 1,2% esta semana a pesar de las fluctuaciones del mercado. ¡Mantén el rumbo!</string>
-    <string name="new_feature_badge">Nueva Función</string>
-    <string name="ai_scanning_title">Escaneo de Tickets con IA</string>
-    <string name="ai_scanning_desc">Nuevo: Ahora puedes escanear tickets y recibos con IA para registrar automáticamente tus gastos en tiempo real.</string>
-    <string name="try_it_now">Pruébalo ahora</string>
+    <string name="notif_empty_state">No hay novedades todavía. Registrá compras para ver tu actividad acá.</string>
+    <string name="notif_budget_over_format">Superaste tu presupuesto mensual en $%1$s (%2$d%% del total).</string>
+    <string name="notif_budget_near_format">Vas por el %1$d%% de tu presupuesto mensual ($%2$s de $%3$s).</string>
+    <string name="notif_top_category_format">Tu categoría con más gasto este mes es %1$s ($%2$s).</string>
+    <string name="notif_biggest_purchase_format">Tu compra más grande este mes fue en %1$s por $%2$s.</string>
+    <string name="notif_auto_savings_format">Tenés un ahorro automático activo del %1$d%% de tu ingreso.</string>
 
     <!-- Splash Screen -->
     <string name="splash_subtitle">Bienvenido a la calma financiera</string>
@@ -118,7 +110,6 @@
     <string name="purchase_details_section">DETALLES DE LA COMPRA</string>
     <string name="store_name_placeholder">ej. Supermercado Día</string>
     <string name="date_placeholder">mm/dd/aa</string>
-    <string name="scan_item">Escanear Artículo</string>
     <string name="id_code_label">ID/Código</string>
     <string name="price_label">Precio</string>
     <string name="item_desc_placeholder">Descripción del artículo…</string>
@@ -153,7 +144,6 @@
     <string name="spending_distribution">Distribución de gastos</string>
     <string name="from_last_month_format">%s desde el mes pasado</string>
     <string name="transactions_format">%d Transacciones</string>
-    <string name="groceries_label">Comestibles</string>
     <string name="tech_digital_label">Tecnología y digital</string>
 
     <!-- Store Detail Screen -->
@@ -197,7 +187,6 @@
     <string name="share_label">Compartir</string>
     <string name="share_purchase_subject">Compra en %1$s</string>
     <string name="share_purchase_body">🛒 Compra en %1$s\n📅 Fecha: %2$s %3$s\n💰 Total: $%4$s\n\nProductos:\n%5$s\n\nCompartido desde ProWallet</string>
-    <string name="help_label">Ayuda</string>
 
     <!-- Personal Inflation Screen -->
     <string name="monthly_inflation">Inflación mensual</string>
@@ -206,10 +195,11 @@
     <string name="personal_inflation_rate">Tasa de inflación personal</string>
     <string name="top_price_hikes_label">MAYORES AUMENTOS DE PRECIO</string>
     <string name="price_changes_by_product">Cambios de precio por producto</string>
-    <string name="view_all_products">Ver todos los productos</string>
-    <string name="ai_savings_tip">Consejo de ahorro de IA</string>
-    <string name="since_last_month">Desde el mes pasado</string>
-    <string name="average_trip_increase">Aumento promedio por viaje</string>
+    <string name="ai_savings_tip">Insight calculado</string>
+    <string name="since_previous_period">Vs. período anterior</string>
+    <string name="personal_inflation_empty_title">Todavía no hay datos suficientes</string>
+    <string name="personal_inflation_empty_desc">Necesitamos que vuelvas a comprar el mismo producto en dos períodos distintos para calcular tu inflación personal real. Registrá más compras para activar esta sección.</string>
+    <string name="no_price_hikes">No se detectaron aumentos de precio en este período.</string>
 
     <!-- Contact Support Screen -->
     <string name="how_can_we_help">¿Cómo podemos ayudar?</string>
@@ -217,6 +207,8 @@
     <string name="search_help_center_hint">Buscar \'Depósito directo\'…</string>
     <string name="live_chat">Chat en vivo</string>
     <string name="email_support">Soporte por correo</string>
+    <string name="support_email">soporte@prowallet.app</string>
+    <string name="support_email_missing_client">No encontramos una app de correo instalada.</string>
     <string name="faq_title">Preguntas frecuentes</string>
     <string name="send_us_a_message">Envíanos un mensaje</string>
     <string name="expect_response_24h">Espera una respuesta en 24 horas.</string>
@@ -226,7 +218,6 @@
     <string name="send_message_button">Enviar mensaje</string>
     <string name="team_here_for_you">Nuestro equipo está aquí para vos.</string>
     <string name="available_24_7">Disponible 24/7 para soporte de emergencia.</string>
-    <string name="learn_more_settlement">Más información sobre tiempos de liquidación</string>
 
     <!-- Auth errors -->
     <string name="error_empty_fields">Completá todos los campos</string>
@@ -238,6 +229,7 @@
     <string name="error_password_mismatch">Las contraseñas no coinciden</string>
     <string name="error_enter_email">Ingresá tu email</string>
     <string name="error_invalid_code">Ingresá un código válido de 6 dígitos</string>
+    <string name="error_wrong_code">Código incorrecto. Probá de nuevo.</string>
 
     <!-- Verify Code Screen -->
     <string name="verify_identity">Verificar Identidad</string>
@@ -245,6 +237,7 @@
     <string name="verify_code_button">Verificar Código</string>
     <string name="resend_code">¿No recibiste el código? Reenviar</string>
     <string name="secured_by_prowallet">Protegido por cifrado ProWallet</string>
+    <string name="simulated_code_notice">Código de verificación (simulado, no se envía email real): %1$s</string>
 
     <!-- Forgot Password Screen -->
     <string name="forgot_password_title">¿Olvidaste tu contraseña?</string>
@@ -284,18 +277,25 @@
     <!-- Biometric Prompt -->
     <string name="settings_biometric_prompt_title">Verificar identidad</string>
     <string name="settings_biometric_prompt_subtitle">Confirma tu huella para habilitar la biometría</string>
+    <string name="splash_biometric_prompt_subtitle">Confirma tu huella para entrar a ProWallet</string>
+    <string name="splash_verifying_identity">Verificando identidad…</string>
+    <string name="splash_biometric_failed">No se reconoció tu huella. Intentá de nuevo.</string>
 
     <!-- Chat AI Screen -->
     <string name="pro_assistant_title">ProAsistente</string>
     <string name="ask_proassistant_placeholder">Pregunta al ProAsistente…</string>
-    <string name="proassistant_typing">ProAsistente está escribiendo…</string>
     <string name="suggestion_analyze_week">Analizar mi última semana</string>
     <string name="suggestion_budget_check">Verificar presupuesto</string>
     <string name="suggestion_top_categories">Categorías principales</string>
     <string name="proassistant_greeting">¡Hola! Soy tu ProAsistente. ¿Cómo puedo ayudarte a alcanzar tus metas financieras hoy?</string>
-    <string name="chat_user_example">¿Podés revisar mi gasto en café este mes?</string>
-    <string name="chat_assistant_example">Has gastado $42.50 en cafeterías este mes en 8 transacciones.</string>
     <string name="left_label_format">%s restante</string>
+    <string name="chat_no_budget_set">Todavía no configuraste un presupuesto mensual. Podés hacerlo desde tu perfil en "Presupuesto mensual".</string>
+    <string name="chat_budget_status">Llevás gastado $%1$s de $%2$s este mes (%3$d%% de tu presupuesto). Te quedan $%4$s.</string>
+    <string name="chat_no_purchases_week">No registraste compras en los últimos 7 días.</string>
+    <string name="chat_week_summary">Esta semana registraste %1$d compra(s) por un total de $%2$s.</string>
+    <string name="chat_no_purchases_month">Todavía no registraste compras este mes.</string>
+    <string name="chat_top_categories">Tus categorías con más gasto este mes son: %1$s.</string>
+    <string name="chat_fallback">Este mes llevás gastado $%1$s. Podés preguntarme por tu presupuesto, tu última semana o tus categorías principales.</string>
 
     <!-- Store Detail Screen -->
     <string name="merchant_id_format">ID de comerciante: %s</string>
@@ -319,10 +319,12 @@
     <string name="budget_usage">Uso del Presupuesto</string>
     <string name="management_section">Administración</string>
     <string name="linked_accounts">Cuentas Vinculadas</string>
-    <string name="banks_connected">3 Bancos Conectados</string>
+    <string name="accounts_linked_none">Sin cuentas vinculadas</string>
+    <string name="accounts_linked_one">1 cuenta vinculada</string>
+    <string name="accounts_linked_many_format">%d cuentas vinculadas</string>
     <string name="fixed_expenses">Gastos Fijos</string>
     <string name="rent_utilities_subscriptions">Alquiler, Servicios, Suscripciones</string>
-    <string name="auto_savings_amount">$500/mes automatizado</string>
+    <string name="auto_savings_status_format">%1$d%% %2$s automatizado</string>
     <string name="support_safety">Soporte y Seguridad</string>
     <string name="contact_us">Contáctanos</string>
     <string name="security_privacy">Seguridad y Privacidad</string>
@@ -335,12 +337,8 @@
     <string name="step_1_of_2">Paso 1 de 2</string>
     <string name="define_your_success">Define Tu Éxito</string>
     <string name="monthly_income_hint">¿Cuánto planeas ganar este mes? Incluye todas las fuentes de ingresos.</string>
-    <string name="budget_allocation">Asignación de Presupuesto</string>
-    <string name="add_custom_category">Agregar Categoría Personalizada</string>
-    <string name="primary_job">Trabajo Principal</string>
-    <string name="add_source">+ Agregar Fuente</string>
-    <string name="transport_label">Transporte</string>
-    <string name="dining_out_label">Comer Fuera</string>
+    <string name="budget_allocation">Gasto por Categoría (este mes)</string>
+    <string name="category_share_of_spend">%d%% del gasto total</string>
 
     <!-- Settings Screen -->
     <string name="save_profile_button">Guardar Perfil</string>
@@ -351,20 +349,23 @@
     <string name="items_count_format">%d artículos</string>
 
     <!-- Auto Savings Screen -->
-    <string name="main_savings">Ahorros Principales</string>
     <string name="auto_savings_plan">Plan de ahorro automático</string>
     <string name="auto_savings_footer">Los fondos se transferirán automáticamente desde su cuenta principal en la fecha programada.</string>
     <string name="activate_plan">Activar plan</string>
-    <string name="savings_goal">Meta de ahorro</string>
-    <string name="savings_yearly_format">Has ahorrado %s este año.</string>
+    <string name="savings_goal">Proyección de ahorro</string>
+    <string name="savings_yearly_format">Proyección anual estimada: %s</string>
+    <string name="savings_estimate_disclaimer">Estimación según tu configuración actual, no un monto ya depositado.</string>
     <string name="percentage">Porcentaje</string>
     <string name="fixed_amount">Monto fijo</string>
+    <string name="fixed_amount_per_period_label">Monto fijo a ahorrar por período</string>
     <string name="current_income">Ingresos actuales</string>
     <string name="estimated_monthly_savings">Ahorro mensual estimado</string>
     <string name="frequency">Frecuencia</string>
     <string name="bi_weekly">Quincenal</string>
     <string name="weekly">Semanal</string>
     <string name="destination_fund">Fondo de destino</string>
+    <string name="no_primary_account">Sin cuenta principal</string>
+    <string name="no_primary_account_hint">Configurá una cuenta principal en "Cuentas vinculadas"</string>
 
     <!-- New Purchase Screen errors -->
     <string name="error_save_purchase">Error al guardar la compra. Intente nuevamente.</string>
