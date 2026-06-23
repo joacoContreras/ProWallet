@@ -40,19 +40,26 @@ Aplicación Android de gestión de gastos personales desarrollada como proyecto 
 ## Capturas de pantalla
 
 ### Flujo de autenticación
-| Splash | Login | Registro | Home |
+| Splash | Login | Registro | Registro exitoso |
 |---|---|---|---|
-| <img src="docs/screenshots/splash.png" width="180"/> | <img src="docs/screenshots/login.png" width="180"/> | <img src="docs/screenshots/register.png" width="180"/> | <img src="docs/screenshots/home.png" width="180"/> |
+| <img src="docs/screenshots/splash.png" width="180"/> | <img src="docs/screenshots/login.jpg" width="180"/> | <img src="docs/screenshots/Register.jpg" width="180"/> | <img src="docs/screenshots/Welcome.jpg" width="180"/> |
 
-### Registro y detalle de compras
-| Nueva Compra | Compra guardada | Detalle | Historial |
-|---|---|---|---|
-| <img src="docs/screenshots/new_purchase.png" width="180"/> | <img src="docs/screenshots/purchase_success.png" width="180"/> | <img src="docs/screenshots/purchase_detail.png" width="180"/> | <img src="docs/screenshots/history.png" width="180"/> |
+### Dashboard y registro de compras
+| Home | Nueva Compra | Compra guardada |
+|---|---|---|
+| <img src="docs/screenshots/Dashboard.jpg" width="180"/> | <img src="docs/screenshots/New_Purchase.jpg" width="180"/> | <img src="docs/screenshots/Succesful_Purchase.jpg" width="180"/> |
 
-### Estadísticas y perfil
-| Analíticas | Top Tiendas | Perfil | Configuración |
-|---|---|---|---|
-| <img src="docs/screenshots/analytics.png" width="180"/> | <img src="docs/screenshots/top_stores.png" width="180"/> | <img src="docs/screenshots/profile.png" width="180"/> | <img src="docs/screenshots/settings.png" width="180"/> |
+### Estadísticas
+| Resumen | Tendencia mensual | Top Tiendas |
+|---|---|---|
+| <img src="docs/screenshots/Analitics.jpg" width="180"/> | <img src="docs/screenshots/Analitics_2.jpg" width="180"/> | <img src="docs/screenshots/Top_Stores.jpg" width="180"/> |
+
+### Perfil y configuración
+| Perfil | Configuración | Notificaciones |
+|---|---|---|
+| <img src="docs/screenshots/Profile.jpg" width="180"/> | <img src="docs/screenshots/Settings.jpg" width="180"/> | <img src="docs/screenshots/Notificactions.jpg" width="180"/> |
+
+> Pendientes: `purchase_detail` (detalle de compra) e `history` (historial completo).
 
 ---
 
