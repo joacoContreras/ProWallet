@@ -52,6 +52,8 @@
     <string name="notif_top_category_format">Tu categoría con más gasto este mes es %1$s ($%2$s).</string>
     <string name="notif_biggest_purchase_format">Tu compra más grande este mes fue en %1$s por $%2$s.</string>
     <string name="notif_auto_savings_format">Tenés un ahorro automático activo del %1$d%% de tu ingreso.</string>
+    <string name="notification_channel_budget_name">Alertas de presupuesto</string>
+    <string name="notification_channel_budget_description">Avisos cuando tu gasto mensual se acerca o supera el presupuesto configurado</string>
 
     <!-- Splash Screen -->
     <string name="splash_subtitle">Bienvenido a la calma financiera</string>

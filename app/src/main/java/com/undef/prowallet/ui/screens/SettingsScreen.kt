@@ -1,6 +1,8 @@
 package com.undef.prowallet.ui.screens
 
+import android.Manifest
 import android.net.Uri
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -72,6 +74,17 @@ fun SettingsScreen(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let { authViewModel.updateAvatar(it.toString()) }
+    }
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted -> settingsViewModel.setNotificationsEnabled(granted) }
+
+    val onNotificationsToggle: (Boolean) -> Unit = { enable ->
+        if (!enable || Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            settingsViewModel.setNotificationsEnabled(enable)
+        } else {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
 
     LaunchedEffect(authState.profileUpdated) {
@@ -212,7 +225,7 @@ fun SettingsScreen(
                     title = stringResource(R.string.settings_notifications_title),
                     subtitle = stringResource(R.string.settings_notifications_subtitle),
                     checked = notificationsEnabled,
-                    onCheckedChange = { settingsViewModel.setNotificationsEnabled(it) }
+                    onCheckedChange = onNotificationsToggle
                 )
                 HorizontalDivider(color = Color(0xFFF8F8F8))
                 SettingsSwitch(

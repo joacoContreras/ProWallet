@@ -3,14 +3,19 @@ package com.undef.prowallet.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.undef.prowallet.R
 import com.undef.prowallet.data.AppRepository
 import com.undef.prowallet.data.CategoryEntity
 import com.undef.prowallet.domain.Product
 import com.undef.prowallet.domain.Purchase
 import com.undef.prowallet.util.LocationHelper
+import com.undef.prowallet.util.NotificationHelper
+import com.undef.prowallet.util.SessionManager
+import com.undef.prowallet.util.isCurrentMonth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -45,6 +50,7 @@ data class PurchaseUiState(
 class PurchaseViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = AppRepository(application)
+    private val sessionManager = SessionManager(application)
 
     private val _uiState = MutableStateFlow(PurchaseUiState())
     val uiState: StateFlow<PurchaseUiState> = _uiState.asStateFlow()
@@ -178,11 +184,37 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
             try {
                 val id = repository.savePurchase(purchase)
                 _uiState.value = _uiState.value.copy(savedSuccess = true, savedPurchaseId = id.toString())
+                checkBudgetAndNotify()
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(saveError = true)
             } finally {
                 _uiState.value = _uiState.value.copy(isSaving = false)
             }
+        }
+    }
+
+    // Notificación real del sistema (no solo el insight in-app de NotificationsScreen):
+    // se dispara una sola vez por guardado, reusando el mismo umbral de 80%/100% que ya
+    // calculaba NotificationsViewModel, para no duplicar la lógica de negocio.
+    private suspend fun checkBudgetAndNotify() {
+        if (!sessionManager.notificationsEnabled.first()) return
+        val budget = sessionManager.monthlyBudget.first()
+        if (budget <= 0) return
+
+        val spent = repository.purchasesFlow.first().filter { it.isCurrentMonth() }.sumOf { it.totalAmount }
+        val percent = ((spent / budget) * 100).toInt()
+        val context = getApplication<Application>()
+        val title = context.getString(R.string.settings_budget_alerts_title)
+
+        when {
+            spent > budget -> NotificationHelper.showBudgetAlert(
+                context, title,
+                context.getString(R.string.notif_budget_over_format, "%.0f".format(spent - budget), percent)
+            )
+            percent >= 80 -> NotificationHelper.showBudgetAlert(
+                context, title,
+                context.getString(R.string.notif_budget_near_format, percent, "%.0f".format(spent), "%.0f".format(budget))
+            )
         }
     }
 
@@ -246,6 +278,7 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
             try {
                 repository.updatePurchase(id, purchase)
                 _uiState.value = _uiState.value.copy(savedSuccess = true, savedPurchaseId = id.toString())
+                checkBudgetAndNotify()
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(saveError = true)
             } finally {
