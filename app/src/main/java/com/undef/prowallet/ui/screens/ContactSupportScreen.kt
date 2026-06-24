@@ -144,29 +144,6 @@ fun ContactSupportScreen(
                 }
             }
 
-            // FAQ Section
-            item {
-                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = stringResource(R.string.faq_title), fontWeight = FontWeight.Bold, fontSize = 18.sp, color = TextPrimary)
-                    }
-                    
-                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        FaqItem(Icons.Default.Security, "Account Security")
-                        FaqExpandedItem(
-                            Icons.Default.Payments, 
-                            "Transactions", 
-                            "Standard transactions typically settle within 1-3 business days. If you see a pending charge, it's often a temporary authorization from the merchant."
-                        )
-                        FaqItem(Icons.Default.Savings, "Auto-Savings")
-                    }
-                }
-            }
-
             // Message Form
             item {
                 Card(
@@ -287,61 +264,6 @@ fun SupportQuickAction(icon: ImageVector, label: String, containerColor: Color, 
             Icon(icon, contentDescription = null, tint = contentColor)
             Spacer(Modifier.height(4.dp))
             Text(text = label, color = contentColor, fontWeight = FontWeight.Bold, fontSize = 12.sp)
-        }
-    }
-}
-
-@Composable
-fun FaqItem(icon: ImageVector, title: String) {
-    Card(
-        modifier = Modifier.fillMaxWidth().shadow(1.dp, RoundedCornerShape(12.dp)),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
-    ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Box(
-                modifier = Modifier.size(36.dp).clip(RoundedCornerShape(8.dp)).background(Primary.copy(alpha = 0.1f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(icon, contentDescription = null, tint = PrimaryDarker, modifier = Modifier.size(20.dp))
-            }
-            Text(text = title, modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, fontSize = 14.sp)
-            Icon(Icons.Default.ExpandMore, contentDescription = null, tint = Neutral)
-        }
-    }
-}
-
-@Composable
-fun FaqExpandedItem(icon: ImageVector, title: String, description: String) {
-    Card(
-        modifier = Modifier.fillMaxWidth().shadow(4.dp, RoundedCornerShape(12.dp)),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        border = androidx.compose.foundation.BorderStroke(2.dp, Primary.copy(alpha = 0.3f))
-    ) {
-        Column {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Box(
-                    modifier = Modifier.size(36.dp).clip(RoundedCornerShape(8.dp)).background(Primary.copy(alpha = 0.1f)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(icon, contentDescription = null, tint = PrimaryDarker, modifier = Modifier.size(20.dp))
-                }
-                Text(text = title, modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, fontSize = 14.sp, color = PrimaryDarker)
-                Icon(Icons.Default.ExpandLess, contentDescription = null, tint = PrimaryDarker)
-            }
-            Column(modifier = Modifier.padding(horizontal = 16.dp).padding(bottom = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                HorizontalDivider(color = BackgroundLight)
-                Text(text = description, fontSize = 13.sp, color = Neutral, lineHeight = 18.sp)
-            }
         }
     }
 }

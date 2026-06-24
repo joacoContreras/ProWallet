@@ -225,7 +225,6 @@
     <string name="email_support">Soporte por correo</string>
     <string name="support_email">soporte@prowallet.app</string>
     <string name="support_email_missing_client">No encontramos una app de correo instalada.</string>
-    <string name="faq_title">Preguntas frecuentes</string>
     <string name="send_us_a_message">Envíanos un mensaje</string>
     <string name="expect_response_24h">Espera una respuesta en 24 horas.</string>
     <string name="subject_label">Asunto</string>
