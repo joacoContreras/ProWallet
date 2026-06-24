@@ -39,27 +39,20 @@ Aplicación Android de gestión de gastos personales desarrollada como proyecto 
 
 ## Capturas de pantalla
 
-### Flujo de autenticación
-| Splash | Login | Registro | Registro exitoso |
+### Flujo de autenticación y registro
+| Splash | Login | Registro | Registro Exitoso |
 |---|---|---|---|
-| <img src="docs/screenshots/splash.png" width="180"/> | <img src="docs/screenshots/login.jpg" width="180"/> | <img src="docs/screenshots/Register.jpg" width="180"/> | <img src="docs/screenshots/Welcome.jpg" width="180"/> |
+| <img src="docs/screenshots/splash.png" width="180"/> | <img src="docs/screenshots/login.jpg" width="180"/> | <img src="docs/screenshots/register.jpg" width="180"/> | <img src="docs/screenshots/welcome.jpg" width="180"/> |
 
-### Dashboard y registro de compras
-| Home | Nueva Compra | Compra guardada |
-|---|---|---|
-| <img src="docs/screenshots/Dashboard.jpg" width="180"/> | <img src="docs/screenshots/New_Purchase.jpg" width="180"/> | <img src="docs/screenshots/Succesful_Purchase.jpg" width="180"/> |
+### Dashboard y Compras
+| Dashboard (Home) | Nueva Compra | Compra Exitosa | Notificaciones |
+|---|---|---|---|
+| <img src="docs/screenshots/dashboard.jpg" width="180"/> | <img src="docs/screenshots/new_purchase.jpg" width="180"/> | <img src="docs/screenshots/successful_purchase.jpg" width="180"/> | <img src="docs/screenshots/notifications.jpg" width="180"/> |
 
-### Estadísticas
-| Resumen | Tendencia mensual | Top Tiendas |
-|---|---|---|
-| <img src="docs/screenshots/Analitics.jpg" width="180"/> | <img src="docs/screenshots/Analitics_2.jpg" width="180"/> | <img src="docs/screenshots/Top_Stores.jpg" width="180"/> |
-
-### Perfil y configuración
-| Perfil | Configuración | Notificaciones |
-|---|---|---|
-| <img src="docs/screenshots/Profile.jpg" width="180"/> | <img src="docs/screenshots/Settings.jpg" width="180"/> | <img src="docs/screenshots/Notificactions.jpg" width="180"/> |
-
-> Pendientes: `purchase_detail` (detalle de compra) e `history` (historial completo).
+### Estadísticas, Perfil y Configuración
+| Estadísticas | Tendencias | Top Tiendas | Perfil | Configuración |
+|---|---|---|---|---|
+| <img src="docs/screenshots/analytics.jpg" width="145"/> | <img src="docs/screenshots/analytics_2.jpg" width="145"/> | <img src="docs/screenshots/top_stores.jpg" width="145"/> | <img src="docs/screenshots/profile.jpg" width="145"/> | <img src="docs/screenshots/settings.jpg" width="145"/> |
 
 ---
 
@@ -196,7 +189,6 @@ com.undef.prowallet
 | Detalle compra | `purchase_detail/{purchaseId}` |
 | Historial | `history` |
 | Estadísticas | `analytics` |
-| Inflación personal | `personal_inflation` |
 | Top tiendas | `top_stores` |
 | Detalle tienda | `store_detail/{storeName}` |
 | Perfil | `profile` |

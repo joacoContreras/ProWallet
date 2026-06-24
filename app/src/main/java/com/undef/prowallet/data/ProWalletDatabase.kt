@@ -14,6 +14,7 @@ import com.undef.prowallet.data.dao.ProductDao
 import com.undef.prowallet.data.dao.PurchaseDao
 import com.undef.prowallet.data.dao.PurchasedItemDao
 import com.undef.prowallet.data.dao.UserDao
+import com.undef.prowallet.data.dao.PreciosClarosProductDao
 
 @Database(
     entities = [
@@ -23,9 +24,10 @@ import com.undef.prowallet.data.dao.UserDao
         PurchasedItemEntity::class,
         CategoryEntity::class,
         FixedExpenseEntity::class,
-        AccountEntity::class
+        AccountEntity::class,
+        PreciosClarosProductEntity::class
     ],
-    version = 7,
+    version = 8,
     exportSchema = false
 )
 abstract class ProWalletDatabase : RoomDatabase() {
@@ -37,6 +39,7 @@ abstract class ProWalletDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun fixedExpenseDao(): FixedExpenseDao
     abstract fun accountDao(): AccountDao
+    abstract fun preciosClarosProductDao(): PreciosClarosProductDao
 
     companion object {
         @Volatile
@@ -120,6 +123,26 @@ abstract class ProWalletDatabase : RoomDatabase() {
             }
         }
 
+        // v7→v8: add precios_claros_cache table.
+        private val MIGRATION_7_8 = object : Migration(7, 8) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS precios_claros_cache (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `query` TEXT NOT NULL,
+                        api_product_id TEXT,
+                        nombre TEXT,
+                        marca TEXT,
+                        presentacion TEXT,
+                        precio_min REAL,
+                        precio_max REAL,
+                        sucursales_disponibles INTEGER,
+                        timestamp INTEGER NOT NULL
+                    )
+                """.trimIndent())
+            }
+        }
+
         fun getInstance(context: Context): ProWalletDatabase =
             INSTANCE ?: synchronized(this) {
                 INSTANCE ?: Room.databaseBuilder(
@@ -127,7 +150,7 @@ abstract class ProWalletDatabase : RoomDatabase() {
                     ProWalletDatabase::class.java,
                     "prowallet.db"
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
                     .apply { if (BuildConfig.DEBUG) fallbackToDestructiveMigration(dropAllTables = true) }
                     .build()
                     .also { INSTANCE = it }

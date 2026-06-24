@@ -204,18 +204,7 @@
     <string name="filter_active_summary">%d filtro(s) activo(s)</string>
     <string name="no_purchases_match_filter">Ninguna compra coincide con los filtros.</string>
 
-    <!-- Personal Inflation Screen -->
-    <string name="monthly_inflation">Inflación mensual</string>
-    <string name="quarterly">Trimestral</string>
     <string name="monthly">Mensual</string>
-    <string name="personal_inflation_rate">Tasa de inflación personal</string>
-    <string name="top_price_hikes_label">MAYORES AUMENTOS DE PRECIO</string>
-    <string name="price_changes_by_product">Cambios de precio por producto</string>
-    <string name="ai_savings_tip">Insight calculado</string>
-    <string name="since_previous_period">Vs. período anterior</string>
-    <string name="personal_inflation_empty_title">Todavía no hay datos suficientes</string>
-    <string name="personal_inflation_empty_desc">Necesitamos que vuelvas a comprar el mismo producto en dos períodos distintos para calcular tu inflación personal real. Registrá más compras para activar esta sección.</string>
-    <string name="no_price_hikes">No se detectaron aumentos de precio en este período.</string>
 
     <!-- Contact Support Screen -->
     <string name="how_can_we_help">¿Cómo podemos ayudar?</string>

@@ -50,7 +50,6 @@ sealed class Screen(val route: String) {
     object ChatAi : Screen("chat_ai")
     object ManageAccounts : Screen("manage_accounts")
     object MonthlySetup : Screen("monthly_setup")
-    object PersonalInflation : Screen("personal_inflation")
     object AutoSavings : Screen("auto_savings")
     object FixedExpenses : Screen("fixed_expenses")
     object ForgotPassword : Screen("forgot_password")
@@ -243,17 +242,7 @@ fun AppNavGraph(navController: NavHostController) {
                     }
                 },
                 onNavigateToNewPurchase = { navController.navigate(Screen.NewPurchase.route) },
-                onNavigateToTopStores = { navController.navigate(Screen.TopStores.route) },
-                onNavigateToPersonalInflation = { navController.navigate(Screen.PersonalInflation.route) }
-            )
-        }
-
-        composable(Screen.PersonalInflation.route) {
-            PersonalInflationScreen(
-                onNavigateBack = { navController.popBackStack() },
-                onNavigateToNotifications = {
-                    navController.navigate(Screen.Notifications.route)
-                }
+                onNavigateToTopStores = { navController.navigate(Screen.TopStores.route) }
             )
         }
 
