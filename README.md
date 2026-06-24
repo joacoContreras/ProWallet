@@ -39,20 +39,20 @@ Aplicación Android de gestión de gastos personales desarrollada como proyecto 
 
 ## Capturas de pantalla
 
-### Flujo de autenticación
-| Splash | Login | Registro | Home |
+### Flujo de autenticación y registro
+| Splash | Login | Registro | Registro Exitoso |
 |---|---|---|---|
-| <img src="docs/screenshots/splash.png" width="180"/> | <img src="docs/screenshots/login.png" width="180"/> | <img src="docs/screenshots/register.png" width="180"/> | <img src="docs/screenshots/home.png" width="180"/> |
+| <img src="docs/screenshots/splash.png" width="180"/> | <img src="docs/screenshots/login.jpg" width="180"/> | <img src="docs/screenshots/register.jpg" width="180"/> | <img src="docs/screenshots/welcome.jpg" width="180"/> |
 
-### Registro y detalle de compras
-| Nueva Compra | Compra guardada | Detalle | Historial |
+### Dashboard y Compras
+| Dashboard (Home) | Nueva Compra | Compra Exitosa | Notificaciones |
 |---|---|---|---|
-| <img src="docs/screenshots/new_purchase.png" width="180"/> | <img src="docs/screenshots/purchase_success.png" width="180"/> | <img src="docs/screenshots/purchase_detail.png" width="180"/> | <img src="docs/screenshots/history.png" width="180"/> |
+| <img src="docs/screenshots/dashboard.jpg" width="180"/> | <img src="docs/screenshots/new_purchase.jpg" width="180"/> | <img src="docs/screenshots/successful_purchase.jpg" width="180"/> | <img src="docs/screenshots/notifications.jpg" width="180"/> |
 
-### Estadísticas y perfil
-| Analíticas | Top Tiendas | Perfil | Configuración |
-|---|---|---|---|
-| <img src="docs/screenshots/analytics.png" width="180"/> | <img src="docs/screenshots/top_stores.png" width="180"/> | <img src="docs/screenshots/profile.png" width="180"/> | <img src="docs/screenshots/settings.png" width="180"/> |
+### Estadísticas, Perfil y Configuración
+| Estadísticas | Tendencias | Top Tiendas | Perfil | Configuración |
+|---|---|---|---|---|
+| <img src="docs/screenshots/analytics.jpg" width="145"/> | <img src="docs/screenshots/analytics_2.jpg" width="145"/> | <img src="docs/screenshots/top_stores.jpg" width="145"/> | <img src="docs/screenshots/profile.jpg" width="145"/> | <img src="docs/screenshots/settings.jpg" width="145"/> |
 
 ---
 
