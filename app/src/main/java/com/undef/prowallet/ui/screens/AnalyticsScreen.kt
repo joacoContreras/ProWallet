@@ -33,8 +33,7 @@ fun AnalyticsScreen(
     viewModel: AnalyticsViewModel,
     onNavigateToHome: () -> Unit,
     onNavigateToNewPurchase: () -> Unit,
-    onNavigateToTopStores: () -> Unit,
-    onNavigateToPersonalInflation: () -> Unit
+    onNavigateToTopStores: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
     val currentMonth = remember {
@@ -62,7 +61,7 @@ fun AnalyticsScreen(
         ) {
             item {
                 Spacer(Modifier.height(8.dp))
-                AnalyticsHeader(onNavigateToPersonalInflation = onNavigateToPersonalInflation)
+                AnalyticsHeader()
             }
 
             item {

@@ -189,7 +189,6 @@ com.undef.prowallet
 | Detalle compra | `purchase_detail/{purchaseId}` |
 | Historial | `history` |
 | Estadísticas | `analytics` |
-| Inflación personal | `personal_inflation` |
 | Top tiendas | `top_stores` |
 | Detalle tienda | `store_detail/{storeName}` |
 | Perfil | `profile` |

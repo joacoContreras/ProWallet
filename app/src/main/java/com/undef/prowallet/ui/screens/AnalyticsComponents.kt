@@ -26,7 +26,6 @@ import java.util.Locale
 
 @Composable
 fun AnalyticsHeader(
-    onNavigateToPersonalInflation: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -47,18 +46,6 @@ fun AnalyticsHeader(
                 fontFamily = PlusJakartaSans,
                 fontSize = 13.sp,
                 color = Neutral
-            )
-        }
-        IconButton(
-            onClick = onNavigateToPersonalInflation,
-            modifier = Modifier
-                .clip(RoundedCornerShape(12.dp))
-                .background(Primary.copy(alpha = 0.1f))
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.TrendingUp,
-                contentDescription = stringResource(R.string.personal_inflation_rate),
-                tint = PrimaryDarker
             )
         }
     }
