@@ -295,6 +295,21 @@
     <string name="splash_biometric_prompt_subtitle">Confirma tu huella para entrar a ProWallet</string>
     <string name="splash_verifying_identity">Verificando identidad…</string>
     <string name="splash_biometric_failed">No se reconoció tu huella. Intentá de nuevo.</string>
+    <string name="biometric_not_available_message">Configura una huella o método biométrico para utilizar esta función.</string>
+    <string name="biometric_cancelled_message">Autenticación cancelada.</string>
+    <string name="biometric_error_message">No se pudo verificar tu identidad biométrica.</string>
+    <string name="retry_label">Reintentar</string>
+    <string name="continue_label">Continuar</string>
+    <string name="back_to_login_label">Volver al login</string>
+
+    <!-- OCR de ticket -->
+    <string name="ocr_processing">Procesando ticket…</string>
+    <string name="ocr_detected_title">Ticket detectado</string>
+    <string name="ocr_detected_summary">Tienda: %1$s\nFecha: %2$s\nProductos detectados: %3$d\nTotal estimado: $%4$.2f</string>
+    <string name="ocr_apply_button">Cargar al formulario</string>
+    <string name="ocr_discard_button">Descartar</string>
+    <string name="ocr_error_no_text">No se pudo detectar texto en la imagen. Cargá los datos manualmente.</string>
+    <string name="ocr_unknown_value">No detectado</string>
 
     <!-- Chat AI Screen -->
     <string name="pro_assistant_title">ProAsistente</string>

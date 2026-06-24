@@ -1,11 +1,16 @@
 package com.undef.prowallet.viewmodel
 
 import android.app.Application
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.undef.prowallet.R
 import com.undef.prowallet.data.AppRepository
 import com.undef.prowallet.data.CategoryEntity
+import com.undef.prowallet.data.ocr.ParsedTicket
+import com.undef.prowallet.data.ocr.TicketOcrService
+import com.undef.prowallet.data.ocr.TicketParser
 import com.undef.prowallet.domain.Product
 import com.undef.prowallet.domain.Purchase
 import com.undef.prowallet.util.LocationHelper
@@ -21,6 +26,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.UUID
+
+enum class OcrStatus { Idle, Processing, Success, Error }
 
 data class PurchaseUiState(
     val storeName: String = "",
@@ -44,7 +51,10 @@ data class PurchaseUiState(
     val ticketImageUri: String? = null,
     val latitude: Double? = null,
     val longitude: Double? = null,
-    val isFetchingLocation: Boolean = false
+    val isFetchingLocation: Boolean = false,
+    val ocrStatus: OcrStatus = OcrStatus.Idle,
+    val ocrParsedTicket: ParsedTicket? = null,
+    val showOcrConfirmDialog: Boolean = false
 )
 
 class PurchaseViewModel(application: Application) : AndroidViewModel(application) {
@@ -77,6 +87,59 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun onTicketImageSelected(uri: String?) { _uiState.value = _uiState.value.copy(ticketImageUri = uri) }
+
+    fun processTicketImage(context: Context, uri: Uri) {
+        _uiState.value = _uiState.value.copy(
+            ocrStatus = OcrStatus.Processing,
+            ocrParsedTicket = null,
+            showOcrConfirmDialog = false
+        )
+        viewModelScope.launch {
+            try {
+                val rawText = TicketOcrService.recognizeText(context, uri)
+                val parsed = TicketParser.parse(rawText)
+                if (parsed.isEmpty) {
+                    _uiState.value = _uiState.value.copy(ocrStatus = OcrStatus.Error)
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        ocrStatus = OcrStatus.Success,
+                        ocrParsedTicket = parsed,
+                        showOcrConfirmDialog = true
+                    )
+                }
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(ocrStatus = OcrStatus.Error)
+            }
+        }
+    }
+
+    fun confirmDetectedTicket() {
+        val parsed = _uiState.value.ocrParsedTicket ?: return
+
+        parsed.storeName?.let { onStoreNameChange(it) }
+        parsed.date?.let { onDateChange(it) }
+        parsed.time?.let { onTimeChange(it) }
+        parsed.items.forEach { item ->
+            onProductNameChange(item.name)
+            onProductPriceChange(item.price.toString())
+            addOrUpdateProduct()
+        }
+
+        _uiState.value = _uiState.value.copy(
+            showOcrConfirmDialog = false,
+            ocrStatus = OcrStatus.Idle,
+            ocrParsedTicket = null
+        )
+    }
+
+    fun dismissOcrDialog() {
+        _uiState.value = _uiState.value.copy(
+            showOcrConfirmDialog = false,
+            ocrStatus = OcrStatus.Idle,
+            ocrParsedTicket = null
+        )
+    }
+
     fun onStoreNameChange(value: String) { _uiState.value = _uiState.value.copy(storeName = value) }
     fun onDateChange(value: String) { _uiState.value = _uiState.value.copy(date = value) }
     fun onTimeChange(value: String) { _uiState.value = _uiState.value.copy(time = value) }
@@ -309,7 +372,10 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
             savedSuccess = false,
             saveError = false,
             validationError = false,
-            productError = false
+            productError = false,
+            ocrStatus = OcrStatus.Idle,
+            ocrParsedTicket = null,
+            showOcrConfirmDialog = false
         )
     }
 }

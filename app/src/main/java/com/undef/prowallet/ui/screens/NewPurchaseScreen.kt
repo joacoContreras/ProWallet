@@ -37,6 +37,7 @@ import com.undef.prowallet.R
 import com.undef.prowallet.data.CategoryEntity
 import com.undef.prowallet.ui.components.*
 import com.undef.prowallet.ui.theme.*
+import com.undef.prowallet.viewmodel.OcrStatus
 import com.undef.prowallet.viewmodel.PurchaseViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -59,6 +60,9 @@ fun NewPurchaseScreen(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         viewModel.onTicketImageSelected(uri?.toString())
+        if (uri != null) {
+            viewModel.processTicketImage(context, uri)
+        }
     }
 
     val locationPermissionLauncher = rememberLauncherForActivityResult(
@@ -248,6 +252,36 @@ fun NewPurchaseScreen(
         )
     }
 
+    if (state.showOcrConfirmDialog && state.ocrParsedTicket != null) {
+        val parsed = state.ocrParsedTicket!!
+        AlertDialog(
+            onDismissRequest = { viewModel.dismissOcrDialog() },
+            title = { Text(stringResource(R.string.ocr_detected_title), fontFamily = PlusJakartaSans) },
+            text = {
+                Text(
+                    text = stringResource(
+                        R.string.ocr_detected_summary,
+                        parsed.storeName ?: stringResource(R.string.ocr_unknown_value),
+                        parsed.date ?: stringResource(R.string.ocr_unknown_value),
+                        parsed.items.size,
+                        parsed.total ?: parsed.items.sumOf { it.price }
+                    ),
+                    fontFamily = PlusJakartaSans
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = { viewModel.confirmDetectedTicket() }) {
+                    Text(stringResource(R.string.ocr_apply_button))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.dismissOcrDialog() }) {
+                    Text(stringResource(R.string.ocr_discard_button))
+                }
+            }
+        )
+    }
+
     Scaffold(
         bottomBar = {
             BottomNavBar(
@@ -336,6 +370,28 @@ fun NewPurchaseScreen(
                             Icon(Icons.Default.AddPhotoAlternate, contentDescription = null)
                             Spacer(Modifier.width(8.dp))
                             Text(if (state.ticketImageUri != null) stringResource(R.string.change_ticket_image) else stringResource(R.string.attach_ticket_image))
+                        }
+                        if (state.ocrStatus == OcrStatus.Processing) {
+                            Spacer(Modifier.height(8.dp))
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp, color = PrimaryDarker)
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    text = stringResource(R.string.ocr_processing),
+                                    fontFamily = PlusJakartaSans,
+                                    fontSize = 12.sp,
+                                    color = Neutral
+                                )
+                            }
+                        }
+                        if (state.ocrStatus == OcrStatus.Error) {
+                            Spacer(Modifier.height(8.dp))
+                            Text(
+                                text = stringResource(R.string.ocr_error_no_text),
+                                fontFamily = PlusJakartaSans,
+                                fontSize = 12.sp,
+                                color = ErrorRed
+                            )
                         }
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {

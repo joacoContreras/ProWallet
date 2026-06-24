@@ -84,4 +84,5 @@ dependencies {
     implementation(libs.retrofit.converter.gson)
     implementation(libs.androidx.biometric)
     implementation(libs.play.services.location)
+    implementation(libs.mlkit.text.recognition)
 }
