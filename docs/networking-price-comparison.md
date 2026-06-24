@@ -241,19 +241,36 @@ suspend fun searchProductPrices(lat: Double, lng: Double, query: String): List<P
 
 ## 6. Lógica de Negocio y Scoring en el ViewModel
 
-### 6.1 Paralelismo seguro con `supervisorScope` ([PurchaseDetailViewModel.kt](file:///C:/Users/cjoaq/AndroidStudioProjects/MyApplication/app/src/main/java/com/undef/prowallet/viewmodel/PurchaseDetailViewModel.kt))
-Para evitar que el fallo de una consulta cancele la carga general de la compra o tire la aplicación, se utiliza `supervisorScope` para paralelizar los hilos de consulta mediante `async` y `awaitAll()`:
+### 6.1 Paralelismo y control de ráfagas (Rate Limiting) ([PurchaseDetailViewModel.kt](file:///C:/Users/cjoaq/AndroidStudioProjects/MyApplication/app/src/main/java/com/undef/prowallet/viewmodel/PurchaseDetailViewModel.kt))
+
+#### Evitando bloqueos de red (Staggered Delay)
+La API de Precios Claros opera detrás del CDN de CloudFront, el cual cuenta con políticas de seguridad estrictas contra ráfagas de peticiones de una misma IP (*burst/DDoS protection*). Si la app dispara 3 o más consultas HTTP concurrentemente en el mismo milisegundo, la CDN responde con errores `403 Forbidden` o `429 Too Many Requests` para los productos subsiguientes.
+
+Para evadir este límite de forma transparente y eficiente, la aplicación intercala un **retraso escalonado (staggered delay)** de 400ms entre el lanzamiento de cada tarea asíncrona.
+
+#### Implementación con `supervisorScope` y `delay`:
+Utilizamos `supervisorScope` para que el fallo aislado de un producto no cancele las otras descargas ni tire la aplicación. Con `mapIndexed` y `delay`, escalonamos las tareas:
 
 ```kotlin
 val apiPriceMap = supervisorScope {
-    val deferreds = purchase.products.map { product ->
-        async { product.name to repository.searchProductPrices(lat, lng, product.name) }
+    val deferreds = purchase.products.mapIndexed { index, product ->
+        async {
+            if (index > 0) {
+                kotlinx.coroutines.delay(400L * index) // Espera 400ms por producto adicional
+            }
+            product.name to repository.searchProductPrices(lat, lng, product.name)
+        }
     }
     deferreds.awaitAll()
 }.mapNotNull { (name, results) ->
     // scoring de resultados y conversión a mapa
 }
 ```
+* El producto 0 se consulta en `t = 0 ms`.
+* El producto 1 se consulta en `t = 400 ms`.
+* El producto 2 se consulta en `t = 800 ms`.
+
+Esto asegura que todas las peticiones se completen de manera óptima sin ser bloqueadas por el cortafuegos de la API.
 
 ### 6.2 El algoritmo de scoring
 El ViewModel selecciona el producto más relevante entre los devueltos mediante una combinación de ratio de coincidencia, disponibilidad física y orden de las palabras.

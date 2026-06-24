@@ -84,8 +84,13 @@ class PurchaseDetailViewModel(application: Application) : AndroidViewModel(appli
 
             try {
                 val apiPriceMap = supervisorScope {
-                    val deferreds = purchase.products.map { product ->
-                        async { product.name to repository.searchProductPrices(lat, lng, product.name) }
+                    val deferreds = purchase.products.mapIndexed { index, product ->
+                        async {
+                            if (index > 0) {
+                                kotlinx.coroutines.delay(400L * index)
+                            }
+                            product.name to repository.searchProductPrices(lat, lng, product.name)
+                        }
                     }
                     deferreds.awaitAll()
                 }.mapNotNull { (name, results) ->
