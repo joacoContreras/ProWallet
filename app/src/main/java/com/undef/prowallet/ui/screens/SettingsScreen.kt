@@ -94,6 +94,8 @@ fun SettingsScreen(
         }
     }
 
+    var showBiometricUnavailableDialog by remember { mutableStateOf(false) }
+
     val onBiometricToggle: (Boolean) -> Unit = { enable ->
         if (!enable) {
             settingsViewModel.setBiometricEnabled(false)
@@ -102,25 +104,39 @@ fun SettingsScreen(
             val canAuth = biometricManager.canAuthenticate(
                 BiometricManager.Authenticators.BIOMETRIC_WEAK
             )
-            if (canAuth == BiometricManager.BIOMETRIC_SUCCESS) {
-                val activity = context as? FragmentActivity
-                if (activity != null) {
-                    val executor = ContextCompat.getMainExecutor(context)
-                    val prompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
-                        override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                            settingsViewModel.setBiometricEnabled(true)
-                        }
-                    })
-                    val promptInfo = BiometricPrompt.PromptInfo.Builder()
-                        .setTitle(context.getString(R.string.settings_biometric_prompt_title))
-                        .setSubtitle(context.getString(R.string.settings_biometric_prompt_subtitle))
-                        .setNegativeButtonText(context.getString(R.string.cancel))
-                        .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
-                        .build()
-                    prompt.authenticate(promptInfo)
-                }
+            val activity = context as? FragmentActivity
+            if (canAuth == BiometricManager.BIOMETRIC_SUCCESS && activity != null) {
+                val executor = ContextCompat.getMainExecutor(context)
+                val prompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
+                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                        settingsViewModel.setBiometricEnabled(true)
+                    }
+                })
+                val promptInfo = BiometricPrompt.PromptInfo.Builder()
+                    .setTitle(context.getString(R.string.settings_biometric_prompt_title))
+                    .setSubtitle(context.getString(R.string.settings_biometric_prompt_subtitle))
+                    .setNegativeButtonText(context.getString(R.string.cancel))
+                    .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
+                    .build()
+                prompt.authenticate(promptInfo)
+            } else {
+                // Antes esto no hacía nada y el usuario no sabía por qué el switch no se activaba.
+                showBiometricUnavailableDialog = true
             }
         }
+    }
+
+    if (showBiometricUnavailableDialog) {
+        AlertDialog(
+            onDismissRequest = { showBiometricUnavailableDialog = false },
+            title = { Text(stringResource(R.string.settings_biometric_prompt_title)) },
+            text = { Text(stringResource(R.string.biometric_not_available_message)) },
+            confirmButton = {
+                TextButton(onClick = { showBiometricUnavailableDialog = false }) {
+                    Text(stringResource(R.string.ok))
+                }
+            }
+        )
     }
 
     Scaffold(

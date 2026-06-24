@@ -39,6 +39,43 @@ fun SplashScreen(
     val scale = remember { Animatable(0f) }
     val context = LocalContext.current
     var statusText by remember { mutableStateOf<String?>(null) }
+    var showContinueButton by remember { mutableStateOf(false) }
+    var showRetryButtons by remember { mutableStateOf(false) }
+
+    fun launchBiometricPrompt() {
+        val activity = context as? FragmentActivity ?: return
+        statusText = context.getString(R.string.splash_verifying_identity)
+        showContinueButton = false
+        showRetryButtons = false
+        val executor = ContextCompat.getMainExecutor(context)
+        val prompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                onNavigateToHome()
+            }
+
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                // Distinguimos cancelación explícita del usuario de un error real (lockout,
+                // hardware, etc.) en vez de mandar siempre a Login sin explicar qué pasó.
+                val cancelled = errorCode == BiometricPrompt.ERROR_USER_CANCELED ||
+                    errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON
+                statusText = context.getString(
+                    if (cancelled) R.string.biometric_cancelled_message else R.string.biometric_error_message
+                )
+                showRetryButtons = true
+            }
+
+            override fun onAuthenticationFailed() {
+                statusText = context.getString(R.string.splash_biometric_failed)
+            }
+        })
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle(context.getString(R.string.settings_biometric_prompt_title))
+            .setSubtitle(context.getString(R.string.splash_biometric_prompt_subtitle))
+            .setNegativeButtonText(context.getString(R.string.cancel))
+            .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
+            .build()
+        prompt.authenticate(promptInfo)
+    }
 
     LaunchedEffect(Unit) {
         scale.animateTo(
@@ -70,33 +107,14 @@ fun SplashScreen(
         val activity = context as? FragmentActivity
 
         if (canAuth != BiometricManager.BIOMETRIC_SUCCESS || activity == null) {
-            // No hay hardware/huellas enroladas: no podemos exigir biometría sin bloquear al usuario.
-            onNavigateToHome()
+            // Sin hardware/huella enrolada: se avisa explícitamente en vez de pasar en
+            // silencio a Home. El usuario decide cuándo continuar.
+            statusText = context.getString(R.string.biometric_not_available_message)
+            showContinueButton = true
             return@LaunchedEffect
         }
 
-        statusText = context.getString(R.string.splash_verifying_identity)
-        val executor = ContextCompat.getMainExecutor(context)
-        val prompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                onNavigateToHome()
-            }
-
-            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                onNavigateToLogin()
-            }
-
-            override fun onAuthenticationFailed() {
-                statusText = context.getString(R.string.splash_biometric_failed)
-            }
-        })
-        val promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle(context.getString(R.string.settings_biometric_prompt_title))
-            .setSubtitle(context.getString(R.string.splash_biometric_prompt_subtitle))
-            .setNegativeButtonText(context.getString(R.string.cancel))
-            .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
-            .build()
-        prompt.authenticate(promptInfo)
+        launchBiometricPrompt()
     }
 
     Box(
@@ -158,6 +176,25 @@ fun SplashScreen(
                     fontSize = 12.sp,
                     color = SecondaryDark
                 )
+            }
+
+            if (showContinueButton) {
+                Spacer(Modifier.height(12.dp))
+                Button(onClick = onNavigateToHome) {
+                    Text(stringResource(R.string.continue_label))
+                }
+            }
+
+            if (showRetryButtons) {
+                Spacer(Modifier.height(12.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Button(onClick = { launchBiometricPrompt() }) {
+                        Text(stringResource(R.string.retry_label))
+                    }
+                    OutlinedButton(onClick = onNavigateToLogin) {
+                        Text(stringResource(R.string.back_to_login_label))
+                    }
+                }
             }
         }
     }
