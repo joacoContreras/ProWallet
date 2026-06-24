@@ -111,18 +111,28 @@ class AppRepository(context: Context) {
             ).toInt()
 
             purchase.products.forEach { product ->
-                val productId = productDao.getProductByCode(product.code)?.id
-                    ?: run {
-                        val inserted = productDao.insert(
-                            ProductEntity(
+                val existingProduct = productDao.getProductByCode(product.code)
+                val productId = if (existingProduct != null) {
+                    if (existingProduct.name != product.name || existingProduct.description != product.description) {
+                        productDao.update(
+                            existingProduct.copy(
                                 name = product.name,
-                                description = product.description,
-                                code = product.code
+                                description = product.description
                             )
                         )
-                        if (inserted != -1L) inserted.toInt()
-                        else productDao.getProductByCode(product.code)!!.id
                     }
+                    existingProduct.id
+                } else {
+                    val inserted = productDao.insert(
+                        ProductEntity(
+                            name = product.name,
+                            description = product.description,
+                            code = product.code
+                        )
+                    )
+                    if (inserted != -1L) inserted.toInt()
+                    else productDao.getProductByCode(product.code)!!.id
+                }
                 purchasedItemDao.insert(
                     PurchasedItemEntity(
                         purchaseId = purchaseId,
@@ -162,18 +172,28 @@ class AppRepository(context: Context) {
             purchasedItemDao.deleteByPurchaseId(id)
 
             purchase.products.forEach { product ->
-                val productId = productDao.getProductByCode(product.code)?.id
-                    ?: run {
-                        val inserted = productDao.insert(
-                            ProductEntity(
+                val existingProduct = productDao.getProductByCode(product.code)
+                val productId = if (existingProduct != null) {
+                    if (existingProduct.name != product.name || existingProduct.description != product.description) {
+                        productDao.update(
+                            existingProduct.copy(
                                 name = product.name,
-                                description = product.description,
-                                code = product.code
+                                description = product.description
                             )
                         )
-                        if (inserted != -1L) inserted.toInt()
-                        else productDao.getProductByCode(product.code)!!.id
                     }
+                    existingProduct.id
+                } else {
+                    val inserted = productDao.insert(
+                        ProductEntity(
+                            name = product.name,
+                            description = product.description,
+                            code = product.code
+                        )
+                    )
+                    if (inserted != -1L) inserted.toInt()
+                    else productDao.getProductByCode(product.code)!!.id
+                }
                 purchasedItemDao.insert(
                     PurchasedItemEntity(
                         purchaseId = id,
