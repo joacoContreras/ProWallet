@@ -28,6 +28,7 @@ class AppRepository(context: Context) {
     private val categoryDao = db.categoryDao()
     private val fixedExpenseDao = db.fixedExpenseDao()
     private val accountDao = db.accountDao()
+    private val preciosClarosProductDao = db.preciosClarosProductDao()
 
     val fixedExpensesFlow: Flow<List<FixedExpenseEntity>> = fixedExpenseDao.getAll()
     val accountsFlow: Flow<List<AccountEntity>> = accountDao.getAll()
@@ -222,12 +223,68 @@ class AppRepository(context: Context) {
         return productDao.getProductByCode(code)
     }
 
-    suspend fun searchProductPrices(lat: Double, lng: Double, query: String): List<PreciosClarosProductDto> =
-        try {
-            PreciosClarosClient.service.getProductos(query = query, lat = lat, lng = lng, limit = 30).productos
-        } catch (e: Exception) {
-            emptyList()
+    suspend fun searchProductPrices(lat: Double, lng: Double, query: String): List<PreciosClarosProductDto> {
+        val normalizedQuery = query.trim().lowercase(Locale.ROOT)
+        // 1. Consultar Room primero (cache-first)
+        val cached = preciosClarosProductDao.getProductsByQuery(normalizedQuery)
+        // Definir tiempo de expiración: 24 horas (86400000 ms)
+        val isExpired = cached.isNotEmpty() && (System.currentTimeMillis() - cached.first().timestamp > 24 * 60 * 60 * 1000)
+
+        if (cached.isNotEmpty() && !isExpired) {
+            return cached.map {
+                PreciosClarosProductDto(
+                    id = it.apiProductId,
+                    nombre = it.nombre,
+                    marca = it.marca,
+                    presentacion = it.presentacion,
+                    precioMin = it.precioMin,
+                    precioMax = it.precioMax,
+                    sucursalesDisponibles = it.sucursalesDisponibles
+                )
+            }
         }
+
+        // 2. Si no hay cache o está vencido, llamar a Retrofit
+        try {
+            val dtos = PreciosClarosClient.service.getProductos(query = query, lat = lat, lng = lng, limit = 30).productos ?: emptyList()
+
+            // 3. Guardar la respuesta en Room (Single Source of Truth)
+            preciosClarosProductDao.deleteByQuery(normalizedQuery)
+            if (dtos.isNotEmpty()) {
+                val entities = dtos.map { dto ->
+                    PreciosClarosProductEntity(
+                        query = normalizedQuery,
+                        apiProductId = dto.id,
+                        nombre = dto.nombre,
+                        marca = dto.marca,
+                        presentacion = dto.presentacion,
+                        precioMin = dto.precioMin,
+                        precioMax = dto.precioMax,
+                        sucursalesDisponibles = dto.sucursalesDisponibles,
+                        timestamp = System.currentTimeMillis()
+                    )
+                }
+                preciosClarosProductDao.insertAll(entities)
+            }
+            return dtos
+        } catch (e: Exception) {
+            // Si la llamada falla (sin internet), retornar lo que haya en cache aunque esté vencido
+            if (cached.isNotEmpty()) {
+                return cached.map {
+                    PreciosClarosProductDto(
+                        id = it.apiProductId,
+                        nombre = it.nombre,
+                        marca = it.marca,
+                        presentacion = it.presentacion,
+                        precioMin = it.precioMin,
+                        precioMax = it.precioMax,
+                        sucursalesDisponibles = it.sucursalesDisponibles
+                    )
+                }
+            }
+            return emptyList()
+        }
+    }
 
     suspend fun seedDefaultCategories() {
         DEFAULT_CATEGORIES.forEach { name ->

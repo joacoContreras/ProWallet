@@ -13,13 +13,13 @@ data class ProductsResponse(
 )
 
 data class PreciosClarosProductDto(
-    @SerializedName("id") val id: String,
-    @SerializedName("nombre") val nombre: String,
-    @SerializedName("marca") val marca: String,
-    @SerializedName("presentacion") val presentacion: String,
-    @SerializedName("precioMin") val precioMin: Double,
-    @SerializedName("precioMax") val precioMax: Double,
-    @SerializedName("cantSucursalesDisponible") val sucursalesDisponibles: Int
+    @SerializedName("id") val id: String?,
+    @SerializedName("nombre") val nombre: String?,
+    @SerializedName("marca") val marca: String?,
+    @SerializedName("presentacion") val presentacion: String?,
+    @SerializedName("precioMin") val precioMin: Double?,
+    @SerializedName("precioMax") val precioMax: Double?,
+    @SerializedName("cantSucursalesDisponible") val sucursalesDisponibles: Int?
 )
 
 data class PreciosClarosResponse(
