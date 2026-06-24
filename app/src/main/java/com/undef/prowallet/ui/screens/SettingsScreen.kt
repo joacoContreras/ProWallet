@@ -94,7 +94,7 @@ fun SettingsScreen(
         }
     }
 
-    var showBiometricUnavailableDialog by remember { mutableStateOf(false) }
+    var biometricDialogMessage by remember { mutableStateOf<String?>(null) }
 
     val onBiometricToggle: (Boolean) -> Unit = { enable ->
         if (!enable) {
@@ -111,6 +111,16 @@ fun SettingsScreen(
                     override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                         settingsViewModel.setBiometricEnabled(true)
                     }
+
+                    override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                        // Antes esto no hacía nada: si se cancelaba o fallaba el prompt al
+                        // activar el switch, el usuario no se enteraba de por qué quedó apagado.
+                        val cancelled = errorCode == BiometricPrompt.ERROR_USER_CANCELED ||
+                            errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON
+                        biometricDialogMessage = context.getString(
+                            if (cancelled) R.string.biometric_cancelled_message else R.string.biometric_error_message
+                        )
+                    }
                 })
                 val promptInfo = BiometricPrompt.PromptInfo.Builder()
                     .setTitle(context.getString(R.string.settings_biometric_prompt_title))
@@ -121,18 +131,18 @@ fun SettingsScreen(
                 prompt.authenticate(promptInfo)
             } else {
                 // Antes esto no hacía nada y el usuario no sabía por qué el switch no se activaba.
-                showBiometricUnavailableDialog = true
+                biometricDialogMessage = context.getString(R.string.biometric_not_available_message)
             }
         }
     }
 
-    if (showBiometricUnavailableDialog) {
+    biometricDialogMessage?.let { message ->
         AlertDialog(
-            onDismissRequest = { showBiometricUnavailableDialog = false },
+            onDismissRequest = { biometricDialogMessage = null },
             title = { Text(stringResource(R.string.settings_biometric_prompt_title)) },
-            text = { Text(stringResource(R.string.biometric_not_available_message)) },
+            text = { Text(message) },
             confirmButton = {
-                TextButton(onClick = { showBiometricUnavailableDialog = false }) {
+                TextButton(onClick = { biometricDialogMessage = null }) {
                     Text(stringResource(R.string.ok))
                 }
             }
