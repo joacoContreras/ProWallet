@@ -12,7 +12,6 @@ import com.undef.prowallet.data.ocr.ParsedTicket
 import com.undef.prowallet.data.ocr.TicketOcrService
 import com.undef.prowallet.data.ocr.TicketParser
 import com.undef.prowallet.data.ocr.GroqOcrService
-import com.undef.prowallet.data.ocr.GroqConfig
 import com.undef.prowallet.domain.Product
 import com.undef.prowallet.domain.Purchase
 import com.undef.prowallet.util.LocationHelper
@@ -99,7 +98,7 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch {
             try {
                 val rawText = TicketOcrService.recognizeText(context, uri)
-                val apiKey = GroqConfig.API_KEY
+                val apiKey = sessionManager.groqApiKey.first()
                 val parsed = if (apiKey.isNotBlank()) {
                     try {
                         GroqOcrService.parseWithGroq(rawText, apiKey)
