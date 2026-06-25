@@ -33,14 +33,14 @@ import com.undef.prowallet.ui.navigation.AppNavGraph
 import com.undef.prowallet.ui.navigation.Screen
 import com.undef.prowallet.ui.theme.PrimaryDarker
 import com.undef.prowallet.ui.theme.ProWalletTheme
+import com.undef.prowallet.util.ReminderWorker
 import com.undef.prowallet.viewmodel.SettingsViewModel
-import com.undef.prowallet.sync.SyncWorker
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        SyncWorker.enqueuePeriodicWork(this)
+        ReminderWorker.scheduleWeekly(this)
         enableEdgeToEdge()
         setContent {
             val settingsViewModel: SettingsViewModel = viewModel()

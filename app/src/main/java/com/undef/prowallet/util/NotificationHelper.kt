@@ -13,31 +13,47 @@ import com.undef.prowallet.R
 
 object NotificationHelper {
 
-    private const val CHANNEL_ID = "budget_alerts"
+    private const val CHANNEL_BUDGET = "budget_alerts"
+    private const val CHANNEL_REMINDERS = "spending_reminders"
     private const val BUDGET_NOTIFICATION_ID = 1001
+    private const val REMINDER_NOTIFICATION_ID = 1002
 
-    fun ensureChannel(context: Context) {
+    fun ensureChannels(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         val manager = context.getSystemService(NotificationManager::class.java)
-        val channel = NotificationChannel(
-            CHANNEL_ID,
-            context.getString(R.string.notification_channel_budget_name),
-            NotificationManager.IMPORTANCE_DEFAULT
-        ).apply {
-            description = context.getString(R.string.notification_channel_budget_description)
+        manager.createNotificationChannel(
+            NotificationChannel(
+                CHANNEL_BUDGET,
+                context.getString(R.string.notification_channel_budget_name),
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply {
+                description = context.getString(R.string.notification_channel_budget_description)
+            }
+        )
+        manager.createNotificationChannel(
+            NotificationChannel(
+                CHANNEL_REMINDERS,
+                context.getString(R.string.notification_channel_reminder_name),
+                NotificationManager.IMPORTANCE_LOW
+            ).apply {
+                description = context.getString(R.string.notification_channel_reminder_description)
+            }
+        )
+    }
+
+    private fun hasPermission(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return ContextCompat.checkSelfPermission(
+                context, Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
         }
-        manager.createNotificationChannel(channel)
+        return true
     }
 
     fun showBudgetAlert(context: Context, title: String, message: String) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val granted = ContextCompat.checkSelfPermission(
-                context, Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
-            if (!granted) return
-        }
-        ensureChannel(context)
-        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+        if (!hasPermission(context)) return
+        ensureChannels(context)
+        val notification = NotificationCompat.Builder(context, CHANNEL_BUDGET)
             .setSmallIcon(R.drawable.ic_app_logo_foreground)
             .setContentTitle(title)
             .setContentText(message)
@@ -46,5 +62,26 @@ object NotificationHelper {
             .setAutoCancel(true)
             .build()
         NotificationManagerCompat.from(context).notify(BUDGET_NOTIFICATION_ID, notification)
+    }
+
+    fun showWeeklyReminder(context: Context, weekSpend: Double, monthSpend: Double, budget: Double) {
+        if (!hasPermission(context)) return
+        ensureChannels(context)
+        val title = context.getString(R.string.notif_weekly_reminder_title)
+        val message = context.getString(
+            R.string.notif_weekly_reminder_body,
+            "%.0f".format(weekSpend),
+            "%.0f".format(monthSpend),
+            "%.0f".format(budget)
+        )
+        val notification = NotificationCompat.Builder(context, CHANNEL_REMINDERS)
+            .setSmallIcon(R.drawable.ic_app_logo_foreground)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setAutoCancel(true)
+            .build()
+        NotificationManagerCompat.from(context).notify(REMINDER_NOTIFICATION_ID, notification)
     }
 }
