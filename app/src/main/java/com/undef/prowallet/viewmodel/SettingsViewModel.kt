@@ -19,11 +19,25 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     val biometricEnabled: StateFlow<Boolean> = sessionManager.biometricEnabled
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
+    val notificationsEnabled: StateFlow<Boolean> = sessionManager.notificationsEnabled
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), true)
+
+    val groqApiKey: StateFlow<String> = sessionManager.groqApiKey
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
+
     fun setDarkMode(enabled: Boolean) {
         viewModelScope.launch { sessionManager.saveDarkMode(enabled) }
     }
 
     fun setBiometricEnabled(enabled: Boolean) {
         viewModelScope.launch { sessionManager.saveBiometricEnabled(enabled) }
+    }
+
+    fun setNotificationsEnabled(enabled: Boolean) {
+        viewModelScope.launch { sessionManager.saveNotificationsEnabled(enabled) }
+    }
+
+    fun setGroqApiKey(apiKey: String) {
+        viewModelScope.launch { sessionManager.saveGroqApiKey(apiKey) }
     }
 }

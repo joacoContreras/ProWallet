@@ -26,7 +26,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
+import com.undef.prowallet.viewmodel.AccountViewModel
 import com.undef.prowallet.viewmodel.AuthViewModel
+import com.undef.prowallet.viewmodel.AutoSavingsViewModel
 import com.undef.prowallet.viewmodel.HomeViewModel
 
 @Preview(showBackground = true)
@@ -62,6 +64,10 @@ fun ProfileScreen(
     val authState by authViewModel.uiState.collectAsState()
     val homeViewModel: HomeViewModel = viewModel()
     val homeState by homeViewModel.uiState.collectAsState()
+    val accountViewModel: AccountViewModel = viewModel()
+    val accountState by accountViewModel.uiState.collectAsState()
+    val autoSavingsViewModel: AutoSavingsViewModel = viewModel()
+    val autoSavingsState by autoSavingsViewModel.uiState.collectAsState()
 
     val displayName = authState.user?.fullName?.takeIf { it.isNotBlank() } ?: ""
     val displayEmail = authState.user?.email?.takeIf { it.isNotBlank() } ?: ""
@@ -69,6 +75,22 @@ fun ProfileScreen(
     val budget = homeState.monthlyBudget
     val spent = homeState.totalMonthlySpend
     val budgetPercent = homeState.budgetPercent
+
+    val accountsSubtitle = when (accountState.accounts.size) {
+        0 -> stringResource(R.string.accounts_linked_none)
+        1 -> stringResource(R.string.accounts_linked_one)
+        else -> stringResource(R.string.accounts_linked_many_format, accountState.accounts.size)
+    }
+    val frequencyRes = when (autoSavingsState.selectedFrequency) {
+        "Weekly" -> R.string.weekly
+        "Bi-weekly" -> R.string.bi_weekly
+        else -> R.string.monthly
+    }
+    val autoSavingsSubtitle = stringResource(
+        R.string.auto_savings_status_format,
+        autoSavingsState.savingsPercentage.toInt(),
+        stringResource(frequencyRes).lowercase()
+    )
 
     Column(
         modifier = Modifier
@@ -221,9 +243,9 @@ fun ProfileScreen(
             ManagementSection(
                 title = stringResource(R.string.management_section),
                 items = listOf(
-                    ManagementItem(Icons.Default.AccountBalance, stringResource(R.string.linked_accounts), stringResource(R.string.banks_connected), SecondaryLight.copy(alpha = 0.2f), SecondaryDark, onNavigateToManageAccounts),
+                    ManagementItem(Icons.Default.AccountBalance, stringResource(R.string.linked_accounts), accountsSubtitle, SecondaryLight.copy(alpha = 0.2f), SecondaryDark, onNavigateToManageAccounts),
                     ManagementItem(Icons.Default.EventRepeat, stringResource(R.string.fixed_expenses), stringResource(R.string.rent_utilities_subscriptions), TertiaryDark.copy(alpha = 0.5f), SecondaryDark, onNavigateToFixedExpenses),
-                    ManagementItem(Icons.Default.Savings, stringResource(R.string.auto_savings_plan), stringResource(R.string.auto_savings_amount), Primary.copy(alpha = 0.2f), PrimaryDarker, onNavigateToAutoSavings)
+                    ManagementItem(Icons.Default.Savings, stringResource(R.string.auto_savings_plan), autoSavingsSubtitle, Primary.copy(alpha = 0.2f), PrimaryDarker, onNavigateToAutoSavings)
                 )
             )
 
@@ -232,7 +254,7 @@ fun ProfileScreen(
                 title = stringResource(R.string.support_safety),
                 items = listOf(
                     ManagementItem(Icons.Default.SupportAgent, stringResource(R.string.contact_us), "", BackgroundLight, Neutral, onNavigateToContactSupport),
-                    ManagementItem(Icons.Default.Security, stringResource(R.string.security_privacy), stringResource(R.string.security_features), BackgroundLight, Neutral, { })
+                    ManagementItem(Icons.Default.Security, stringResource(R.string.security_privacy), stringResource(R.string.security_features), BackgroundLight, Neutral, onNavigateToSettings)
                 )
             )
 

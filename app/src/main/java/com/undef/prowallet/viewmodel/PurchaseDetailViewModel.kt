@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import java.util.Locale
 
 data class ApiPriceResult(val precioMin: Double, val precioMax: Double)
@@ -37,11 +38,13 @@ private fun scoreDto(
     firstQueryWord: String,
     maxSucursales: Int
 ): Double {
-    val dtoWords = dto.nombre.lowercase(Locale.ROOT).split("\\s+".toRegex())
+    val nombre = dto.nombre ?: return -1.0
+    val dtoWords = nombre.lowercase(Locale.ROOT).split("\\s+".toRegex())
     val matched = queryWords.count { qw -> dtoWords.any { dw -> dw.startsWith(qw) } }
     val matchRatio = matched.toDouble() / queryWords.size
     if (matchRatio < MIN_MATCH_RATIO) return -1.0
-    val normSuc = if (maxSucursales > 0) dto.sucursalesDisponibles.toDouble() / maxSucursales else 0.0
+    val sucursales = dto.sucursalesDisponibles ?: 0
+    val normSuc = if (maxSucursales > 0) sucursales.toDouble() / maxSucursales else 0.0
     val firstBonus = if ((dtoWords.firstOrNull() ?: "").startsWith(firstQueryWord)) BONUS_FIRST else 0.0
     return (matchRatio * WEIGHT_MATCH) + (normSuc * WEIGHT_SUC) + firstBonus
 }
@@ -79,31 +82,45 @@ class PurchaseDetailViewModel(application: Application) : AndroidViewModel(appli
 
             val (lat, lng) = coords
 
-            val deferreds = purchase.products.map { product ->
-                async { product.name to repository.searchProductPrices(lat, lng, product.name) }
+            try {
+                val apiPriceMap = supervisorScope {
+                    val deferreds = purchase.products.mapIndexed { index, product ->
+                        async {
+                            if (index > 0) {
+                                kotlinx.coroutines.delay(400L * index)
+                            }
+                            product.name to repository.searchProductPrices(lat, lng, product.name)
+                        }
+                    }
+                    deferreds.awaitAll()
+                }.mapNotNull { (name, results) ->
+                    try {
+                        val queryWords = name.toQueryWords()
+                        if (queryWords.isEmpty()) return@mapNotNull null
+
+                        val firstQueryWord = queryWords.first()
+                        val maxSucursales = results.maxOfOrNull { it.sucursalesDisponibles ?: 0 } ?: 0
+
+                        val best = results
+                            .filter { (it.precioMin ?: 0.0) > 0.0 }
+                            .map { dto -> dto to scoreDto(dto, queryWords, firstQueryWord, maxSucursales) }
+                            .filter { (_, score) -> score >= 0.0 }
+                            .maxByOrNull { (_, score) -> score }
+                            ?.first
+                            ?: return@mapNotNull null
+
+                        val bestMin = best.precioMin ?: 0.0
+                        val bestMax = best.precioMax ?: 0.0
+                        name.trim().lowercase(Locale.ROOT) to ApiPriceResult(bestMin, bestMax)
+                    } catch (e: Exception) {
+                        null
+                    }
+                }.toMap()
+
+                _uiState.value = _uiState.value.copy(apiPriceMap = apiPriceMap, isLoadingPrices = false)
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(isLoadingPrices = false)
             }
-
-            val apiPriceMap = deferreds.awaitAll()
-                .mapNotNull { (name, results) ->
-                    val queryWords = name.toQueryWords()
-                    if (queryWords.isEmpty()) return@mapNotNull null
-
-                    val firstQueryWord = queryWords.first()
-                    val maxSucursales = results.maxOfOrNull { it.sucursalesDisponibles } ?: 0
-
-                    val best = results
-                        .filter { it.precioMin > 0.0 }
-                        .map { dto -> dto to scoreDto(dto, queryWords, firstQueryWord, maxSucursales) }
-                        .filter { (_, score) -> score >= 0.0 }
-                        .maxByOrNull { (_, score) -> score }
-                        ?.first
-                        ?: return@mapNotNull null
-
-                    name.trim().lowercase(Locale.ROOT) to ApiPriceResult(best.precioMin, best.precioMax)
-                }
-                .toMap()
-
-            _uiState.value = _uiState.value.copy(apiPriceMap = apiPriceMap, isLoadingPrices = false)
         }
     }
 

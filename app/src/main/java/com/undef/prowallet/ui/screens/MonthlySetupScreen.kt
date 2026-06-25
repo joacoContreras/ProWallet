@@ -124,39 +124,30 @@ fun MonthlySetupScreen(
                                 ),
                                 textStyle = LocalTextStyle.current.copy(fontSize = 24.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
                             )
-                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                SuggestionChip(onClick = {}, label = { Text(stringResource(R.string.primary_job)) }, shape = RoundedCornerShape(percent = 50))
-                                SuggestionChip(onClick = {}, label = { Text(stringResource(R.string.add_source)) }, shape = RoundedCornerShape(percent = 50))
-                            }
                         }
                     }
                 }
             }
 
             item {
-                // Budget Allocation Section
+                // Category Spend Section (real data from this month's purchases)
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = stringResource(R.string.budget_allocation), fontFamily = PlusJakartaSans, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = TextPrimary)
-                        Surface(color = Secondary.copy(alpha = 0.1f), shape = RoundedCornerShape(percent = 50)) {
-                            Text(text = "85% Assigned", modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp), color = Secondary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
-                        }
-                    }
-                    
-                    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                        BudgetItem(Icons.Default.ShoppingBasket, stringResource(R.string.groceries_label), "$800", "Recommended: $600", 0.75f)
-                        BudgetItem(Icons.Default.Commute, stringResource(R.string.transport_label), "$320", "Public & Fuel", 0.45f)
-                        BudgetItem(Icons.Default.Restaurant, stringResource(R.string.dining_out_label), "$450", "Entertainment", 0.60f)
-                        
-                        OutlinedButton(
-                            onClick = { },
-                            modifier = Modifier.fillMaxWidth().height(56.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            border = androidx.compose.foundation.BorderStroke(1.dp, NeutralLight.copy(alpha = 0.3f))
-                        ) {
-                            Icon(Icons.Default.AddCircle, contentDescription = null, tint = Neutral)
-                            Spacer(Modifier.width(8.dp))
-                            Text(text = stringResource(R.string.add_custom_category), color = Neutral, fontWeight = FontWeight.Bold)
+                    Text(text = stringResource(R.string.budget_allocation), fontFamily = PlusJakartaSans, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = TextPrimary)
+
+                    if (state.categorySpend.isEmpty()) {
+                        Text(text = stringResource(R.string.chat_no_purchases_month), fontSize = 13.sp, color = Neutral)
+                    } else {
+                        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                            state.categorySpend.forEach { (category, amount) ->
+                                val share = if (state.totalSpentThisMonth > 0) (amount / state.totalSpentThisMonth).toFloat() else 0f
+                                BudgetItem(
+                                    icon = Icons.Default.Category,
+                                    title = category,
+                                    amount = "$${String.format("%.0f", amount)}",
+                                    subtitle = stringResource(R.string.category_share_of_spend, (share * 100).toInt()),
+                                    progress = share
+                                )
+                            }
                         }
                     }
                 }

@@ -39,12 +39,27 @@ android {
         compose = true
         buildConfig = true
     }
+
+    lint {
+        // lintDebug crashea por una incompatibilidad de versión de kotlinx-metadata-jvm:
+        // el Kotlin compiler genera metadata 2.1.0 pero la lib que usan los detectores de
+        // Compose lint para leer @Composable solo soporta hasta 2.0.0 ("Provided Metadata
+        // instance has version 2.1.0, while maximum supported version is 2.0.0"). Es un bug
+        // de toolchain, no del código de la app, y afecta a distintos detectores
+        // (ComposableStateFlowValueDetector, ComposableCoroutineCreationDetector, etc.)
+        // según qué archivo se analice. Deshabilitar un check puntual no soluciona la causa
+        // raíz, solo evita que ESE detector específico crashee. Con estos dos deshabilitados
+        // `lintDebug` corre limpio sobre el código actual del proyecto.
+        disable += "StateFlowValueCalledInComposition"
+        disable += "CoroutineCreationDuringComposition"
+    }
 }
 
 dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -70,4 +85,6 @@ dependencies {
     implementation(libs.retrofit.converter.gson)
     implementation(libs.androidx.biometric)
     implementation(libs.play.services.location)
+    implementation(libs.mlkit.text.recognition)
+    implementation(libs.androidx.work.runtime.ktx)
 }

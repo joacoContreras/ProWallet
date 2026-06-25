@@ -9,11 +9,12 @@ import com.undef.prowallet.data.UserEntity
 import com.undef.prowallet.data.dao.UserDao
 import com.undef.prowallet.domain.User
 import com.undef.prowallet.util.SessionManager
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -33,7 +34,9 @@ data class AuthUiState(
     val resetEmailSent: Boolean = false,
     val codeVerified: Boolean = false,
     val passwordUpdated: Boolean = false,
-    val profileUpdated: Boolean = false
+    val profileUpdated: Boolean = false,
+    val simulatedCode: String? = null,
+    val sessionValidated: Boolean = false
 )
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
@@ -44,9 +47,14 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
-    val isLoggedIn: Flow<Boolean> = sessionManager.isLoggedIn
+    val biometricEnabled: StateFlow<Boolean> = sessionManager.biometricEnabled
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
+    val lastEmail: StateFlow<String?> = sessionManager.lastEmail
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private var pendingEmail: String? = null
+    private var pendingCode: String? = null
 
     init {
         viewModelScope.launch {
@@ -56,9 +64,12 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 val user = email?.let { userDao.getUserByEmail(it) }
                 if (user == null) {
                     sessionManager.clearSession()
+                    _uiState.value = _uiState.value.copy(isLoggedIn = false, sessionValidated = true)
                 } else {
-                    _uiState.value = _uiState.value.copy(isLoggedIn = true, user = user.toDomain())
+                    _uiState.value = _uiState.value.copy(isLoggedIn = true, user = user.toDomain(), sessionValidated = true)
                 }
+            } else {
+                _uiState.value = _uiState.value.copy(sessionValidated = true)
             }
         }
     }
@@ -94,6 +105,16 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         _uiState.value = _uiState.value.copy(profileUpdated = false)
     }
 
+    fun updateAvatar(uri: String) {
+        val current = _uiState.value.user ?: return
+        viewModelScope.launch {
+            val entity = userDao.getUserByEmail(current.email) ?: return@launch
+            val updated = entity.copy(avatarUrl = uri)
+            userDao.update(updated)
+            _uiState.value = _uiState.value.copy(user = updated.toDomain())
+        }
+    }
+
     fun login(email: String, password: String) {
         val trimmedEmail = email.trim().lowercase(Locale.ROOT)
         if (email.isBlank() || password.isBlank()) {
@@ -115,6 +136,20 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     sessionManager.saveSession(user.email)
                     _uiState.value = _uiState.value.copy(isLoading = false, isLoggedIn = true, user = user.toDomain())
                 }
+            }
+        }
+    }
+
+    fun loginBiometric(email: String) {
+        val trimmedEmail = email.trim().lowercase(Locale.ROOT)
+        _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+        viewModelScope.launch {
+            val user = userDao.getUserByEmail(trimmedEmail)
+            if (user == null) {
+                _uiState.value = _uiState.value.copy(isLoading = false, error = AuthError.EmailNotFound)
+            } else {
+                sessionManager.saveSession(user.email)
+                _uiState.value = _uiState.value.copy(isLoading = false, isLoggedIn = true, user = user.toDomain())
             }
         }
     }
@@ -183,7 +218,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 return@launch
             }
             pendingEmail = trimmedEmail
-            _uiState.value = _uiState.value.copy(isLoading = false, resetEmailSent = true)
+            val code = (100000..999999).random().toString()
+            pendingCode = code
+            _uiState.value = _uiState.value.copy(isLoading = false, resetEmailSent = true, simulatedCode = code)
         }
     }
 
@@ -227,7 +264,11 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             _uiState.value = _uiState.value.copy(error = AuthError.InvalidCode)
             return
         }
-        _uiState.value = _uiState.value.copy(codeVerified = true)
+        if (code != pendingCode) {
+            _uiState.value = _uiState.value.copy(error = AuthError.WrongCode)
+            return
+        }
+        _uiState.value = _uiState.value.copy(codeVerified = true, error = null)
     }
 
     fun resendCode() {
@@ -237,10 +278,13 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun resetFlow() {
+        pendingCode = null
+        pendingEmail = null
         _uiState.value = _uiState.value.copy(
             resetEmailSent = false,
             codeVerified = false,
             passwordUpdated = false,
+            simulatedCode = null,
             error = null
         )
     }

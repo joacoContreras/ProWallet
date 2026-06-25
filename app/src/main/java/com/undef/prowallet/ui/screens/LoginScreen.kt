@@ -9,9 +9,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.biometric.BiometricPrompt
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Savings
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -42,8 +47,35 @@ fun LoginScreen(
     onNavigateToForgotPassword: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+    val biometricEnabled by viewModel.biometricEnabled.collectAsState()
+    val lastEmail by viewModel.lastEmail.collectAsState()
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    LaunchedEffect(lastEmail) {
+        if (!lastEmail.isNullOrBlank() && email.isBlank()) {
+            email = lastEmail!!
+        }
+    }
+
+    fun launchBiometricLoginPrompt() {
+        val activity = context as? FragmentActivity ?: return
+        val executor = ContextCompat.getMainExecutor(context)
+        val prompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                lastEmail?.let { viewModel.loginBiometric(it) }
+            }
+        })
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle(context.getString(R.string.settings_biometric_prompt_title))
+            .setSubtitle(context.getString(R.string.splash_biometric_prompt_subtitle))
+            .setNegativeButtonText(context.getString(R.string.cancel))
+            .setAllowedAuthenticators(androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK)
+            .build()
+        prompt.authenticate(promptInfo)
+    }
 
     LaunchedEffect(state.isLoggedIn) {
         if (state.isLoggedIn) onLoginSuccess()
@@ -148,11 +180,35 @@ fun LoginScreen(
                     )
                 }
 
-                PrimaryButton(
-                    text = stringResource(R.string.login_button),
-                    onClick = { viewModel.login(email, password) },
-                    enabled = !state.isLoading
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    PrimaryButton(
+                        text = stringResource(R.string.login_button),
+                        onClick = { viewModel.login(email, password) },
+                        enabled = !state.isLoading,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    if (biometricEnabled && !lastEmail.isNullOrBlank()) {
+                        IconButton(
+                            onClick = { launchBiometricLoginPrompt() },
+                            modifier = Modifier
+                                .size(54.dp)
+                                .clip(CircleShape)
+                                .background(Primary.copy(alpha = 0.12f))
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Fingerprint,
+                                contentDescription = "Biometric Login",
+                                tint = Primary,
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
+                    }
+                }
 
                 Text(
                     text = buildAnnotatedString {

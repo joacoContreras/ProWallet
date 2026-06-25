@@ -1,5 +1,10 @@
 package com.undef.prowallet.ui.screens
 
+import android.Manifest
+import android.net.Uri
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
@@ -20,8 +25,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,11 +65,27 @@ fun SettingsScreen(
     val authState by authViewModel.uiState.collectAsState()
     var fullName by remember(authState.user) { mutableStateOf(authState.user?.fullName ?: "") }
     val email = authState.user?.email ?: ""
-    var notificationsEnabled by remember { mutableStateOf(true) }
+    val notificationsEnabled by settingsViewModel.notificationsEnabled.collectAsState()
     val biometricEnabled by settingsViewModel.biometricEnabled.collectAsState()
     val darkModeEnabled by settingsViewModel.darkMode.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val profileSavedMsg = stringResource(R.string.profile_saved_msg)
+    val photoLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let { authViewModel.updateAvatar(it.toString()) }
+    }
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted -> settingsViewModel.setNotificationsEnabled(granted) }
+
+    val onNotificationsToggle: (Boolean) -> Unit = { enable ->
+        if (!enable || Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            settingsViewModel.setNotificationsEnabled(enable)
+        } else {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
 
     LaunchedEffect(authState.profileUpdated) {
         if (authState.profileUpdated) {
@@ -69,6 +93,8 @@ fun SettingsScreen(
             authViewModel.clearProfileUpdated()
         }
     }
+
+    var biometricDialogMessage by remember { mutableStateOf<String?>(null) }
 
     val onBiometricToggle: (Boolean) -> Unit = { enable ->
         if (!enable) {
@@ -78,25 +104,49 @@ fun SettingsScreen(
             val canAuth = biometricManager.canAuthenticate(
                 BiometricManager.Authenticators.BIOMETRIC_WEAK
             )
-            if (canAuth == BiometricManager.BIOMETRIC_SUCCESS) {
-                val activity = context as? FragmentActivity
-                if (activity != null) {
-                    val executor = ContextCompat.getMainExecutor(context)
-                    val prompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
-                        override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                            settingsViewModel.setBiometricEnabled(true)
-                        }
-                    })
-                    val promptInfo = BiometricPrompt.PromptInfo.Builder()
-                        .setTitle(context.getString(R.string.settings_biometric_prompt_title))
-                        .setSubtitle(context.getString(R.string.settings_biometric_prompt_subtitle))
-                        .setNegativeButtonText(context.getString(R.string.cancel))
-                        .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
-                        .build()
-                    prompt.authenticate(promptInfo)
-                }
+            val activity = context as? FragmentActivity
+            if (canAuth == BiometricManager.BIOMETRIC_SUCCESS && activity != null) {
+                val executor = ContextCompat.getMainExecutor(context)
+                val prompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
+                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                        settingsViewModel.setBiometricEnabled(true)
+                    }
+
+                    override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                        // Antes esto no hacía nada: si se cancelaba o fallaba el prompt al
+                        // activar el switch, el usuario no se enteraba de por qué quedó apagado.
+                        val cancelled = errorCode == BiometricPrompt.ERROR_USER_CANCELED ||
+                            errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON
+                        biometricDialogMessage = context.getString(
+                            if (cancelled) R.string.biometric_cancelled_message else R.string.biometric_error_message
+                        )
+                    }
+                })
+                val promptInfo = BiometricPrompt.PromptInfo.Builder()
+                    .setTitle(context.getString(R.string.settings_biometric_prompt_title))
+                    .setSubtitle(context.getString(R.string.settings_biometric_prompt_subtitle))
+                    .setNegativeButtonText(context.getString(R.string.cancel))
+                    .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
+                    .build()
+                prompt.authenticate(promptInfo)
+            } else {
+                // Antes esto no hacía nada y el usuario no sabía por qué el switch no se activaba.
+                biometricDialogMessage = context.getString(R.string.biometric_not_available_message)
             }
         }
+    }
+
+    biometricDialogMessage?.let { message ->
+        AlertDialog(
+            onDismissRequest = { biometricDialogMessage = null },
+            title = { Text(stringResource(R.string.settings_biometric_prompt_title)) },
+            text = { Text(message) },
+            confirmButton = {
+                TextButton(onClick = { biometricDialogMessage = null }) {
+                    Text(stringResource(R.string.ok))
+                }
+            }
+        )
     }
 
     Scaffold(
@@ -135,10 +185,20 @@ fun SettingsScreen(
                                 .background(Primary.copy(alpha = 0.1f)),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(Icons.Default.Person, contentDescription = null, modifier = Modifier.size(40.dp), tint = PrimaryDarker)
+                            val avatarUrl = authState.user?.avatarUrl
+                            if (!avatarUrl.isNullOrBlank()) {
+                                AsyncImage(
+                                    model = ImageRequest.Builder(context).data(avatarUrl).crossfade(true).build(),
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.fillMaxSize().clip(CircleShape)
+                                )
+                            } else {
+                                Icon(Icons.Default.Person, contentDescription = null, modifier = Modifier.size(40.dp), tint = PrimaryDarker)
+                            }
                         }
                         IconButton(
-                            onClick = { },
+                            onClick = { photoLauncher.launch("image/*") },
                             modifier = Modifier
                                 .size(28.dp)
                                 .clip(CircleShape)
@@ -191,7 +251,7 @@ fun SettingsScreen(
                     title = stringResource(R.string.settings_notifications_title),
                     subtitle = stringResource(R.string.settings_notifications_subtitle),
                     checked = notificationsEnabled,
-                    onCheckedChange = { notificationsEnabled = it }
+                    onCheckedChange = onNotificationsToggle
                 )
                 HorizontalDivider(color = Color(0xFFF8F8F8))
                 SettingsSwitch(
@@ -214,7 +274,6 @@ fun SettingsScreen(
                     onCheckedChange = { settingsViewModel.setDarkMode(it) }
                 )
             }
-
             // Footer
             Column(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 32.dp),

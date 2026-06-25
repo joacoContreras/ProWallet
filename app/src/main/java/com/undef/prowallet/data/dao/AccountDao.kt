@@ -16,9 +16,15 @@ interface AccountDao {
     @Query("DELETE FROM accounts WHERE id = :id")
     suspend fun deleteById(id: Int)
 
-    @Query("SELECT * FROM accounts ORDER BY is_primary DESC, name ASC")
-    fun getAll(): Flow<List<AccountEntity>>
+    @Query("UPDATE accounts SET is_primary = 0 WHERE user_email = :userEmail")
+    suspend fun clearPrimary(userEmail: String)
 
-    @Query("UPDATE accounts SET is_primary = 0")
-    suspend fun clearPrimary()
+    @Query("SELECT * FROM accounts WHERE (user_email = :userEmail OR user_email = '') AND is_deleted = 0 ORDER BY is_primary DESC, name ASC")
+    fun getAll(userEmail: String): Flow<List<AccountEntity>>
+
+    @Query("SELECT * FROM accounts WHERE user_email = :userEmail AND is_dirty = 1")
+    suspend fun getDirty(userEmail: String): List<AccountEntity>
+
+    @Query("SELECT * FROM accounts WHERE id = :id")
+    suspend fun getById(id: Int): AccountEntity?
 }

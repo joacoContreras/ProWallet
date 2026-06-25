@@ -10,5 +10,9 @@ data class AccountEntity(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "type") val type: String,
     @ColumnInfo(name = "last_four") val lastFour: String,
-    @ColumnInfo(name = "is_primary") val isPrimary: Boolean = false
+    @ColumnInfo(name = "is_primary") val isPrimary: Boolean = false,
+    @ColumnInfo(name = "user_email") val userEmail: String = "",
+    @ColumnInfo(name = "updated_at") val updatedAt: Long = System.currentTimeMillis(),
+    @ColumnInfo(name = "is_dirty") val isDirty: Boolean = false,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false
 )

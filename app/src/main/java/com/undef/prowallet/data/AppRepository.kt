@@ -8,13 +8,17 @@ import com.undef.prowallet.data.remote.PreciosClarosProductDto
 import com.undef.prowallet.data.remote.RetrofitClient
 import com.undef.prowallet.domain.Product
 import com.undef.prowallet.domain.Purchase
+import com.undef.prowallet.util.SessionManager
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class AppRepository(context: Context) {
+class AppRepository(private val context: Context) {
 
     companion object {
         const val CATEGORY_FALLBACK = "Other"
@@ -28,72 +32,190 @@ class AppRepository(context: Context) {
     private val categoryDao = db.categoryDao()
     private val fixedExpenseDao = db.fixedExpenseDao()
     private val accountDao = db.accountDao()
+    private val preciosClarosProductDao = db.preciosClarosProductDao()
+    private val sessionManager = SessionManager(context)
 
-    val fixedExpensesFlow: Flow<List<FixedExpenseEntity>> = fixedExpenseDao.getAll()
-    val accountsFlow: Flow<List<AccountEntity>> = accountDao.getAll()
+    suspend fun getUserEmail(): String = sessionManager.email.first() ?: ""
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val fixedExpensesFlow: Flow<List<FixedExpenseEntity>> = sessionManager.email
+        .flatMapLatest { email ->
+            fixedExpenseDao.getAll(email ?: "")
+        }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val accountsFlow: Flow<List<AccountEntity>> = sessionManager.email
+        .flatMapLatest { email ->
+            accountDao.getAll(email ?: "")
+        }
 
     suspend fun addAccount(name: String, type: String, lastFour: String, isPrimary: Boolean): Boolean {
         if (name.isBlank()) return false
-        if (isPrimary) accountDao.clearPrimary()
-        return accountDao.insert(AccountEntity(name = name, type = type, lastFour = lastFour, isPrimary = isPrimary)) != -1L
+        val email = getUserEmail()
+        if (isPrimary) accountDao.clearPrimary(email)
+        return accountDao.insert(
+            AccountEntity(
+                name = name,
+                type = type,
+                lastFour = lastFour,
+                isPrimary = isPrimary,
+                userEmail = email,
+                updatedAt = System.currentTimeMillis(),
+                isDirty = true,
+                isDeleted = false
+            )
+        ) != -1L
     }
 
     suspend fun updateAccount(id: Int, name: String, type: String, lastFour: String, isPrimary: Boolean) {
         if (name.isBlank()) return
-        if (isPrimary) accountDao.clearPrimary()
-        accountDao.update(AccountEntity(id = id, name = name, type = type, lastFour = lastFour, isPrimary = isPrimary))
+        val email = getUserEmail()
+        if (isPrimary) accountDao.clearPrimary(email)
+        accountDao.update(
+            AccountEntity(
+                id = id,
+                name = name,
+                type = type,
+                lastFour = lastFour,
+                isPrimary = isPrimary,
+                userEmail = email,
+                updatedAt = System.currentTimeMillis(),
+                isDirty = true,
+                isDeleted = false
+            )
+        )
     }
 
-    suspend fun deleteAccount(id: Int) = accountDao.deleteById(id)
+    suspend fun deleteAccount(id: Int) {
+        val account = accountDao.getById(id) ?: return
+        accountDao.update(
+            account.copy(
+                isDeleted = true,
+                isDirty = true,
+                updatedAt = System.currentTimeMillis()
+            )
+        )
+    }
 
     suspend fun addFixedExpense(name: String, amount: Double, category: String, frequency: String): Boolean {
         if (name.isBlank() || amount <= 0) return false
-        return fixedExpenseDao.insert(FixedExpenseEntity(name = name, amount = amount, category = category, frequency = frequency)) != -1L
+        val email = getUserEmail()
+        return fixedExpenseDao.insert(
+            FixedExpenseEntity(
+                name = name,
+                amount = amount,
+                category = category,
+                frequency = frequency,
+                userEmail = email,
+                updatedAt = System.currentTimeMillis(),
+                isDirty = true,
+                isDeleted = false
+            )
+        ) != -1L
     }
 
     suspend fun updateFixedExpense(id: Int, name: String, amount: Double, category: String, frequency: String) {
         if (name.isBlank() || amount <= 0) return
-        fixedExpenseDao.update(FixedExpenseEntity(id = id, name = name, amount = amount, category = category, frequency = frequency))
+        val email = getUserEmail()
+        fixedExpenseDao.update(
+            FixedExpenseEntity(
+                id = id,
+                name = name,
+                amount = amount,
+                category = category,
+                frequency = frequency,
+                userEmail = email,
+                updatedAt = System.currentTimeMillis(),
+                isDirty = true,
+                isDeleted = false
+            )
+        )
     }
 
-    suspend fun deleteFixedExpense(id: Int) = fixedExpenseDao.deleteById(id)
+    suspend fun deleteFixedExpense(id: Int) {
+        val expense = fixedExpenseDao.getById(id) ?: return
+        fixedExpenseDao.update(
+            expense.copy(
+                isDeleted = true,
+                isDirty = true,
+                updatedAt = System.currentTimeMillis()
+            )
+        )
+    }
 
     // @Transaction query tracks purchases + purchase_items — no race condition.
     // Per emission: 1 query for categories, 1 for products → 3 total, no N+1.
-    val categoriesFlow: Flow<List<CategoryEntity>> = categoryDao.getAllCategories()
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val categoriesFlow: Flow<List<CategoryEntity>> = sessionManager.email
+        .flatMapLatest { email ->
+            categoryDao.getAllCategories(email ?: "")
+        }
 
     suspend fun addCategory(name: String): Boolean {
         val trimmed = name.trim()
         if (trimmed.isBlank()) return false
-        return categoryDao.insert(CategoryEntity(name = trimmed)) != -1L
+        val email = getUserEmail()
+        return categoryDao.insert(
+            CategoryEntity(
+                name = trimmed,
+                userEmail = email,
+                updatedAt = System.currentTimeMillis(),
+                isDirty = true,
+                isDeleted = false
+            )
+        ) != -1L
     }
 
-    suspend fun deleteCategory(id: Int) = categoryDao.deleteById(id)
+    suspend fun deleteCategory(id: Int) {
+        val category = categoryDao.getCategoryById(id) ?: return
+        categoryDao.update(
+            category.copy(
+                isDeleted = true,
+                isDirty = true,
+                updatedAt = System.currentTimeMillis()
+            )
+        )
+    }
 
     suspend fun updateCategory(id: Int, newName: String) {
         val trimmed = newName.trim()
         if (trimmed.isNotBlank()) {
             try {
-                categoryDao.updateName(id, trimmed)
+                categoryDao.updateName(id, trimmed, System.currentTimeMillis())
             } catch (_: SQLiteConstraintException) {
             }
         }
     }
 
-    val purchasesFlow: Flow<List<Purchase>> = purchaseDao.getAllPurchasesWithItems()
-        .map { purchasesWithItems ->
-            val categoryMap = categoryDao.getAllCategoriesOnce().associateBy { it.id }
-            val productMap = productDao.getAllProductsOnce().associateBy { it.id }
-            purchasesWithItems.map { it.toDomain(categoryMap, productMap) }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val purchasesFlow: Flow<List<Purchase>> = sessionManager.email
+        .flatMapLatest { email ->
+            val userEmail = email ?: ""
+            purchaseDao.getAllPurchasesWithItems(userEmail).map { purchasesWithItems ->
+                val categoryMap = categoryDao.getAllCategoriesOnce(userEmail).associateBy { it.id }
+                val productMap = productDao.getAllProductsOnce().associateBy { it.id }
+                purchasesWithItems.map { it.toDomain(categoryMap, productMap) }
+            }
         }
 
+    suspend fun guardarCompra(compra: Purchase): Int = savePurchase(compra)
+
     suspend fun savePurchase(purchase: Purchase): Int {
+        val email = getUserEmail()
         return db.withTransaction {
-            val categoryId = categoryDao.getCategoryByName(purchase.category)?.id
+            val categoryId = categoryDao.getCategoryByName(purchase.category, email)?.id
                 ?: run {
-                    val inserted = categoryDao.insert(CategoryEntity(name = purchase.category))
+                    val inserted = categoryDao.insert(
+                        CategoryEntity(
+                            name = purchase.category,
+                            userEmail = email,
+                            updatedAt = System.currentTimeMillis(),
+                            isDirty = true,
+                            isDeleted = false
+                        )
+                    )
                     if (inserted != -1L) inserted.toInt()
-                    else categoryDao.getCategoryByName(purchase.category)!!.id
+                    else categoryDao.getCategoryByName(purchase.category, email)!!.id
                 }
 
             val purchaseId = purchaseDao.insert(
@@ -105,23 +227,37 @@ class AppRepository(context: Context) {
                     timestamp = parseTimestamp(purchase.date, purchase.time),
                     ticketImagePath = purchase.ticketImageUri,
                     latitude = purchase.latitude,
-                    longitude = purchase.longitude
+                    longitude = purchase.longitude,
+                    userEmail = email,
+                    updatedAt = System.currentTimeMillis(),
+                    isDirty = true,
+                    isDeleted = false
                 )
             ).toInt()
 
             purchase.products.forEach { product ->
-                val productId = productDao.getProductByCode(product.code)?.id
-                    ?: run {
-                        val inserted = productDao.insert(
-                            ProductEntity(
+                val existingProduct = productDao.getProductByCode(product.code)
+                val productId = if (existingProduct != null) {
+                    if (existingProduct.name != product.name || existingProduct.description != product.description) {
+                        productDao.update(
+                            existingProduct.copy(
                                 name = product.name,
-                                description = product.description,
-                                code = product.code
+                                description = product.description
                             )
                         )
-                        if (inserted != -1L) inserted.toInt()
-                        else productDao.getProductByCode(product.code)!!.id
                     }
+                    existingProduct.id
+                } else {
+                    val inserted = productDao.insert(
+                        ProductEntity(
+                            name = product.name,
+                            description = product.description,
+                            code = product.code
+                        )
+                    )
+                    if (inserted != -1L) inserted.toInt()
+                    else productDao.getProductByCode(product.code)!!.id
+                }
                 purchasedItemDao.insert(
                     PurchasedItemEntity(
                         purchaseId = purchaseId,
@@ -136,12 +272,21 @@ class AppRepository(context: Context) {
     }
 
     suspend fun updatePurchase(id: Int, purchase: Purchase) {
+        val email = getUserEmail()
         db.withTransaction {
-            val categoryId = categoryDao.getCategoryByName(purchase.category)?.id
+            val categoryId = categoryDao.getCategoryByName(purchase.category, email)?.id
                 ?: run {
-                    val inserted = categoryDao.insert(CategoryEntity(name = purchase.category))
+                    val inserted = categoryDao.insert(
+                        CategoryEntity(
+                            name = purchase.category,
+                            userEmail = email,
+                            updatedAt = System.currentTimeMillis(),
+                            isDirty = true,
+                            isDeleted = false
+                        )
+                    )
                     if (inserted != -1L) inserted.toInt()
-                    else categoryDao.getCategoryByName(purchase.category)!!.id
+                    else categoryDao.getCategoryByName(purchase.category, email)!!.id
                 }
 
             purchaseDao.update(
@@ -154,25 +299,39 @@ class AppRepository(context: Context) {
                     timestamp = parseTimestamp(purchase.date, purchase.time),
                     ticketImagePath = purchase.ticketImageUri,
                     latitude = purchase.latitude,
-                    longitude = purchase.longitude
+                    longitude = purchase.longitude,
+                    userEmail = email,
+                    updatedAt = System.currentTimeMillis(),
+                    isDirty = true,
+                    isDeleted = false
                 )
             )
 
             purchasedItemDao.deleteByPurchaseId(id)
 
             purchase.products.forEach { product ->
-                val productId = productDao.getProductByCode(product.code)?.id
-                    ?: run {
-                        val inserted = productDao.insert(
-                            ProductEntity(
+                val existingProduct = productDao.getProductByCode(product.code)
+                val productId = if (existingProduct != null) {
+                    if (existingProduct.name != product.name || existingProduct.description != product.description) {
+                        productDao.update(
+                            existingProduct.copy(
                                 name = product.name,
-                                description = product.description,
-                                code = product.code
+                                description = product.description
                             )
                         )
-                        if (inserted != -1L) inserted.toInt()
-                        else productDao.getProductByCode(product.code)!!.id
                     }
+                    existingProduct.id
+                } else {
+                    val inserted = productDao.insert(
+                        ProductEntity(
+                            name = product.name,
+                            description = product.description,
+                            code = product.code
+                        )
+                    )
+                    if (inserted != -1L) inserted.toInt()
+                    else productDao.getProductByCode(product.code)!!.id
+                }
                 purchasedItemDao.insert(
                     PurchasedItemEntity(
                         purchaseId = id,
@@ -186,12 +345,20 @@ class AppRepository(context: Context) {
     }
 
     suspend fun deletePurchase(id: Int) {
-        purchaseDao.deleteById(id)
+        val purchase = purchaseDao.getPurchaseById(id) ?: return
+        purchaseDao.update(
+            purchase.copy(
+                isDeleted = true,
+                isDirty = true,
+                updatedAt = System.currentTimeMillis()
+            )
+        )
     }
 
     suspend fun getPurchaseById(id: Int): Purchase? {
         val pwi = purchaseDao.getPurchaseWithItemsById(id) ?: return null
-        val categoryMap = categoryDao.getAllCategoriesOnce().associateBy { it.id }
+        val email = getUserEmail()
+        val categoryMap = categoryDao.getAllCategoriesOnce(email).associateBy { it.id }
         val productMap = productDao.getAllProductsOnce().associateBy { it.id }
         return pwi.toDomain(categoryMap, productMap)
     }
@@ -222,17 +389,74 @@ class AppRepository(context: Context) {
         return productDao.getProductByCode(code)
     }
 
-    suspend fun searchProductPrices(lat: Double, lng: Double, query: String): List<PreciosClarosProductDto> =
-        try {
-            PreciosClarosClient.service.getProductos(query = query, lat = lat, lng = lng, limit = 30).productos
-        } catch (e: Exception) {
-            emptyList()
+    suspend fun searchProductPrices(lat: Double, lng: Double, query: String): List<PreciosClarosProductDto> {
+        val normalizedQuery = query.trim().lowercase(Locale.ROOT)
+        // 1. Consultar Room primero (cache-first)
+        val cached = preciosClarosProductDao.getProductsByQuery(normalizedQuery)
+        // Definir tiempo de expiración: 24 horas (86400000 ms)
+        val isExpired = cached.isNotEmpty() && (System.currentTimeMillis() - cached.first().timestamp > 24 * 60 * 60 * 1000)
+
+        if (cached.isNotEmpty() && !isExpired) {
+            return cached.map {
+                PreciosClarosProductDto(
+                    id = it.apiProductId,
+                    nombre = it.nombre,
+                    marca = it.marca,
+                    presentacion = it.presentacion,
+                    precioMin = it.precioMin,
+                    precioMax = it.precioMax,
+                    sucursalesDisponibles = it.sucursalesDisponibles
+                )
+            }
         }
 
+        // 2. Si no hay cache o está vencido, llamar a Retrofit
+        try {
+            val dtos = PreciosClarosClient.service.getProductos(query = query, lat = lat, lng = lng, limit = 30).productos ?: emptyList()
+
+            // 3. Guardar la respuesta en Room (Single Source of Truth)
+            preciosClarosProductDao.deleteByQuery(normalizedQuery)
+            if (dtos.isNotEmpty()) {
+                val entities = dtos.map { dto ->
+                    PreciosClarosProductEntity(
+                        query = normalizedQuery,
+                        apiProductId = dto.id,
+                        nombre = dto.nombre,
+                        marca = dto.marca,
+                        presentacion = dto.presentacion,
+                        precioMin = dto.precioMin,
+                        precioMax = dto.precioMax,
+                        sucursalesDisponibles = dto.sucursalesDisponibles,
+                        timestamp = System.currentTimeMillis()
+                    )
+                }
+                preciosClarosProductDao.insertAll(entities)
+            }
+            return dtos
+        } catch (e: Exception) {
+            // Si la llamada falla (sin internet), retornar lo que haya en cache aunque esté vencido
+            if (cached.isNotEmpty()) {
+                return cached.map {
+                    PreciosClarosProductDto(
+                        id = it.apiProductId,
+                        nombre = it.nombre,
+                        marca = it.marca,
+                        presentacion = it.presentacion,
+                        precioMin = it.precioMin,
+                        precioMax = it.precioMax,
+                        sucursalesDisponibles = it.sucursalesDisponibles
+                    )
+                }
+            }
+            return emptyList()
+        }
+    }
+
     suspend fun seedDefaultCategories() {
+        val email = getUserEmail()
         DEFAULT_CATEGORIES.forEach { name ->
-            if (categoryDao.getCategoryByName(name) == null) {
-                categoryDao.insert(CategoryEntity(name = name))
+            if (categoryDao.getCategoryByName(name, email) == null) {
+                categoryDao.insert(CategoryEntity(name = name, userEmail = email))
             }
         }
     }

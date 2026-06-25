@@ -2,22 +2,23 @@
 
 Agregar aquí las capturas antes de la entrega final. Los nombres de archivo deben coincidir exactamente con los usados en el README principal.
 
-## Capturas requeridas
+## Capturas requeridas y disponibles
 
-| Archivo esperado | Pantalla | Cómo llegar |
+| Nombre de archivo | Pantalla | Cómo llegar / Origen |
 |---|---|---|
 | `splash.png` | Pantalla de inicio | Abrir la app |
-| `login.png` | Login | Pantalla inicial después del splash |
-| `register.png` | Registro | Botón "Crear cuenta" en Login |
-| `home.png` | Dashboard | Después de iniciar sesión |
-| `new_purchase.png` | Nueva compra | Botón "+" en la barra inferior |
-| `purchase_success.png` | Compra guardada | Después de guardar una compra |
-| `purchase_detail.png` | Detalle de compra | Tap en cualquier compra del historial |
-| `history.png` | Historial | Sección "Ver todas" en Home |
-| `analytics.png` | Estadísticas | Tab de Analytics |
-| `top_stores.png` | Top tiendas | Botón "Ver todas" en Analytics |
-| `profile.png` | Perfil | Tab de Perfil |
-| `settings.png` | Configuración | Botón de ajustes en Perfil |
+| `login.jpg` | Login | Pantalla inicial después del splash |
+| `register.jpg` | Registro | Botón "Crear cuenta" en Login |
+| `welcome.jpg` | Éxito Registro (Bienvenido) | Después de registrar una cuenta exitosamente |
+| `dashboard.jpg` | Dashboard (Home) | Después de iniciar sesión |
+| `new_purchase.jpg` | Nueva compra | Botón "+" en la barra inferior |
+| `successful_purchase.jpg` | Compra guardada | Después de guardar una compra |
+| `notifications.jpg` | Notificaciones | Ícono de campana en el top bar del Dashboard |
+| `analytics.jpg` | Estadísticas (Panel Superior) | Tab de Análisis |
+| `analytics_2.jpg` | Estadísticas (Tendencias / Panel Inferior) | Hacer scroll hacia abajo en la Tab de Análisis |
+| `top_stores.jpg` | Top tiendas | Botón de flecha/ver todas en la sección Tiendas de Análisis |
+| `profile.jpg` | Perfil | Tab de Perfil |
+| `settings.jpg` | Configuración | Botón de ajustes (engranaje) en Perfil |
 
 ## Cómo tomar las capturas desde Android Studio
 

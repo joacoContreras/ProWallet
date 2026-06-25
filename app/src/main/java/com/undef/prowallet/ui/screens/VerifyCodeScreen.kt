@@ -106,7 +106,26 @@ fun VerifyCodeScreen(
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
 
-            Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.height(24.dp))
+
+            state.simulatedCode?.let { simulatedCode ->
+                Surface(
+                    color = SecondaryLight.copy(alpha = 0.15f),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.simulated_code_notice, simulatedCode),
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+                        fontFamily = PlusJakartaSans,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = SecondaryDark,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
 
             Card(
                 modifier = Modifier

@@ -21,12 +21,16 @@ interface PurchaseDao {
     @Query("DELETE FROM purchases WHERE id = :id")
     suspend fun deleteById(id: Int)
 
-    @Query("SELECT * FROM purchases ORDER BY timestamp DESC")
-    fun getAllPurchases(): Flow<List<PurchaseEntity>>
+    @Query("SELECT * FROM purchases WHERE (user_email = :userEmail OR user_email = '') AND is_deleted = 0 ORDER BY timestamp DESC")
+    fun getAllPurchases(userEmail: String): Flow<List<PurchaseEntity>>
 
     @Transaction
-    @Query("SELECT * FROM purchases ORDER BY timestamp DESC")
-    fun getAllPurchasesWithItems(): Flow<List<PurchaseWithItems>>
+    @Query("SELECT * FROM purchases WHERE (user_email = :userEmail OR user_email = '') AND is_deleted = 0 ORDER BY timestamp DESC")
+    fun getAllPurchasesWithItems(userEmail: String): Flow<List<PurchaseWithItems>>
+
+    @Transaction
+    @Query("SELECT * FROM purchases WHERE user_email = :userEmail AND is_dirty = 1")
+    suspend fun getDirtyPurchasesWithItems(userEmail: String): List<PurchaseWithItems>
 
     @Transaction
     @Query("SELECT * FROM purchases WHERE id = :id")

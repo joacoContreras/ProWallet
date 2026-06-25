@@ -18,13 +18,17 @@ class SessionManager(private val context: Context) {
     companion object {
         private val IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
         private val EMAIL = stringPreferencesKey("email")
+        private val LAST_EMAIL = stringPreferencesKey("last_email")
         private val MONTHLY_BUDGET = doublePreferencesKey("monthly_budget")
         private val MONTHLY_INCOME = doublePreferencesKey("monthly_income")
         private val SAVINGS_PERCENTAGE = androidx.datastore.preferences.core.floatPreferencesKey("savings_percentage")
         private val SAVINGS_METHOD = stringPreferencesKey("savings_method")
         private val SAVINGS_FREQUENCY = stringPreferencesKey("savings_frequency")
+        private val SAVINGS_FIXED_AMOUNT = doublePreferencesKey("savings_fixed_amount")
         private val DARK_MODE = booleanPreferencesKey("dark_mode")
         private val BIOMETRIC_ENABLED = booleanPreferencesKey("biometric_enabled")
+        private val NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
+        private val GROQ_API_KEY = stringPreferencesKey("groq_api_key")
     }
 
     val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { preferences ->
@@ -33,6 +37,10 @@ class SessionManager(private val context: Context) {
 
     val email: Flow<String?> = context.dataStore.data.map { preferences ->
         preferences[EMAIL]
+    }
+
+    val lastEmail: Flow<String?> = context.dataStore.data.map { preferences ->
+        preferences[LAST_EMAIL]
     }
 
     val monthlyBudget: Flow<Double> = context.dataStore.data.map { preferences ->
@@ -55,12 +63,24 @@ class SessionManager(private val context: Context) {
         preferences[SAVINGS_FREQUENCY] ?: "Monthly"
     }
 
+    val savingsFixedAmount: Flow<Double> = context.dataStore.data.map { preferences ->
+        preferences[SAVINGS_FIXED_AMOUNT] ?: 0.0
+    }
+
     val darkMode: Flow<Boolean> = context.dataStore.data.map { preferences ->
         preferences[DARK_MODE] ?: false
     }
 
     val biometricEnabled: Flow<Boolean> = context.dataStore.data.map { preferences ->
         preferences[BIOMETRIC_ENABLED] ?: false
+    }
+
+    val notificationsEnabled: Flow<Boolean> = context.dataStore.data.map { preferences ->
+        preferences[NOTIFICATIONS_ENABLED] ?: true
+    }
+
+    val groqApiKey: Flow<String> = context.dataStore.data.map { preferences ->
+        preferences[GROQ_API_KEY] ?: ""
     }
 
     suspend fun saveDarkMode(enabled: Boolean) {
@@ -72,6 +92,18 @@ class SessionManager(private val context: Context) {
     suspend fun saveBiometricEnabled(enabled: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[BIOMETRIC_ENABLED] = enabled
+        }
+    }
+
+    suspend fun saveNotificationsEnabled(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[NOTIFICATIONS_ENABLED] = enabled
+        }
+    }
+
+    suspend fun saveGroqApiKey(apiKey: String) {
+        context.dataStore.edit { preferences ->
+            preferences[GROQ_API_KEY] = apiKey
         }
     }
 
@@ -87,11 +119,12 @@ class SessionManager(private val context: Context) {
         }
     }
 
-    suspend fun saveSavingsSettings(percentage: Float, method: String, frequency: String) {
+    suspend fun saveSavingsSettings(percentage: Float, method: String, frequency: String, fixedAmount: Double) {
         context.dataStore.edit { preferences ->
             preferences[SAVINGS_PERCENTAGE] = percentage
             preferences[SAVINGS_METHOD] = method
             preferences[SAVINGS_FREQUENCY] = frequency
+            preferences[SAVINGS_FIXED_AMOUNT] = fixedAmount
         }
     }
 
@@ -99,6 +132,7 @@ class SessionManager(private val context: Context) {
         context.dataStore.edit { preferences ->
             preferences[IS_LOGGED_IN] = true
             preferences[EMAIL] = email
+            preferences[LAST_EMAIL] = email
         }
     }
 

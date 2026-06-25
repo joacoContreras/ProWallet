@@ -23,6 +23,7 @@ import com.undef.prowallet.viewmodel.PurchaseViewModel
 import com.undef.prowallet.viewmodel.SettingsViewModel
 import com.undef.prowallet.viewmodel.StoreDetailViewModel
 import com.undef.prowallet.viewmodel.TopStoresViewModel
+import com.undef.prowallet.viewmodel.PriceComparisonViewModel
 
 sealed class Screen(val route: String) {
     object Splash : Screen("splash")
@@ -50,7 +51,6 @@ sealed class Screen(val route: String) {
     object ChatAi : Screen("chat_ai")
     object ManageAccounts : Screen("manage_accounts")
     object MonthlySetup : Screen("monthly_setup")
-    object PersonalInflation : Screen("personal_inflation")
     object AutoSavings : Screen("auto_savings")
     object FixedExpenses : Screen("fixed_expenses")
     object ForgotPassword : Screen("forgot_password")
@@ -58,6 +58,7 @@ sealed class Screen(val route: String) {
     object UpdatePassword : Screen("update_password")
     object UpdatePasswordSuccess : Screen("update_password_success")
     object ContactSupport : Screen("contact_support")
+    object PriceComparison : Screen("price_comparison")
 }
 
 @Composable
@@ -71,13 +72,21 @@ fun AppNavGraph(navController: NavHostController) {
         startDestination = Screen.Splash.route
     ) {
         composable(Screen.Splash.route) {
-            val isLoggedIn by authViewModel.isLoggedIn.collectAsState(initial = false)
-            SplashScreen(onNavigateToLogin = {
-                val destination = if (isLoggedIn) Screen.Home.route else Screen.Login.route
-                navController.navigate(destination) {
-                    popUpTo(Screen.Splash.route) { inclusive = true }
+            val biometricEnabled by settingsViewModel.biometricEnabled.collectAsState()
+            SplashScreen(
+                authViewModel = authViewModel,
+                biometricEnabled = biometricEnabled,
+                onNavigateToHome = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Splash.route) { inclusive = true }
+                    }
+                },
+                onNavigateToLogin = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Splash.route) { inclusive = true }
+                    }
                 }
-            })
+            )
         }
 
         composable(Screen.Login.route) {
@@ -236,16 +245,7 @@ fun AppNavGraph(navController: NavHostController) {
                 },
                 onNavigateToNewPurchase = { navController.navigate(Screen.NewPurchase.route) },
                 onNavigateToTopStores = { navController.navigate(Screen.TopStores.route) },
-                onNavigateToPersonalInflation = { navController.navigate(Screen.PersonalInflation.route) }
-            )
-        }
-
-        composable(Screen.PersonalInflation.route) {
-            PersonalInflationScreen(
-                onNavigateBack = { navController.popBackStack() },
-                onNavigateToNotifications = {
-                    navController.navigate(Screen.Notifications.route)
-                }
+                onNavigateToPriceComparison = { navController.navigate(Screen.PriceComparison.route) }
             )
         }
 
@@ -269,7 +269,8 @@ fun AppNavGraph(navController: NavHostController) {
             StoreDetailScreen(
                 storeName = storeName,
                 viewModel = storeDetailViewModel,
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToNotifications = { navController.navigate(Screen.Notifications.route) }
             )
         }
 
@@ -378,6 +379,16 @@ fun AppNavGraph(navController: NavHostController) {
 
         composable(Screen.ContactSupport.route) {
             ContactSupportScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToChatAi = { navController.navigate(Screen.ChatAi.route) },
+                onNavigateToNotifications = { navController.navigate(Screen.Notifications.route) }
+            )
+        }
+
+        composable(Screen.PriceComparison.route) {
+            val priceComparisonViewModel: PriceComparisonViewModel = viewModel()
+            PriceComparisonScreen(
+                viewModel = priceComparisonViewModel,
                 onNavigateBack = { navController.popBackStack() }
             )
         }

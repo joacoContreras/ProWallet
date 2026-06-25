@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.sp
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.undef.prowallet.viewmodel.AccountViewModel
 import com.undef.prowallet.viewmodel.AutoSavingsViewModel
 import java.util.Locale
 
@@ -34,10 +36,13 @@ fun AutoSavingsScreen(
     onNavigateToNotifications: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
+    val accountViewModel: AccountViewModel = viewModel()
+    val accountState by accountViewModel.uiState.collectAsState()
     val savingsPercentage = state.savingsPercentage
     val selectedMethod = state.selectedMethod
     val selectedFrequency = state.selectedFrequency
     val currentIncome = state.monthlyIncome
+    var fixedAmountText by remember(state.fixedAmount) { mutableStateOf(if (state.fixedAmount > 0) state.fixedAmount.toString() else "") }
 
     LaunchedEffect(state.isSaved) {
         if (state.isSaved) {
@@ -120,14 +125,13 @@ fun AutoSavingsScreen(
                         }
                         Column {
                             Text(text = stringResource(R.string.savings_goal), fontFamily = PlusJakartaSans, fontWeight = FontWeight.ExtraBold, fontSize = 20.sp, color = PrimaryDarker)
-                            Text(text = stringResource(R.string.savings_yearly_format, "$12,450"), fontSize = 14.sp, color = Neutral)
-                            Spacer(Modifier.height(12.dp))
-                            LinearProgressIndicator(
-                                progress = { 0.65f },
-                                modifier = Modifier.fillMaxWidth().height(10.dp).clip(CircleShape),
-                                color = PrimaryDarker,
-                                trackColor = TertiaryDark.copy(alpha = 0.3f)
+                            val yearlyEstimate = state.estimatedMonthlyAmount * 12
+                            Text(
+                                text = stringResource(R.string.savings_yearly_format, "$${String.format(Locale.getDefault(), "%.2f", yearlyEstimate)}"),
+                                fontSize = 14.sp,
+                                color = Neutral
                             )
+                            Text(text = stringResource(R.string.savings_estimate_disclaimer), fontSize = 11.sp, color = NeutralLight)
                         }
                     }
                 }
@@ -147,7 +151,7 @@ fun AutoSavingsScreen(
                 }
             }
 
-            // Percentage Setup
+            // Percentage / Fixed Amount Setup
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth().shadow(4.dp, RoundedCornerShape(20.dp)),
@@ -155,30 +159,50 @@ fun AutoSavingsScreen(
                     colors = CardDefaults.cardColors(containerColor = Color.White)
                 ) {
                     Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
-                            Column {
-                                Text(text = stringResource(R.string.current_income), fontSize = 12.sp, color = Neutral)
-                                Text(
-                                    text = if (currentIncome > 0) "$${String.format(Locale.getDefault(), "%.2f", currentIncome)}" else "—",
-                                    fontSize = 24.sp,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    color = TextPrimary
-                                )
+                        if (selectedMethod == "Percentage") {
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
+                                Column {
+                                    Text(text = stringResource(R.string.current_income), fontSize = 12.sp, color = Neutral)
+                                    Text(
+                                        text = if (currentIncome > 0) "$${String.format(Locale.getDefault(), "%.2f", currentIncome)}" else "—",
+                                        fontSize = 24.sp,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        color = TextPrimary
+                                    )
+                                }
+                                Text(text = "${savingsPercentage.toInt()}%", fontSize = 30.sp, fontWeight = FontWeight.Bold, color = PrimaryDarker)
                             }
-                            Text(text = "${savingsPercentage.toInt()}%", fontSize = 30.sp, fontWeight = FontWeight.Bold, color = PrimaryDarker)
-                        }
-                        
-                        Slider(
-                            value = savingsPercentage,
-                            onValueChange = { viewModel.onPercentageChange(it) },
-                            valueRange = 0f..30f,
-                            colors = SliderDefaults.colors(
-                                thumbColor = PrimaryDarker,
-                                activeTrackColor = PrimaryDarker,
-                                inactiveTrackColor = TertiaryDark.copy(alpha = 0.5f)
+
+                            Slider(
+                                value = savingsPercentage,
+                                onValueChange = { viewModel.onPercentageChange(it) },
+                                valueRange = 0f..30f,
+                                colors = SliderDefaults.colors(
+                                    thumbColor = PrimaryDarker,
+                                    activeTrackColor = PrimaryDarker,
+                                    inactiveTrackColor = TertiaryDark.copy(alpha = 0.5f)
+                                )
                             )
-                        )
-                        
+                        } else {
+                            Text(text = stringResource(R.string.fixed_amount_per_period_label), fontSize = 12.sp, color = Neutral)
+                            OutlinedTextField(
+                                value = fixedAmountText,
+                                onValueChange = {
+                                    fixedAmountText = it
+                                    viewModel.onFixedAmountChange(it.toDoubleOrNull() ?: 0.0)
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                prefix = { Text("$", color = PrimaryDarker, fontWeight = FontWeight.Bold) },
+                                shape = RoundedCornerShape(12.dp),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedContainerColor = BackgroundLight,
+                                    unfocusedContainerColor = BackgroundLight,
+                                    focusedBorderColor = Primary
+                                ),
+                                textStyle = LocalTextStyle.current.copy(fontSize = 24.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                            )
+                        }
+
                         Surface(
                             modifier = Modifier.fillMaxWidth(),
                             color = BackgroundLight,
@@ -187,7 +211,7 @@ fun AutoSavingsScreen(
                             Row(modifier = Modifier.padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                                 Text(text = stringResource(R.string.estimated_monthly_savings), fontSize = 14.sp, color = Neutral)
                                 Text(
-                                    text = "$${String.format(Locale.getDefault(), "%.2f", currentIncome * (savingsPercentage / 100))}",
+                                    text = "$${String.format(Locale.getDefault(), "%.2f", state.estimatedMonthlyAmount)}",
                                     fontSize = 20.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = PrimaryDarker
@@ -218,12 +242,15 @@ fun AutoSavingsScreen(
                 }
             }
 
-            // Destination Fund
+            // Destination Fund: la cuenta marcada como principal en "Cuentas vinculadas"
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(text = stringResource(R.string.destination_fund), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Neutral, letterSpacing = 1.sp)
-                    DestinationFundCard(Icons.Default.Savings, stringResource(R.string.main_savings), "APY 4.25%", Secondary.copy(alpha = 0.1f)) {
-                        // Potential navigation to fund details
+                    val primaryAccount = accountState.accounts.firstOrNull { it.isPrimary }
+                    if (primaryAccount != null) {
+                        DestinationFundCard(Icons.Default.Savings, primaryAccount.name, primaryAccount.type, Secondary.copy(alpha = 0.1f))
+                    } else {
+                        DestinationFundCard(Icons.Default.AccountBalance, stringResource(R.string.no_primary_account), stringResource(R.string.no_primary_account_hint), BackgroundLight)
                     }
                 }
             }
@@ -266,11 +293,9 @@ fun FrequencyRow(label: String, isSelected: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-fun DestinationFundCard(icon: ImageVector, title: String, subtitle: String, iconBg: Color, onClick: () -> Unit) {
+fun DestinationFundCard(icon: ImageVector, title: String, subtitle: String, iconBg: Color) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
+        modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
@@ -286,7 +311,6 @@ fun DestinationFundCard(icon: ImageVector, title: String, subtitle: String, icon
                 Text(text = title, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = TextPrimary)
                 Text(text = subtitle, fontSize = 12.sp, color = Neutral)
             }
-            Icon(Icons.Default.ChevronRight, contentDescription = null, tint = Neutral)
         }
     }
 }

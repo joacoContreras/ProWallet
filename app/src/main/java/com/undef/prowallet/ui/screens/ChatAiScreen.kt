@@ -1,56 +1,37 @@
 package com.undef.prowallet.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
-
-data class ChatMessage(
-    val text: String,
-    val isUser: Boolean,
-    val hasInsight: Boolean = false
-)
+import com.undef.prowallet.viewmodel.ChatAiViewModel
+import com.undef.prowallet.viewmodel.ChatMessage
+import com.undef.prowallet.viewmodel.ChatOption
 
 @Composable
 fun ChatAiScreen(onNavigateBack: () -> Unit) {
-    var messageText by remember { mutableStateOf("") }
-    val greeting = stringResource(R.string.proassistant_greeting)
-    val userEx = stringResource(R.string.chat_user_example)
-    val assistantEx = stringResource(R.string.chat_assistant_example)
-    
-    val messages = remember {
-        mutableStateListOf(
-            ChatMessage(greeting, false),
-            ChatMessage(userEx, true),
-            ChatMessage(assistantEx, false, true)
-        )
-    }
-
-    val suggestions = listOf(
-        stringResource(R.string.suggestion_analyze_week),
-        stringResource(R.string.suggestion_budget_check),
-        stringResource(R.string.suggestion_top_categories)
-    )
+    val viewModel: ChatAiViewModel = viewModel()
+    val state by viewModel.uiState.collectAsState()
+    val messages = state.messages
 
     Scaffold(
         topBar = {
@@ -62,62 +43,31 @@ fun ChatAiScreen(onNavigateBack: () -> Unit) {
                 modifier = Modifier
                     .background(Color.White)
                     .navigationBarsPadding()
-                    .padding(16.dp)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                // Suggestions
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(bottom = 12.dp)
-                ) {
-                    items(suggestions) { suggestion ->
-                        Surface(
-                            onClick = { messages.add(ChatMessage(suggestion, true)) },
-                            shape = RoundedCornerShape(20.dp),
-                            color = Neutral.copy(alpha = 0.1f)
+                // Predefined chatbot menu options
+                state.options.forEach { option ->
+                    Surface(
+                        onClick = { viewModel.selectOption(option) },
+                        shape = RoundedCornerShape(16.dp),
+                        color = PrimaryLight.copy(alpha = 0.6f),
+                        border = BorderStroke(1.dp, PrimaryDark.copy(alpha = 0.8f)),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 20.dp, vertical = 14.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = suggestion,
-                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                                fontSize = 12.sp,
+                                text = stringResource(option.textRes),
+                                fontSize = 14.sp,
                                 fontFamily = PlusJakartaSans,
-                                color = TextPrimary
+                                fontWeight = FontWeight.SemiBold,
+                                color = PrimaryDarker
                             )
                         }
-                    }
-                }
-
-                // Input field
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    OutlinedTextField(
-                        value = messageText,
-                        onValueChange = { messageText = it },
-                        modifier = Modifier.weight(1f),
-                        placeholder = { Text(stringResource(R.string.ask_proassistant_placeholder), color = NeutralLight) },
-                        shape = RoundedCornerShape(24.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = BackgroundLight,
-                            unfocusedContainerColor = BackgroundLight,
-                            focusedBorderColor = Primary,
-                            unfocusedBorderColor = Color.Transparent
-                        ),
-                        maxLines = 3
-                    )
-                    FloatingActionButton(
-                        onClick = {
-                            if (messageText.isNotBlank()) {
-                                messages.add(ChatMessage(messageText, true))
-                                messageText = ""
-                            }
-                        },
-                        containerColor = PrimaryDarker,
-                        contentColor = Color.White,
-                        shape = CircleShape,
-                        modifier = Modifier.size(48.dp)
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.Send, contentDescription = stringResource(R.string.send_label))
                     }
                 }
             }
@@ -148,27 +98,6 @@ fun ChatAiScreen(onNavigateBack: () -> Unit) {
 
             items(messages) { message ->
                 ChatBubble(message)
-            }
-
-            item {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.alpha(0.6f)
-                ) {
-                    Icon(
-                        Icons.Default.SmartToy,
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp),
-                        tint = Neutral
-                    )
-                    Text(
-                        text = stringResource(R.string.proassistant_typing),
-                        fontSize = 12.sp,
-                        fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
-                        color = Neutral
-                    )
-                }
             }
         }
     }
@@ -202,6 +131,8 @@ fun ChatBubble(message: ChatMessage) {
                 }
             }
 
+            val text = message.rawText ?: stringResource(message.textRes!!, *message.textArgs.toTypedArray())
+
             Surface(
                 color = bgColor,
                 shape = shape,
@@ -210,14 +141,14 @@ fun ChatBubble(message: ChatMessage) {
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     Text(
-                        text = message.text,
+                        text = text,
                         fontSize = 14.sp,
                         fontFamily = PlusJakartaSans,
                         color = textColor,
                         lineHeight = 20.sp
                     )
-                    
-                    if (message.hasInsight) {
+
+                    message.insightPercent?.let { percent ->
                         Spacer(Modifier.height(12.dp))
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Row(
@@ -225,10 +156,15 @@ fun ChatBubble(message: ChatMessage) {
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text(stringResource(R.string.monthly_budget), fontSize = 11.sp, color = Neutral)
-                                Text(stringResource(R.string.left_label_format, "85%"), fontSize = 11.sp, color = SuccessGreen, fontWeight = FontWeight.Bold)
+                                Text(
+                                    stringResource(R.string.left_label_format, "$percent%"),
+                                    fontSize = 11.sp,
+                                    color = if (percent > 100) ErrorRed else SuccessGreen,
+                                    fontWeight = FontWeight.Bold
+                                )
                             }
                             LinearProgressIndicator(
-                                progress = { 0.15f },
+                                progress = { (percent / 100f).coerceIn(0f, 1f) },
                                 modifier = Modifier.fillMaxWidth().height(6.dp).clip(CircleShape),
                                 color = PrimaryDarker,
                                 trackColor = Primary.copy(alpha = 0.2f)

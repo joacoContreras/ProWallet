@@ -31,7 +31,8 @@ import com.undef.prowallet.viewmodel.StoreDetailViewModel
 fun StoreDetailScreen(
     storeName: String,
     viewModel: StoreDetailViewModel,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onNavigateToNotifications: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -53,7 +54,7 @@ fun StoreDetailScreen(
                 title = stringResource(R.string.store_detail_title),
                 onNavigateBack = onNavigateBack,
                 actions = {
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = onNavigateToNotifications) {
                         Icon(Icons.Default.Notifications, contentDescription = null, tint = Neutral)
                     }
                 }
