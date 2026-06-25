@@ -9,7 +9,6 @@ import com.undef.prowallet.data.remote.RetrofitClient
 import com.undef.prowallet.domain.Product
 import com.undef.prowallet.domain.Purchase
 import com.undef.prowallet.util.SessionManager
-import com.undef.prowallet.sync.SyncWorker
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -18,14 +17,6 @@ import kotlinx.coroutines.flow.map
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import java.util.concurrent.TimeUnit
-import androidx.work.Constraints
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.BackoffPolicy
-import androidx.work.WorkRequest
-import androidx.work.ExistingWorkPolicy
 
 class AppRepository(private val context: Context) {
 
@@ -62,7 +53,7 @@ class AppRepository(private val context: Context) {
         if (name.isBlank()) return false
         val email = getUserEmail()
         if (isPrimary) accountDao.clearPrimary(email)
-        val success = accountDao.insert(
+        return accountDao.insert(
             AccountEntity(
                 name = name,
                 type = type,
@@ -74,8 +65,6 @@ class AppRepository(private val context: Context) {
                 isDeleted = false
             )
         ) != -1L
-        if (success) triggerSync()
-        return success
     }
 
     suspend fun updateAccount(id: Int, name: String, type: String, lastFour: String, isPrimary: Boolean) {
@@ -95,7 +84,6 @@ class AppRepository(private val context: Context) {
                 isDeleted = false
             )
         )
-        triggerSync()
     }
 
     suspend fun deleteAccount(id: Int) {
@@ -107,13 +95,12 @@ class AppRepository(private val context: Context) {
                 updatedAt = System.currentTimeMillis()
             )
         )
-        triggerSync()
     }
 
     suspend fun addFixedExpense(name: String, amount: Double, category: String, frequency: String): Boolean {
         if (name.isBlank() || amount <= 0) return false
         val email = getUserEmail()
-        val success = fixedExpenseDao.insert(
+        return fixedExpenseDao.insert(
             FixedExpenseEntity(
                 name = name,
                 amount = amount,
@@ -125,8 +112,6 @@ class AppRepository(private val context: Context) {
                 isDeleted = false
             )
         ) != -1L
-        if (success) triggerSync()
-        return success
     }
 
     suspend fun updateFixedExpense(id: Int, name: String, amount: Double, category: String, frequency: String) {
@@ -145,7 +130,6 @@ class AppRepository(private val context: Context) {
                 isDeleted = false
             )
         )
-        triggerSync()
     }
 
     suspend fun deleteFixedExpense(id: Int) {
@@ -157,7 +141,6 @@ class AppRepository(private val context: Context) {
                 updatedAt = System.currentTimeMillis()
             )
         )
-        triggerSync()
     }
 
     // @Transaction query tracks purchases + purchase_items — no race condition.
@@ -172,7 +155,7 @@ class AppRepository(private val context: Context) {
         val trimmed = name.trim()
         if (trimmed.isBlank()) return false
         val email = getUserEmail()
-        val success = categoryDao.insert(
+        return categoryDao.insert(
             CategoryEntity(
                 name = trimmed,
                 userEmail = email,
@@ -181,8 +164,6 @@ class AppRepository(private val context: Context) {
                 isDeleted = false
             )
         ) != -1L
-        if (success) triggerSync()
-        return success
     }
 
     suspend fun deleteCategory(id: Int) {
@@ -194,7 +175,6 @@ class AppRepository(private val context: Context) {
                 updatedAt = System.currentTimeMillis()
             )
         )
-        triggerSync()
     }
 
     suspend fun updateCategory(id: Int, newName: String) {
@@ -202,7 +182,6 @@ class AppRepository(private val context: Context) {
         if (trimmed.isNotBlank()) {
             try {
                 categoryDao.updateName(id, trimmed, System.currentTimeMillis())
-                triggerSync()
             } catch (_: SQLiteConstraintException) {
             }
         }
@@ -219,11 +198,7 @@ class AppRepository(private val context: Context) {
             }
         }
 
-    suspend fun guardarCompra(compra: Purchase): Int {
-        val id = savePurchase(compra)
-        triggerSync()
-        return id
-    }
+    suspend fun guardarCompra(compra: Purchase): Int = savePurchase(compra)
 
     suspend fun savePurchase(purchase: Purchase): Int {
         val email = getUserEmail()
@@ -367,7 +342,6 @@ class AppRepository(private val context: Context) {
                 )
             }
         }
-        triggerSync()
     }
 
     suspend fun deletePurchase(id: Int) {
@@ -379,31 +353,6 @@ class AppRepository(private val context: Context) {
                 updatedAt = System.currentTimeMillis()
             )
         )
-        triggerSync()
-    }
-
-    fun triggerSync() {
-        try {
-            val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build()
-
-            val syncWorkRequest = OneTimeWorkRequestBuilder<SyncWorker>()
-                .setConstraints(constraints)
-                .setBackoffCriteria(
-                    BackoffPolicy.EXPONENTIAL,
-                    WorkRequest.MIN_BACKOFF_MILLIS,
-                    TimeUnit.MILLISECONDS
-                )
-                .build()
-
-            WorkManager.getInstance(context).enqueueUniqueWork(
-                "cloud_sync_work",
-                ExistingWorkPolicy.REPLACE,
-                syncWorkRequest
-            )
-        } catch (_: Exception) {
-        }
     }
 
     suspend fun getPurchaseById(id: Int): Purchase? {
@@ -508,98 +457,6 @@ class AppRepository(private val context: Context) {
         DEFAULT_CATEGORIES.forEach { name ->
             if (categoryDao.getCategoryByName(name, email) == null) {
                 categoryDao.insert(CategoryEntity(name = name, userEmail = email))
-            }
-        }
-    }
-
-    suspend fun getDirtyPurchases(userEmail: String): List<Purchase> {
-        val purchasesWithItems = purchaseDao.getDirtyPurchasesWithItems(userEmail)
-        val categoryMap = categoryDao.getAllCategoriesOnce(userEmail).associateBy { it.id }
-        val productMap = productDao.getAllProductsOnce().associateBy { it.id }
-        return purchasesWithItems.map { it.toDomain(categoryMap, productMap) }
-    }
-    suspend fun getDirtyCategories(userEmail: String): List<CategoryEntity> = categoryDao.getDirty(userEmail)
-    suspend fun getDirtyAccounts(userEmail: String): List<AccountEntity> = accountDao.getDirty(userEmail)
-    suspend fun getDirtyFixedExpenses(userEmail: String): List<FixedExpenseEntity> = fixedExpenseDao.getDirty(userEmail)
-
-    suspend fun clearDirtyFlags(
-        purchases: List<Purchase>,
-        categories: List<CategoryEntity>,
-        accounts: List<AccountEntity>,
-        fixedExpenses: List<FixedExpenseEntity>
-    ) {
-        db.withTransaction {
-            purchases.forEach { domainPurchase ->
-                val id = domainPurchase.id.toIntOrNull()
-                if (id != null) {
-                    val entity = purchaseDao.getPurchaseById(id)
-                    if (entity != null) {
-                        purchaseDao.update(entity.copy(isDirty = false))
-                    }
-                }
-            }
-            categories.forEach { categoryDao.update(it.copy(isDirty = false)) }
-            accounts.forEach { accountDao.update(it.copy(isDirty = false)) }
-            fixedExpenses.forEach { fixedExpenseDao.update(it.copy(isDirty = false)) }
-        }
-    }
-
-    suspend fun applySyncResponse(
-        purchases: List<Purchase>,
-        categories: List<CategoryEntity>,
-        accounts: List<AccountEntity>,
-        fixedExpenses: List<FixedExpenseEntity>
-    ) {
-        db.withTransaction {
-            // Apply categories
-            categories.forEach { remote ->
-                val local = categoryDao.getCategoryById(remote.id)
-                if (local == null) {
-                    categoryDao.insert(remote.copy(isDirty = false))
-                } else if (!local.isDirty || remote.updatedAt > local.updatedAt) {
-                    categoryDao.update(remote.copy(isDirty = false))
-                }
-            }
-
-            // Apply accounts
-            accounts.forEach { remote ->
-                val local = accountDao.getById(remote.id)
-                if (local == null) {
-                    accountDao.insert(remote.copy(isDirty = false))
-                } else if (!local.isDirty || remote.updatedAt > local.updatedAt) {
-                    accountDao.update(remote.copy(isDirty = false))
-                }
-            }
-
-            // Apply fixed expenses
-            fixedExpenses.forEach { remote ->
-                val local = fixedExpenseDao.getById(remote.id)
-                if (local == null) {
-                    fixedExpenseDao.insert(remote.copy(isDirty = false))
-                } else if (!local.isDirty || remote.updatedAt > local.updatedAt) {
-                    fixedExpenseDao.update(remote.copy(isDirty = false))
-                }
-            }
-
-            // Apply purchases
-            purchases.forEach { remote ->
-                val localId = remote.id.toIntOrNull()
-                val local = if (localId != null) purchaseDao.getPurchaseById(localId) else null
-                if (local == null) {
-                    val insertedId = savePurchase(remote)
-                    val insertedEntity = purchaseDao.getPurchaseById(insertedId)
-                    if (insertedEntity != null) {
-                        purchaseDao.update(insertedEntity.copy(isDirty = false))
-                    }
-                } else if (remote.timestampMs > local.updatedAt) {
-                    if (localId != null) {
-                        updatePurchase(localId, remote)
-                        val updatedEntity = purchaseDao.getPurchaseById(localId)
-                        if (updatedEntity != null) {
-                            purchaseDao.update(updatedEntity.copy(isDirty = false))
-                        }
-                    }
-                }
             }
         }
     }
