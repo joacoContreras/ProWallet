@@ -25,6 +25,7 @@ import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
 import com.undef.prowallet.viewmodel.ChatAiViewModel
 import com.undef.prowallet.viewmodel.ChatMessage
+import com.undef.prowallet.viewmodel.ChatOption
 
 @Composable
 fun ChatAiScreen(onNavigateBack: () -> Unit) {
@@ -46,9 +47,9 @@ fun ChatAiScreen(onNavigateBack: () -> Unit) {
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 // Predefined chatbot menu options
-                state.options.forEach { optionRes ->
+                state.options.forEach { option ->
                     Surface(
-                        onClick = { viewModel.selectOption(optionRes) },
+                        onClick = { viewModel.selectOption(option) },
                         shape = RoundedCornerShape(16.dp),
                         color = PrimaryLight.copy(alpha = 0.6f),
                         border = BorderStroke(1.dp, PrimaryDark.copy(alpha = 0.8f)),
@@ -60,7 +61,7 @@ fun ChatAiScreen(onNavigateBack: () -> Unit) {
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = stringResource(optionRes),
+                                text = stringResource(option.textRes),
                                 fontSize = 14.sp,
                                 fontFamily = PlusJakartaSans,
                                 fontWeight = FontWeight.SemiBold,
@@ -130,6 +131,8 @@ fun ChatBubble(message: ChatMessage) {
                 }
             }
 
+            val text = message.rawText ?: stringResource(message.textRes!!, *message.textArgs.toTypedArray())
+
             Surface(
                 color = bgColor,
                 shape = shape,
@@ -137,34 +140,13 @@ fun ChatBubble(message: ChatMessage) {
                 modifier = Modifier.widthIn(max = 280.dp)
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
-                    if (message.isThinking) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(16.dp),
-                                strokeWidth = 2.dp,
-                                color = PrimaryDarker
-                            )
-                            Text(
-                                text = stringResource(R.string.chat_thinking),
-                                fontSize = 13.sp,
-                                fontFamily = PlusJakartaSans,
-                                color = Neutral
-                            )
-                        }
-                    } else {
-                        val text = message.rawText
-                            ?: if (message.textRes != null) stringResource(message.textRes, *message.textArgs.toTypedArray()) else ""
-                        Text(
-                            text = text,
-                            fontSize = 14.sp,
-                            fontFamily = PlusJakartaSans,
-                            color = textColor,
-                            lineHeight = 20.sp
-                        )
-                    }
+                    Text(
+                        text = text,
+                        fontSize = 14.sp,
+                        fontFamily = PlusJakartaSans,
+                        color = textColor,
+                        lineHeight = 20.sp
+                    )
 
                     message.insightPercent?.let { percent ->
                         Spacer(Modifier.height(12.dp))

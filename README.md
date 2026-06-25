@@ -164,10 +164,10 @@ db.withTransaction {
 | `HomeViewModel` | Gasto mensual, presupuesto, compras recientes, filtrado por mes |
 | `PurchaseViewModel` | Formulario, OCR+Groq, CRUD de categorías, guardado con transacción |
 | `PurchaseDetailViewModel` | Detalle + comparación Precios Claros (GPS + async/awaitAll + scoring) |
-| `ChatAiViewModel` | Asistente financiero: Groq API o motor local con datos reales de Room |
+| `ChatAiViewModel` | Asistente financiero local basado en reglas con datos reales de Room |
 | `HistoryViewModel` | Historial con `HistoryFilter` (6 dimensiones), exportación CSV |
 | `NotificationsViewModel` | Feed in-app calculado desde purchasesFlow + DataStore |
-| `AutoSavingsViewModel` | Calculadora de ahorro + meta de ahorro con progreso real de Room |
+| `AutoSavingsViewModel` | Configuración y cálculo del porcentaje/frecuencia de ahorro mensual (DataStore) |
 | `AnalyticsViewModel` | Tendencia 6 meses, distribución categorías, inflación personal |
 | `TopStoresViewModel` | Ranking de tiendas por mes |
 | `SettingsViewModel` | Dark mode, biométrico, Groq API key (DataStore) |
@@ -233,8 +233,8 @@ com.undef.prowallet
 | Configuración | `settings` | Dark mode, biometría, idioma, Groq API key |
 | Cuentas vinculadas | `manage_accounts` | CRUD de cuentas bancarias |
 | Presupuesto mensual | `monthly_setup` | Ingreso y presupuesto (DataStore) |
-| Ahorro automático | `auto_savings` | Calculadora + meta de ahorro con progreso real |
-| Chat IA | `chat_ai` | Asistente financiero (Groq o motor local) |
+| Ahorro automático | `auto_savings` | Configuración del porcentaje, método y frecuencia de ahorro mensual |
+| Chat IA | `chat_ai` | Asistente financiero local basado en reglas |
 | Notificaciones | `notifications` | Feed in-app calculado desde Room |
 | Soporte | `contact_support` | Email vía Intent ACTION_SENDTO |
 | Recuperar contraseña | `forgot_password` | Envío de código |
