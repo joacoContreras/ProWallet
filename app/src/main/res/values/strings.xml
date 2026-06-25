@@ -54,6 +54,10 @@
     <string name="notif_auto_savings_format">Tenés un ahorro automático activo del %1$d%% de tu ingreso.</string>
     <string name="notification_channel_budget_name">Alertas de presupuesto</string>
     <string name="notification_channel_budget_description">Avisos cuando tu gasto mensual se acerca o supera el presupuesto configurado</string>
+    <string name="notification_channel_reminder_name">Recordatorios de gastos</string>
+    <string name="notification_channel_reminder_description">Resumen semanal de tus gastos para mantener el control financiero</string>
+    <string name="notif_weekly_reminder_title">Resumen semanal de gastos</string>
+    <string name="notif_weekly_reminder_body">Esta semana gastaste $%1$s. Este mes vas por $%2$s de $%3$s presupuestados.</string>
 
     <!-- Splash Screen -->
     <string name="splash_subtitle">Bienvenido a la calma financiera</string>
@@ -78,8 +82,6 @@
     <string name="settings_dark_mode_title">Modo Oscuro</string>
     <string name="settings_dark_mode_subtitle">Tema oscuro de la aplicación</string>
     <string name="settings_data_section">DATOS</string>
-    <string name="settings_sync_title">Sincronización</string>
-    <string name="settings_sync_subtitle">Sincronización automática de moneda local</string>
     <string name="settings_export_title">Exportar Datos</string>
     <string name="settings_export_subtitle">Descargar historial en CSV</string>
     <string name="settings_delete_account_title">Eliminar Cuenta</string>
@@ -327,10 +329,24 @@
     <string name="chat_option_expenses_month">📅 Este Mes</string>
     <string name="chat_option_back_main">🔙 Volver al Menú Principal</string>
     <string name="chat_option_budget_adjust">⚙️ Cómo Ajustar Presupuesto</string>
-    
+
     <string name="chat_help_reply">Aquí tenés algunas respuestas rápidas:\n\n• <b>¿Cómo registrar compras?</b> Hacé clic en la pestaña \'Nuevo\' y capturá tu ticket.\n• <b>¿Cómo ver estadísticas?</b> Andá a la pestaña \'Análisis\' para ver los gráficos.\n• <b>¿Dónde se guardan mis datos?</b> Todo se almacena localmente en tu celular de forma segura.</string>
     <string name="chat_expenses_menu_reply">Seleccioná el período que querés consultar para tus gastos:</string>
     <string name="chat_budget_adjust_reply">Podés cambiar tu presupuesto mensual desde tu perfil seleccionando \'Configuración Mensual\' o ajustándolo en la configuración de la app.</string>
+
+    <!-- Chat AI — nuevas respuestas del motor local -->
+    <string name="chat_most_expensive_format">Tu compra más cara fue en %1$s por $%2$s el %3$s.</string>
+    <string name="chat_no_purchases">Todavía no tenés compras registradas.</string>
+    <string name="chat_comparison_format">Este mes gastaste $%1$s vs $%2$s el mes pasado (%3$s).</string>
+    <string name="chat_comparison_no_prev">Este mes gastaste $%1$s, pero no tenés compras del mes anterior para comparar.</string>
+    <string name="chat_savings_advice_format">Tu mayor gasto este mes es en %1$s ($%2$s). Si lo reducís un 20%%, ahorrarías $%3$s por mes.</string>
+    <string name="chat_savings_no_data">Registrá compras este mes para recibir recomendaciones personalizadas de ahorro.</string>
+    <string name="chat_store_query_format">Gastaste $%1$s en %2$s en %3$d compra(s).</string>
+    <string name="chat_store_not_found_format">No encontré compras en tiendas que contengan \"%1$s\".</string>
+    <string name="chat_groq_error">No pude conectarme al asistente en este momento. Intentá de nuevo.</string>
+    <string name="chat_thinking">Analizando tu historial financiero…</string>
+    <string name="chat_comparison_more">más que</string>
+    <string name="chat_comparison_less">menos que</string>
 
     <!-- Store Detail Screen -->
     <string name="merchant_id_format">ID de comerciante: %s</string>
@@ -444,4 +460,21 @@
     <string name="category_dining">Gastronomía</string>
     <string name="category_coffee">Café</string>
     <string name="category_other">Otro</string>
+
+    <!-- Auto Savings — Meta de ahorro -->
+    <string name="savings_goal_section">Meta de Ahorro</string>
+    <string name="savings_goal_target_label">¿Cuánto querés ahorrar?</string>
+    <string name="savings_goal_months_label">¿En cuántos meses?</string>
+    <string name="savings_goal_set_button">Definir Meta</string>
+    <string name="savings_goal_clear_button">Eliminar Meta</string>
+    <string name="savings_goal_progress_title">Progreso de tu meta</string>
+    <string name="savings_goal_monthly_needed_format">Necesitás ahorrar $%s por mes</string>
+    <string name="savings_goal_capacity_format">Tu capacidad actual: $%s/mes</string>
+    <string name="savings_goal_on_track">¡Vas bien! Estás en camino de alcanzar tu meta.</string>
+    <string name="savings_goal_off_track">Estás gastando más de lo planeado. Revisá tus gastos.</string>
+    <string name="savings_goal_elapsed_format">Llevas %d mes(es) desde que definiste la meta</string>
+    <string name="savings_goal_input_error">Ingresá valores válidos mayores a cero</string>
+    <string name="savings_goal_months_remaining_format">%d mes(es) restantes</string>
+    <string name="savings_goal_accumulated_format">Ahorro acumulado estimado: $%s</string>
+    <string name="savings_goal_top_categories">Top categorías este mes</string>
 </resources>

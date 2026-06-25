@@ -18,9 +18,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.text.KeyboardOptions
 import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
@@ -105,6 +107,167 @@ fun AutoSavingsScreen(
             contentPadding = PaddingValues(24.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
+            // ── Meta de Ahorro ─────────────────────────────────────────────
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(
+                        text = stringResource(R.string.savings_goal_section),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Neutral,
+                        letterSpacing = 1.sp
+                    )
+                    if (!state.hasActiveGoal) {
+                        // Formulario de meta
+                        Card(
+                            modifier = Modifier.fillMaxWidth().shadow(4.dp, RoundedCornerShape(20.dp)),
+                            shape = RoundedCornerShape(20.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White)
+                        ) {
+                            Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                                OutlinedTextField(
+                                    value = state.goalTargetInput,
+                                    onValueChange = { viewModel.onGoalTargetInputChange(it) },
+                                    label = { Text(stringResource(R.string.savings_goal_target_label)) },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    prefix = { Text("$", color = PrimaryDarker, fontWeight = FontWeight.Bold) },
+                                    isError = state.goalInputError,
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                                    shape = RoundedCornerShape(12.dp),
+                                    colors = OutlinedTextFieldDefaults.colors(
+                                        focusedContainerColor = BackgroundLight,
+                                        unfocusedContainerColor = BackgroundLight,
+                                        focusedBorderColor = Primary
+                                    ),
+                                    singleLine = true
+                                )
+                                OutlinedTextField(
+                                    value = state.goalMonthsInput,
+                                    onValueChange = { viewModel.onGoalMonthsInputChange(it) },
+                                    label = { Text(stringResource(R.string.savings_goal_months_label)) },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    isError = state.goalInputError,
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                    shape = RoundedCornerShape(12.dp),
+                                    colors = OutlinedTextFieldDefaults.colors(
+                                        focusedContainerColor = BackgroundLight,
+                                        unfocusedContainerColor = BackgroundLight,
+                                        focusedBorderColor = Primary
+                                    ),
+                                    singleLine = true
+                                )
+                                if (state.goalInputError) {
+                                    Text(
+                                        text = stringResource(R.string.savings_goal_input_error),
+                                        color = MaterialTheme.colorScheme.error,
+                                        fontSize = 12.sp
+                                    )
+                                }
+                                Button(
+                                    onClick = { viewModel.saveGoal() },
+                                    modifier = Modifier.fillMaxWidth().height(48.dp),
+                                    shape = RoundedCornerShape(24.dp),
+                                    colors = ButtonDefaults.buttonColors(containerColor = PrimaryDarker)
+                                ) {
+                                    Text(stringResource(R.string.savings_goal_set_button), fontWeight = FontWeight.Bold)
+                                }
+                            }
+                        }
+                    } else {
+                        // Card de progreso
+                        Card(
+                            modifier = Modifier.fillMaxWidth().shadow(4.dp, RoundedCornerShape(20.dp)),
+                            shape = RoundedCornerShape(20.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White)
+                        ) {
+                            Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                                Text(
+                                    text = stringResource(R.string.savings_goal_progress_title),
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 16.sp,
+                                    color = TextPrimary
+                                )
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.Bottom
+                                ) {
+                                    Text(
+                                        text = "$${String.format(Locale.getDefault(), "%.0f", state.accumulatedSavings)}",
+                                        fontSize = 28.sp,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        color = PrimaryDarker
+                                    )
+                                    Text(
+                                        text = "/ $${String.format(Locale.getDefault(), "%.0f", state.goalTarget)}",
+                                        fontSize = 14.sp,
+                                        color = Neutral
+                                    )
+                                }
+                                LinearProgressIndicator(
+                                    progress = { state.progressFraction },
+                                    modifier = Modifier.fillMaxWidth().height(8.dp).clip(CircleShape),
+                                    color = PrimaryDarker,
+                                    trackColor = Primary.copy(alpha = 0.2f)
+                                )
+                                Text(
+                                    text = "${(state.progressFraction * 100).toInt()}%",
+                                    fontSize = 12.sp,
+                                    color = Neutral,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Surface(
+                                    color = if (state.isOnTrack) SuccessGreen.copy(alpha = 0.1f) else ErrorRed.copy(alpha = 0.1f),
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = if (state.isOnTrack)
+                                            stringResource(R.string.savings_goal_on_track)
+                                        else
+                                            stringResource(R.string.savings_goal_off_track),
+                                        modifier = Modifier.padding(10.dp),
+                                        fontSize = 13.sp,
+                                        color = if (state.isOnTrack) SuccessGreen else ErrorRed,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                }
+                                HorizontalDivider(color = BackgroundLight)
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                    Column {
+                                        Text(stringResource(R.string.savings_goal_monthly_needed_format, String.format(Locale.getDefault(), "%.0f", state.monthlyNeeded)), fontSize = 12.sp, color = Neutral)
+                                        Text(stringResource(R.string.savings_goal_capacity_format, String.format(Locale.getDefault(), "%.0f", state.monthlySavingCapacity)), fontSize = 12.sp, color = Neutral)
+                                        Text(stringResource(R.string.savings_goal_elapsed_format, state.elapsedMonths), fontSize = 12.sp, color = Neutral)
+                                        if (state.monthsRemaining > 0) {
+                                            Text(stringResource(R.string.savings_goal_months_remaining_format, state.monthsRemaining), fontSize = 12.sp, color = Neutral)
+                                        }
+                                    }
+                                }
+                                if (state.topCategories.isNotEmpty()) {
+                                    HorizontalDivider(color = BackgroundLight)
+                                    Text(stringResource(R.string.savings_goal_top_categories), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Neutral)
+                                    state.topCategories.forEach { (cat, amount) ->
+                                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                            Text(cat, fontSize = 13.sp, color = TextPrimary)
+                                            Text("$${String.format(Locale.getDefault(), "%.0f", amount)}", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = PrimaryDarker)
+                                        }
+                                    }
+                                }
+                                OutlinedButton(
+                                    onClick = { viewModel.clearGoal() },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    shape = RoundedCornerShape(24.dp),
+                                    colors = ButtonDefaults.outlinedButtonColors(contentColor = ErrorRed),
+                                    border = androidx.compose.foundation.BorderStroke(1.dp, ErrorRed)
+                                ) {
+                                    Text(stringResource(R.string.savings_goal_clear_button), fontWeight = FontWeight.Bold)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             // Hero Progress Card
             item {
                 Card(

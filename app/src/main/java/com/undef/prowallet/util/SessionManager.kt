@@ -6,6 +6,8 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
@@ -29,7 +31,9 @@ class SessionManager(private val context: Context) {
         private val BIOMETRIC_ENABLED = booleanPreferencesKey("biometric_enabled")
         private val NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
         private val GROQ_API_KEY = stringPreferencesKey("groq_api_key")
-        private val LAST_SYNC_TIME = androidx.datastore.preferences.core.longPreferencesKey("last_sync_time")
+        private val SAVINGS_GOAL_TARGET = doublePreferencesKey("savings_goal_target")
+        private val SAVINGS_GOAL_MONTHS = intPreferencesKey("savings_goal_months")
+        private val SAVINGS_GOAL_START_MS = longPreferencesKey("savings_goal_start_ms")
     }
 
     val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { preferences ->
@@ -84,6 +88,10 @@ class SessionManager(private val context: Context) {
         preferences[GROQ_API_KEY] ?: ""
     }
 
+    val savingsGoalTarget: Flow<Double> = context.dataStore.data.map { it[SAVINGS_GOAL_TARGET] ?: 0.0 }
+    val savingsGoalMonths: Flow<Int> = context.dataStore.data.map { it[SAVINGS_GOAL_MONTHS] ?: 0 }
+    val savingsGoalStartMs: Flow<Long> = context.dataStore.data.map { it[SAVINGS_GOAL_START_MS] ?: 0L }
+
     suspend fun saveDarkMode(enabled: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[DARK_MODE] = enabled
@@ -137,21 +145,28 @@ class SessionManager(private val context: Context) {
         }
     }
 
+    suspend fun saveSavingsGoal(target: Double, months: Int) {
+        context.dataStore.edit { prefs ->
+            prefs[SAVINGS_GOAL_TARGET] = target
+            prefs[SAVINGS_GOAL_MONTHS] = months
+            if ((prefs[SAVINGS_GOAL_START_MS] ?: 0L) == 0L) {
+                prefs[SAVINGS_GOAL_START_MS] = System.currentTimeMillis()
+            }
+        }
+    }
+
+    suspend fun clearSavingsGoal() {
+        context.dataStore.edit { prefs ->
+            prefs[SAVINGS_GOAL_TARGET] = 0.0
+            prefs[SAVINGS_GOAL_MONTHS] = 0
+            prefs[SAVINGS_GOAL_START_MS] = 0L
+        }
+    }
+
     suspend fun clearSession() {
         context.dataStore.edit { preferences ->
             preferences[IS_LOGGED_IN] = false
             preferences.remove(EMAIL)
-            preferences[LAST_SYNC_TIME] = 0L // Reset last sync on logout
-        }
-    }
-
-    val lastSyncTime: Flow<Long> = context.dataStore.data.map { preferences ->
-        preferences[LAST_SYNC_TIME] ?: 0L
-    }
-
-    suspend fun saveLastSyncTime(time: Long) {
-        context.dataStore.edit { preferences ->
-            preferences[LAST_SYNC_TIME] = time
         }
     }
 }
