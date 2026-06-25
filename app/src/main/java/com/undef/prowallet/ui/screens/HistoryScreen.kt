@@ -1,6 +1,8 @@
 package com.undef.prowallet.ui.screens
 
 import android.content.Intent
+import androidx.core.content.FileProvider
+import java.io.File
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -74,12 +76,19 @@ fun HistoryScreen(
                     Icon(Icons.Default.FilterList, contentDescription = stringResource(R.string.filter_label), tint = PrimaryDarker)
                 }
                 IconButton(onClick = {
-                    val intent = Intent(Intent.ACTION_SEND).apply {
-                        type = "text/plain"
-                        putExtra(Intent.EXTRA_SUBJECT, exportSubject)
-                        putExtra(Intent.EXTRA_TEXT, viewModel.buildExportText())
-                    }
-                    context.startActivity(Intent.createChooser(intent, exportSubject))
+                    try {
+                        val csvText = viewModel.buildExportText()
+                        val dir = File(context.cacheDir, "exports").also { it.mkdirs() }
+                        val file = File(dir, "prowallet_historial.csv").also { it.writeText(csvText) }
+                        val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
+                        val intent = Intent(Intent.ACTION_SEND).apply {
+                            type = "text/csv"
+                            putExtra(Intent.EXTRA_STREAM, uri)
+                            putExtra(Intent.EXTRA_SUBJECT, exportSubject)
+                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        }
+                        context.startActivity(Intent.createChooser(intent, exportSubject))
+                    } catch (_: Exception) {}
                 }) {
                     Icon(Icons.Default.Share, contentDescription = stringResource(R.string.export_history_label), tint = PrimaryDarker)
                 }
