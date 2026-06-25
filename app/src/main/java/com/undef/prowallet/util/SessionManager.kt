@@ -18,6 +18,7 @@ class SessionManager(private val context: Context) {
     companion object {
         private val IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
         private val EMAIL = stringPreferencesKey("email")
+        private val LAST_EMAIL = stringPreferencesKey("last_email")
         private val MONTHLY_BUDGET = doublePreferencesKey("monthly_budget")
         private val MONTHLY_INCOME = doublePreferencesKey("monthly_income")
         private val SAVINGS_PERCENTAGE = androidx.datastore.preferences.core.floatPreferencesKey("savings_percentage")
@@ -27,6 +28,8 @@ class SessionManager(private val context: Context) {
         private val DARK_MODE = booleanPreferencesKey("dark_mode")
         private val BIOMETRIC_ENABLED = booleanPreferencesKey("biometric_enabled")
         private val NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
+        private val GROQ_API_KEY = stringPreferencesKey("groq_api_key")
+        private val LAST_SYNC_TIME = androidx.datastore.preferences.core.longPreferencesKey("last_sync_time")
     }
 
     val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { preferences ->
@@ -35,6 +38,10 @@ class SessionManager(private val context: Context) {
 
     val email: Flow<String?> = context.dataStore.data.map { preferences ->
         preferences[EMAIL]
+    }
+
+    val lastEmail: Flow<String?> = context.dataStore.data.map { preferences ->
+        preferences[LAST_EMAIL]
     }
 
     val monthlyBudget: Flow<Double> = context.dataStore.data.map { preferences ->
@@ -73,6 +80,10 @@ class SessionManager(private val context: Context) {
         preferences[NOTIFICATIONS_ENABLED] ?: true
     }
 
+    val groqApiKey: Flow<String> = context.dataStore.data.map { preferences ->
+        preferences[GROQ_API_KEY] ?: ""
+    }
+
     suspend fun saveDarkMode(enabled: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[DARK_MODE] = enabled
@@ -88,6 +99,12 @@ class SessionManager(private val context: Context) {
     suspend fun saveNotificationsEnabled(enabled: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[NOTIFICATIONS_ENABLED] = enabled
+        }
+    }
+
+    suspend fun saveGroqApiKey(apiKey: String) {
+        context.dataStore.edit { preferences ->
+            preferences[GROQ_API_KEY] = apiKey
         }
     }
 
@@ -116,6 +133,7 @@ class SessionManager(private val context: Context) {
         context.dataStore.edit { preferences ->
             preferences[IS_LOGGED_IN] = true
             preferences[EMAIL] = email
+            preferences[LAST_EMAIL] = email
         }
     }
 
@@ -123,6 +141,17 @@ class SessionManager(private val context: Context) {
         context.dataStore.edit { preferences ->
             preferences[IS_LOGGED_IN] = false
             preferences.remove(EMAIL)
+            preferences[LAST_SYNC_TIME] = 0L // Reset last sync on logout
+        }
+    }
+
+    val lastSyncTime: Flow<Long> = context.dataStore.data.map { preferences ->
+        preferences[LAST_SYNC_TIME] ?: 0L
+    }
+
+    suspend fun saveLastSyncTime(time: Long) {
+        context.dataStore.edit { preferences ->
+            preferences[LAST_SYNC_TIME] = time
         }
     }
 }

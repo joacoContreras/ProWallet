@@ -27,7 +27,7 @@ import com.undef.prowallet.data.dao.PreciosClarosProductDao
         AccountEntity::class,
         PreciosClarosProductEntity::class
     ],
-    version = 8,
+    version = 9,
     exportSchema = false
 )
 abstract class ProWalletDatabase : RoomDatabase() {
@@ -143,6 +143,37 @@ abstract class ProWalletDatabase : RoomDatabase() {
             }
         }
 
+        // v8→v9: add sync metadata columns to accounts, categories, fixed_expenses, purchases.
+        private val MIGRATION_8_9 = object : Migration(8, 9) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // accounts
+                db.execSQL("ALTER TABLE accounts ADD COLUMN user_email TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE accounts ADD COLUMN updated_at INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE accounts ADD COLUMN is_dirty INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE accounts ADD COLUMN is_deleted INTEGER NOT NULL DEFAULT 0")
+
+                // categories index drop and recreate
+                db.execSQL("DROP INDEX IF EXISTS index_categories_name")
+                db.execSQL("ALTER TABLE categories ADD COLUMN user_email TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE categories ADD COLUMN updated_at INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE categories ADD COLUMN is_dirty INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE categories ADD COLUMN is_deleted INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_categories_name_user_email ON categories (name, user_email)")
+
+                // fixed_expenses
+                db.execSQL("ALTER TABLE fixed_expenses ADD COLUMN user_email TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE fixed_expenses ADD COLUMN updated_at INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE fixed_expenses ADD COLUMN is_dirty INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE fixed_expenses ADD COLUMN is_deleted INTEGER NOT NULL DEFAULT 0")
+
+                // purchases
+                db.execSQL("ALTER TABLE purchases ADD COLUMN user_email TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE purchases ADD COLUMN updated_at INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE purchases ADD COLUMN is_dirty INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE purchases ADD COLUMN is_deleted INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+
         fun getInstance(context: Context): ProWalletDatabase =
             INSTANCE ?: synchronized(this) {
                 INSTANCE ?: Room.databaseBuilder(
@@ -150,7 +181,16 @@ abstract class ProWalletDatabase : RoomDatabase() {
                     ProWalletDatabase::class.java,
                     "prowallet.db"
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
+                    .addMigrations(
+                        MIGRATION_1_2,
+                        MIGRATION_2_3,
+                        MIGRATION_3_4,
+                        MIGRATION_4_5,
+                        MIGRATION_5_6,
+                        MIGRATION_6_7,
+                        MIGRATION_7_8,
+                        MIGRATION_8_9
+                    )
                     .apply { if (BuildConfig.DEBUG) fallbackToDestructiveMigration(dropAllTables = true) }
                     .build()
                     .also { INSTANCE = it }

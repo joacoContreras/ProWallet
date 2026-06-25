@@ -274,7 +274,6 @@ fun SettingsScreen(
                     onCheckedChange = { settingsViewModel.setDarkMode(it) }
                 )
             }
-
             // Footer
             Column(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 32.dp),

@@ -1,6 +1,7 @@
 package com.undef.prowallet.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -33,7 +34,8 @@ fun AnalyticsScreen(
     viewModel: AnalyticsViewModel,
     onNavigateToHome: () -> Unit,
     onNavigateToNewPurchase: () -> Unit,
-    onNavigateToTopStores: () -> Unit
+    onNavigateToTopStores: () -> Unit,
+    onNavigateToPriceComparison: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
     val currentMonth = remember {
@@ -86,6 +88,10 @@ fun AnalyticsScreen(
             }
 
             item {
+                PriceComparisonPromoCard(onClick = onNavigateToPriceComparison)
+            }
+
+            item {
                 Text(
                     text = stringResource(R.string.most_purchased_products),
                     fontFamily = PlusJakartaSans,
@@ -107,6 +113,68 @@ fun AnalyticsScreen(
             }
 
             item { Spacer(Modifier.height(16.dp)) }
+        }
+    }
+}
+
+@Composable
+fun PriceComparisonPromoCard(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .shadow(4.dp, RoundedCornerShape(16.dp)),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Secondary)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color.White.copy(alpha = 0.2f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Compare,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = "Comparador de Precios",
+                    fontFamily = PlusJakartaSans,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp,
+                    color = Color.White
+                )
+                Text(
+                    text = "Compara productos entre supermercados y encuentra diferencias de precio",
+                    fontFamily = PlusJakartaSans,
+                    fontSize = 11.sp,
+                    color = Color.White.copy(alpha = 0.85f)
+                )
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Icon(
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(20.dp)
+            )
         }
     }
 }

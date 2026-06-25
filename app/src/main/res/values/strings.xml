@@ -299,6 +299,9 @@
     <string name="ocr_discard_button">Descartar</string>
     <string name="ocr_error_no_text">No se pudo detectar texto en la imagen. Cargá los datos manualmente.</string>
     <string name="ocr_unknown_value">No detectado</string>
+    <string name="settings_ai_section_title">CONFIGURACIÓN DE IA</string>
+    <string name="settings_groq_api_key_label">Groq API Key (para análisis inteligente)</string>
+    <string name="save_api_key_button">Guardar API Key</string>
 
     <!-- Chat AI Screen -->
     <string name="pro_assistant_title">ProAsistente</string>
@@ -315,6 +318,19 @@
     <string name="chat_no_purchases_month">Todavía no registraste compras este mes.</string>
     <string name="chat_top_categories">Tus categorías con más gasto este mes son: %1$s.</string>
     <string name="chat_fallback">Este mes llevás gastado $%1$s. Podés preguntarme por tu presupuesto, tu última semana o tus categorías principales.</string>
+
+    <string name="chat_option_expenses">📊 Consultar Gastos</string>
+    <string name="chat_option_budget">💰 Verificar Presupuesto</string>
+    <string name="chat_option_categories">📂 Categorías Principales</string>
+    <string name="chat_option_help">❓ Ayuda / FAQ</string>
+    <string name="chat_option_expenses_week">📅 Esta Semana</string>
+    <string name="chat_option_expenses_month">📅 Este Mes</string>
+    <string name="chat_option_back_main">🔙 Volver al Menú Principal</string>
+    <string name="chat_option_budget_adjust">⚙️ Cómo Ajustar Presupuesto</string>
+    
+    <string name="chat_help_reply">Aquí tenés algunas respuestas rápidas:\n\n• <b>¿Cómo registrar compras?</b> Hacé clic en la pestaña \'Nuevo\' y capturá tu ticket.\n• <b>¿Cómo ver estadísticas?</b> Andá a la pestaña \'Análisis\' para ver los gráficos.\n• <b>¿Dónde se guardan mis datos?</b> Todo se almacena localmente en tu celular de forma segura.</string>
+    <string name="chat_expenses_menu_reply">Seleccioná el período que querés consultar para tus gastos:</string>
+    <string name="chat_budget_adjust_reply">Podés cambiar tu presupuesto mensual desde tu perfil seleccionando \'Configuración Mensual\' o ajustándolo en la configuración de la app.</string>
 
     <!-- Store Detail Screen -->
     <string name="merchant_id_format">ID de comerciante: %s</string>

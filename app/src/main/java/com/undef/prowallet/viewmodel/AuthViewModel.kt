@@ -10,9 +10,11 @@ import com.undef.prowallet.data.dao.UserDao
 import com.undef.prowallet.domain.User
 import com.undef.prowallet.util.SessionManager
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -44,6 +46,12 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
+
+    val biometricEnabled: StateFlow<Boolean> = sessionManager.biometricEnabled
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
+    val lastEmail: StateFlow<String?> = sessionManager.lastEmail
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private var pendingEmail: String? = null
     private var pendingCode: String? = null
@@ -128,6 +136,20 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     sessionManager.saveSession(user.email)
                     _uiState.value = _uiState.value.copy(isLoading = false, isLoggedIn = true, user = user.toDomain())
                 }
+            }
+        }
+    }
+
+    fun loginBiometric(email: String) {
+        val trimmedEmail = email.trim().lowercase(Locale.ROOT)
+        _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+        viewModelScope.launch {
+            val user = userDao.getUserByEmail(trimmedEmail)
+            if (user == null) {
+                _uiState.value = _uiState.value.copy(isLoading = false, error = AuthError.EmailNotFound)
+            } else {
+                sessionManager.saveSession(user.email)
+                _uiState.value = _uiState.value.copy(isLoading = false, isLoggedIn = true, user = user.toDomain())
             }
         }
     }

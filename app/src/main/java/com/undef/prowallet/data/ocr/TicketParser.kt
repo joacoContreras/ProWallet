@@ -25,8 +25,8 @@ object TicketParser {
         "total", "subtotal", "iva", "cambio", "efectivo", "tarjeta", "vuelto", "descuento"
     )
 
-    private val PRICE_LINE_REGEX = Regex("""^(.+?)\s+\$?(\d{1,3}(?:[.,]\d{3})*[.,]\d{2})$""")
-    private val AMOUNT_REGEX = Regex("""(\d{1,3}(?:[.,]\d{3})*[.,]\d{2})""")
+    private val PRICE_LINE_REGEX = Regex("""^(.+?)\s+\$?((?:\d{1,3}(?:[.,]\d{3})*|\d+)(?:[.,]\d{1,2})?)(?:\s*[a-zA-Z*]+)?$""")
+    private val AMOUNT_REGEX = Regex("""((?:\d{1,3}(?:[.,]\d{3})*|\d+)(?:[.,]\d{1,2})?)(?:\s*[a-zA-Z*]+)?$""")
     private val DATE_REGEX = Regex("""\b(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})\b""")
     private val TIME_REGEX = Regex("""\b(\d{1,2}):(\d{2})(?::\d{2})?\b""")
 
@@ -48,10 +48,34 @@ object TicketParser {
     }
 
     private fun normalizeAmount(raw: String): Double {
+        val trimmed = raw.trim()
         val cleaned = when {
-            raw.contains(",") && raw.contains(".") -> raw.replace(".", "").replace(",", ".")
-            raw.contains(",") -> raw.replace(",", ".")
-            else -> raw
+            trimmed.contains(",") && trimmed.contains(".") -> {
+                if (trimmed.lastIndexOf(',') > trimmed.lastIndexOf('.')) {
+                    trimmed.replace(".", "").replace(",", ".")
+                } else {
+                    trimmed.replace(",", "")
+                }
+            }
+            trimmed.contains(",") -> {
+                val lastIdx = trimmed.lastIndexOf(',')
+                val digitsAfter = trimmed.length - 1 - lastIdx
+                if (digitsAfter == 3) {
+                    trimmed.replace(",", "")
+                } else {
+                    trimmed.replace(",", ".")
+                }
+            }
+            trimmed.contains(".") -> {
+                val lastIdx = trimmed.lastIndexOf('.')
+                val digitsAfter = trimmed.length - 1 - lastIdx
+                if (digitsAfter == 3) {
+                    trimmed.replace(".", "")
+                } else {
+                    trimmed
+                }
+            }
+            else -> trimmed
         }
         return cleaned.toDoubleOrNull() ?: 0.0
     }
@@ -69,7 +93,10 @@ object TicketParser {
     }
 
     private fun extractDate(lines: List<String>): String? {
+        val skipKeywords = listOf("inicio", "actividad", "vto", "vencimiento", "nacimiento")
         for (line in lines) {
+            val lower = line.lowercase()
+            if (skipKeywords.any { lower.contains(it) }) continue
             val match = DATE_REGEX.find(line) ?: continue
             val (d, m, y) = match.destructured
             val day = d.toIntOrNull() ?: continue
@@ -84,7 +111,10 @@ object TicketParser {
     }
 
     private fun extractTime(lines: List<String>): String? {
+        val skipKeywords = listOf("vto", "vencimiento")
         for (line in lines) {
+            val lower = line.lowercase()
+            if (skipKeywords.any { lower.contains(it) }) continue
             val match = TIME_REGEX.find(line) ?: continue
             val (h, min) = match.destructured
             val hour = h.toIntOrNull() ?: continue
@@ -105,12 +135,32 @@ object TicketParser {
         }
     }
 
+    private val HEADER_CONTACT_KEYWORDS = listOf(
+        "calle", "av.", "avenida", "avda", "tel", "phone", "cuit", "rut", "nit", "rfc", 
+        "nro", "n°", "numero", "ticket", "factura", "boleta", "tkt", "duplicado", "original",
+        "fecha", "hora", "date", "time", "c.u.i.t", "r.u.t", "n.i.t", "r.f.c", "consumidor"
+    )
+
+    private fun isHeaderOrContactLine(line: String): Boolean {
+        val lower = line.lowercase()
+        return HEADER_CONTACT_KEYWORDS.any { lower.contains(it) }
+    }
+
+    private fun cleanProductName(rawName: String): String {
+        var name = rawName.trim()
+        name = name.replace(Regex("""\b\d{8,14}\b"""), "").trim()
+        name = name.replace(Regex("""\(\d+\s*[xX]\s*[^)]+\)"""), "").trim()
+        name = name.replace(Regex("""\b\d+\s*[xX]\s*[\d.,]+\b"""), "").trim()
+        name = name.replace(Regex("""\s+"""), " ").trim()
+        return name
+    }
+
     private fun extractItems(lines: List<String>): List<ParsedItem> {
         val items = mutableListOf<ParsedItem>()
         for (line in lines) {
-            if (isSummaryLine(line)) continue
+            if (isSummaryLine(line) || isHeaderOrContactLine(line)) continue
             val match = PRICE_LINE_REGEX.find(line) ?: continue
-            val name = match.groupValues[1].trim()
+            val name = cleanProductName(match.groupValues[1])
             val price = normalizeAmount(match.groupValues[2])
             if (name.isBlank() || price <= 0.0) continue
             items.add(ParsedItem(name = name, price = price))

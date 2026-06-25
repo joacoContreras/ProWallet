@@ -1,14 +1,13 @@
 package com.undef.prowallet.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -26,19 +25,13 @@ import com.undef.prowallet.ui.components.TopBar
 import com.undef.prowallet.ui.theme.*
 import com.undef.prowallet.viewmodel.ChatAiViewModel
 import com.undef.prowallet.viewmodel.ChatMessage
+import com.undef.prowallet.viewmodel.ChatOption
 
 @Composable
 fun ChatAiScreen(onNavigateBack: () -> Unit) {
     val viewModel: ChatAiViewModel = viewModel()
     val state by viewModel.uiState.collectAsState()
-    var messageText by remember { mutableStateOf("") }
     val messages = state.messages
-
-    val suggestions = listOf(
-        stringResource(R.string.suggestion_analyze_week),
-        stringResource(R.string.suggestion_budget_check),
-        stringResource(R.string.suggestion_top_categories)
-    )
 
     Scaffold(
         topBar = {
@@ -50,62 +43,31 @@ fun ChatAiScreen(onNavigateBack: () -> Unit) {
                 modifier = Modifier
                     .background(Color.White)
                     .navigationBarsPadding()
-                    .padding(16.dp)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                // Suggestions
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(bottom = 12.dp)
-                ) {
-                    items(suggestions) { suggestion ->
-                        Surface(
-                            onClick = { viewModel.sendMessage(suggestion) },
-                            shape = RoundedCornerShape(20.dp),
-                            color = Neutral.copy(alpha = 0.1f)
+                // Predefined chatbot menu options
+                state.options.forEach { option ->
+                    Surface(
+                        onClick = { viewModel.selectOption(option) },
+                        shape = RoundedCornerShape(16.dp),
+                        color = PrimaryLight.copy(alpha = 0.6f),
+                        border = BorderStroke(1.dp, PrimaryDark.copy(alpha = 0.8f)),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 20.dp, vertical = 14.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = suggestion,
-                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                                fontSize = 12.sp,
+                                text = stringResource(option.textRes),
+                                fontSize = 14.sp,
                                 fontFamily = PlusJakartaSans,
-                                color = TextPrimary
+                                fontWeight = FontWeight.SemiBold,
+                                color = PrimaryDarker
                             )
                         }
-                    }
-                }
-
-                // Input field
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    OutlinedTextField(
-                        value = messageText,
-                        onValueChange = { messageText = it },
-                        modifier = Modifier.weight(1f),
-                        placeholder = { Text(stringResource(R.string.ask_proassistant_placeholder), color = NeutralLight) },
-                        shape = RoundedCornerShape(24.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = BackgroundLight,
-                            unfocusedContainerColor = BackgroundLight,
-                            focusedBorderColor = Primary,
-                            unfocusedBorderColor = Color.Transparent
-                        ),
-                        maxLines = 3
-                    )
-                    FloatingActionButton(
-                        onClick = {
-                            if (messageText.isNotBlank()) {
-                                viewModel.sendMessage(messageText)
-                                messageText = ""
-                            }
-                        },
-                        containerColor = PrimaryDarker,
-                        contentColor = Color.White,
-                        shape = CircleShape,
-                        modifier = Modifier.size(48.dp)
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.Send, contentDescription = stringResource(R.string.send_label))
                     }
                 }
             }

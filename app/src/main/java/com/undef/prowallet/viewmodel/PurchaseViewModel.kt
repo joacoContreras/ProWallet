@@ -11,6 +11,8 @@ import com.undef.prowallet.data.CategoryEntity
 import com.undef.prowallet.data.ocr.ParsedTicket
 import com.undef.prowallet.data.ocr.TicketOcrService
 import com.undef.prowallet.data.ocr.TicketParser
+import com.undef.prowallet.data.ocr.GroqOcrService
+import com.undef.prowallet.data.ocr.GroqConfig
 import com.undef.prowallet.domain.Product
 import com.undef.prowallet.domain.Purchase
 import com.undef.prowallet.util.LocationHelper
@@ -97,7 +99,17 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch {
             try {
                 val rawText = TicketOcrService.recognizeText(context, uri)
-                val parsed = TicketParser.parse(rawText)
+                val apiKey = GroqConfig.API_KEY
+                val parsed = if (apiKey.isNotBlank()) {
+                    try {
+                        GroqOcrService.parseWithGroq(rawText, apiKey)
+                    } catch (e: Exception) {
+                        TicketParser.parse(rawText)
+                    }
+                } else {
+                    TicketParser.parse(rawText)
+                }
+
                 if (parsed.isEmpty) {
                     _uiState.value = _uiState.value.copy(ocrStatus = OcrStatus.Error)
                 } else {
@@ -171,7 +183,7 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
             }
         } else {
             state.products + Product(
-                id = "tmp_${System.currentTimeMillis()}",
+                id = "tmp_${UUID.randomUUID()}",
                 code = resolvedCode,
                 name = state.currentProductName,
                 description = state.currentProductDescription,

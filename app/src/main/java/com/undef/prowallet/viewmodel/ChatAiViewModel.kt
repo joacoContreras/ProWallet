@@ -15,6 +15,11 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.util.Locale
 
+data class ChatOption(
+    val id: String,
+    val textRes: Int
+)
+
 data class ChatMessage(
     val textRes: Int? = null,
     val textArgs: List<Any> = emptyList(),
@@ -24,7 +29,8 @@ data class ChatMessage(
 )
 
 data class ChatUiState(
-    val messages: List<ChatMessage> = emptyList()
+    val messages: List<ChatMessage> = emptyList(),
+    val options: List<ChatOption> = emptyList()
 )
 
 /**
@@ -43,6 +49,13 @@ class ChatAiViewModel(application: Application) : AndroidViewModel(application) 
     private var latestBudget: Double = 0.0
     private var initialized = false
 
+    private val mainOptions = listOf(
+        ChatOption("OPTION_EXPENSES", R.string.chat_option_expenses),
+        ChatOption("OPTION_BUDGET", R.string.chat_option_budget),
+        ChatOption("OPTION_CATEGORIES", R.string.chat_option_categories),
+        ChatOption("OPTION_HELP", R.string.chat_option_help)
+    )
+
     init {
         viewModelScope.launch {
             combine(repository.purchasesFlow, sessionManager.monthlyBudget) { purchases, budget ->
@@ -52,31 +65,74 @@ class ChatAiViewModel(application: Application) : AndroidViewModel(application) 
                 latestBudget = budget
                 if (!initialized) {
                     initialized = true
-                    _uiState.value = ChatUiState(messages = listOf(greetingMessage()))
+                    _uiState.value = ChatUiState(
+                        messages = listOf(greetingMessage()),
+                        options = mainOptions
+                    )
                 }
             }
         }
     }
 
-    fun sendMessage(text: String) {
-        val trimmed = text.trim()
-        if (trimmed.isBlank()) return
-        val userMessage = ChatMessage(rawText = trimmed, isUser = true)
-        val reply = buildReply(trimmed)
-        _uiState.value = _uiState.value.copy(messages = _uiState.value.messages + userMessage + reply)
+    fun selectOption(option: ChatOption) {
+        val userMessage = ChatMessage(textRes = option.textRes, isUser = true)
+        
+        val (reply, nextOptions) = when (option.id) {
+            "OPTION_EXPENSES" -> {
+                ChatMessage(textRes = R.string.chat_expenses_menu_reply, isUser = false) to listOf(
+                    ChatOption("OPTION_EXPENSES_WEEK", R.string.chat_option_expenses_week),
+                    ChatOption("OPTION_EXPENSES_MONTH", R.string.chat_option_expenses_month),
+                    ChatOption("OPTION_BACK_MAIN", R.string.chat_option_back_main)
+                )
+            }
+            "OPTION_EXPENSES_WEEK" -> {
+                weeklyReply() to listOf(
+                    ChatOption("OPTION_EXPENSES_MONTH", R.string.chat_option_expenses_month),
+                    ChatOption("OPTION_BACK_MAIN", R.string.chat_option_back_main)
+                )
+            }
+            "OPTION_EXPENSES_MONTH" -> {
+                budgetReply() to listOf(
+                    ChatOption("OPTION_EXPENSES_WEEK", R.string.chat_option_expenses_week),
+                    ChatOption("OPTION_BACK_MAIN", R.string.chat_option_back_main)
+                )
+            }
+            "OPTION_BUDGET" -> {
+                budgetReply() to listOf(
+                    ChatOption("OPTION_BUDGET_ADJUST", R.string.chat_option_budget_adjust),
+                    ChatOption("OPTION_BACK_MAIN", R.string.chat_option_back_main)
+                )
+            }
+            "OPTION_BUDGET_ADJUST" -> {
+                ChatMessage(textRes = R.string.chat_budget_adjust_reply, isUser = false) to listOf(
+                    ChatOption("OPTION_BACK_MAIN", R.string.chat_option_back_main)
+                )
+            }
+            "OPTION_CATEGORIES" -> {
+                categoryReply() to listOf(
+                    ChatOption("OPTION_BACK_MAIN", R.string.chat_option_back_main)
+                )
+            }
+            "OPTION_HELP" -> {
+                ChatMessage(textRes = R.string.chat_help_reply, isUser = false) to listOf(
+                    ChatOption("OPTION_BACK_MAIN", R.string.chat_option_back_main)
+                )
+            }
+            "OPTION_BACK_MAIN" -> {
+                greetingMessage() to mainOptions
+            }
+            else -> {
+                greetingMessage() to mainOptions
+            }
+        }
+        
+        _uiState.value = _uiState.value.copy(
+            messages = _uiState.value.messages + userMessage + reply,
+            options = nextOptions
+        )
     }
 
     private fun greetingMessage(): ChatMessage = ChatMessage(textRes = R.string.proassistant_greeting, isUser = false)
-
-    private fun buildReply(input: String): ChatMessage {
-        val normalized = input.lowercase(Locale.getDefault())
-        return when {
-            "presupuesto" in normalized || "budget" in normalized -> budgetReply()
-            "semana" in normalized || "week" in normalized -> weeklyReply()
-            "categor" in normalized -> categoryReply()
-            else -> fallbackReply()
-        }
-    }
 
     private fun budgetReply(): ChatMessage {
         val spent = latestPurchases.filter { it.isCurrentMonth() }.sumOf { it.totalAmount }
@@ -121,14 +177,5 @@ class ChatAiViewModel(application: Application) : AndroidViewModel(application) 
         }
         val summary = byCategory.joinToString(", ") { (category, total) -> "$category ($${"%.0f".format(total)})" }
         return ChatMessage(textRes = R.string.chat_top_categories, textArgs = listOf(summary), isUser = false)
-    }
-
-    private fun fallbackReply(): ChatMessage {
-        val spent = latestPurchases.filter { it.isCurrentMonth() }.sumOf { it.totalAmount }
-        return ChatMessage(
-            textRes = R.string.chat_fallback,
-            textArgs = listOf("%.0f".format(spent)),
-            isUser = false
-        )
     }
 }

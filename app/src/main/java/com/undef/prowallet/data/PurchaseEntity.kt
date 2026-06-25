@@ -28,5 +28,9 @@ data class PurchaseEntity(
     @ColumnInfo(name = "timestamp") val timestamp: Long,
     @ColumnInfo(name = "ticket_image_path") val ticketImagePath: String? = null,
     @ColumnInfo(name = "latitude") val latitude: Double? = null,
-    @ColumnInfo(name = "longitude") val longitude: Double? = null
+    @ColumnInfo(name = "longitude") val longitude: Double? = null,
+    @ColumnInfo(name = "user_email") val userEmail: String = "",
+    @ColumnInfo(name = "updated_at") val updatedAt: Long = System.currentTimeMillis(),
+    @ColumnInfo(name = "is_dirty") val isDirty: Boolean = false,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false
 )

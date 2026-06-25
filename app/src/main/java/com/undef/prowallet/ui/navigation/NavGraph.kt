@@ -23,6 +23,7 @@ import com.undef.prowallet.viewmodel.PurchaseViewModel
 import com.undef.prowallet.viewmodel.SettingsViewModel
 import com.undef.prowallet.viewmodel.StoreDetailViewModel
 import com.undef.prowallet.viewmodel.TopStoresViewModel
+import com.undef.prowallet.viewmodel.PriceComparisonViewModel
 
 sealed class Screen(val route: String) {
     object Splash : Screen("splash")
@@ -57,6 +58,7 @@ sealed class Screen(val route: String) {
     object UpdatePassword : Screen("update_password")
     object UpdatePasswordSuccess : Screen("update_password_success")
     object ContactSupport : Screen("contact_support")
+    object PriceComparison : Screen("price_comparison")
 }
 
 @Composable
@@ -242,7 +244,8 @@ fun AppNavGraph(navController: NavHostController) {
                     }
                 },
                 onNavigateToNewPurchase = { navController.navigate(Screen.NewPurchase.route) },
-                onNavigateToTopStores = { navController.navigate(Screen.TopStores.route) }
+                onNavigateToTopStores = { navController.navigate(Screen.TopStores.route) },
+                onNavigateToPriceComparison = { navController.navigate(Screen.PriceComparison.route) }
             )
         }
 
@@ -379,6 +382,14 @@ fun AppNavGraph(navController: NavHostController) {
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToChatAi = { navController.navigate(Screen.ChatAi.route) },
                 onNavigateToNotifications = { navController.navigate(Screen.Notifications.route) }
+            )
+        }
+
+        composable(Screen.PriceComparison.route) {
+            val priceComparisonViewModel: PriceComparisonViewModel = viewModel()
+            PriceComparisonScreen(
+                viewModel = priceComparisonViewModel,
+                onNavigateBack = { navController.popBackStack() }
             )
         }
     }
