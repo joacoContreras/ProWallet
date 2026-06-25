@@ -218,6 +218,21 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch { repository.updateCategory(id, newName) }
     }
 
+    fun guardarCompra(compra: Purchase) {
+        _uiState.value = _uiState.value.copy(isSaving = true, saveError = false)
+        viewModelScope.launch {
+            try {
+                val id = repository.guardarCompra(compra)
+                _uiState.value = _uiState.value.copy(savedSuccess = true, savedPurchaseId = id.toString())
+                checkBudgetAndNotify()
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(saveError = true)
+            } finally {
+                _uiState.value = _uiState.value.copy(isSaving = false)
+            }
+        }
+    }
+
     fun savePurchase() {
         val state = _uiState.value
         if (state.isSaving) return
@@ -242,18 +257,7 @@ class PurchaseViewModel(application: Application) : AndroidViewModel(application
             longitude = state.longitude
         )
 
-        _uiState.value = state.copy(isSaving = true, saveError = false)
-        viewModelScope.launch {
-            try {
-                val id = repository.savePurchase(purchase)
-                _uiState.value = _uiState.value.copy(savedSuccess = true, savedPurchaseId = id.toString())
-                checkBudgetAndNotify()
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(saveError = true)
-            } finally {
-                _uiState.value = _uiState.value.copy(isSaving = false)
-            }
-        }
+        guardarCompra(purchase)
     }
 
     // Notificación real del sistema (no solo el insight in-app de NotificationsScreen):

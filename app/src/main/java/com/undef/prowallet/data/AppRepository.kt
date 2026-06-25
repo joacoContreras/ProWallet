@@ -88,6 +88,15 @@ class AppRepository(context: Context) {
             purchasesWithItems.map { it.toDomain(categoryMap, productMap) }
         }
 
+    suspend fun guardarCompra(compra: Purchase): Int {
+        val response = RetrofitClient.apiService.crearCompra(compra)
+        if (response.isSuccessful) {
+            return savePurchase(compra)
+        } else {
+            throw Exception("Failed to post purchase: ${response.code()}")
+        }
+    }
+
     suspend fun savePurchase(purchase: Purchase): Int {
         return db.withTransaction {
             val categoryId = categoryDao.getCategoryByName(purchase.category)?.id

@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.undef.prowallet.domain.Purchase
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.undef.prowallet.R
 import com.undef.prowallet.data.CategoryEntity
 import com.undef.prowallet.ui.components.*
@@ -52,7 +54,7 @@ fun NewPurchaseScreen(
     onNavigateToAnalytics: () -> Unit
 ) {
     val isEditMode = purchaseId != null
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     val galleryLauncher = rememberLauncherForActivityResult(
@@ -277,7 +279,26 @@ fun NewPurchaseScreen(
             Spacer(Modifier.height(24.dp))
 
             Button(
-                onClick = if (isEditMode) viewModel::updatePurchase else viewModel::savePurchase,
+                onClick = {
+                    if (isEditMode) {
+                        viewModel.updatePurchase()
+                    } else {
+                        val totalAmount = state.products.sumOf { it.price }
+                        val compra = Purchase(
+                            id = "",
+                            storeName = state.storeName,
+                            date = state.date,
+                            time = state.time,
+                            totalAmount = totalAmount,
+                            category = state.category,
+                            products = state.products,
+                            ticketImageUri = state.ticketImageUri,
+                            latitude = state.latitude,
+                            longitude = state.longitude
+                        )
+                        viewModel.guardarCompra(compra)
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)

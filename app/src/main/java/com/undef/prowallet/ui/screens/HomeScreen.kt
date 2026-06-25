@@ -27,6 +27,7 @@ import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.BottomNavBar
 import com.undef.prowallet.ui.components.PurchaseCard
 import com.undef.prowallet.ui.components.SectionCard
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.undef.prowallet.ui.theme.*
 import com.undef.prowallet.viewmodel.HomeViewModel
 
@@ -58,7 +59,7 @@ fun HomeScreen(
     onNavigateToNotifications: () -> Unit,
     onNavigateToMonthlySetup: () -> Unit
 ) {
-    val state by homeViewModel.uiState.collectAsState()
+    val state by homeViewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         bottomBar = {

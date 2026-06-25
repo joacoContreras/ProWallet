@@ -27,6 +27,7 @@ import com.undef.prowallet.R
 import com.undef.prowallet.ui.components.PurchaseCard
 import com.undef.prowallet.ui.components.SectionCard
 import com.undef.prowallet.ui.components.TopBar
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.undef.prowallet.ui.theme.*
 import com.undef.prowallet.viewmodel.HistoryViewModel
 
@@ -36,7 +37,7 @@ fun HistoryScreen(
     onNavigateToPurchaseDetail: (String) -> Unit,
     onNavigateBack: () -> Unit
 ) {
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     var showFilterDialog by remember { mutableStateOf(false) }
 
